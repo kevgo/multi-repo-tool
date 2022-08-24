@@ -68,8 +68,9 @@ mod tests {
         #[test]
         fn has_next_link() {
             let give = r#"<https://api.github.com/organizations/108299804/repos?page=2>; rel="next", <https://api.github.com/organizations/108299804/repos?page=3>; rel="last""#;
-            let want = "https://api.github.com/organizations/108299804/repos?page=2";
-            let have = super::extract_next_link(give);
+            let want =
+                Some("https://api.github.com/organizations/108299804/repos?page=2".to_string());
+            let have = super::super::extract_next_link(give);
             assert_eq!(have, want)
         }
     }
