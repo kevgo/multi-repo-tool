@@ -33,21 +33,21 @@ pub fn clone(org: &str) {
     // clone each repo
     println!("cloning {} repos", repos.len());
     for (i, repo) in repos.iter().enumerate() {
-        println!("cloning repo {}/{}: {}", i, repos.len(), repo.name);
+        println!("cloning repo {}/{}: {}", i + 1, repos.len(), repo.name);
     }
 }
 
 fn next_page_url(headers: &HeaderMap) -> Option<String> {
     for (name, value) in headers {
-        if name != "link" {
-            continue;
+        if name == "link" {
+            return extract_next_link(value.to_str().unwrap());
         }
-        return extract_next_link(value.to_str().unwrap());
     }
     None
 }
 
 fn extract_next_link(value: &str) -> Option<String> {
+    // TODO: cache the regex
     let re = Regex::new(r#"<([^>]+)>; rel="next""#).unwrap();
     match re.captures(value) {
         None => return None,
