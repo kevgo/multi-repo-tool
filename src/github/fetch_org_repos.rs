@@ -43,7 +43,6 @@ fn next_page_url(headers: &HeaderMap) -> Option<String> {
 }
 
 fn extract_next_link(value: &str) -> Option<String> {
-    // TODO: cache the regex
     LINK_RE
         .captures(value)
         .map(|captures| captures[1].to_string())
