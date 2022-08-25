@@ -1,28 +1,13 @@
-use super::Operation;
 use std::process::Command;
 
-#[derive(Debug, PartialEq)]
-pub struct CloneOperation {
-    repo_name: String,
-    clone_url: String,
-    repo_number: usize,
-    repo_count: usize,
+pub fn print(name: usize, number: usize, count: usize) {
+    println!("cloning repo {}/{}: {}", number + 1, count, name);
 }
 
-impl Operation for CloneOperation {
-    fn execute(&self) {
-        println!(
-            "cloning repo {}/{}: {}",
-            self.repo_number + 1,
-            self.repo_count,
-            self.repo_name
-        );
-        match Command::new("git")
-            .args(["clone", &self.clone_url])
-            .status()
-        {
-            Ok(status) => {}
-            Err(err) => {}
-        }
+pub fn clone_repo(clone_url: &str) {
+    let command = Command::new("git").args(["clone", clone_url]);
+    match command.status() {
+        Ok(status) => {}
+        Err(err) => {}
     }
 }

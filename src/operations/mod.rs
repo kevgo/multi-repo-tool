@@ -1,15 +1,16 @@
 mod clone_repo;
 
-use clone_repo::CloneOperation;
+use core::fmt::Debug;
 
-trait Operation {
-    fn execute(&self);
+#[derive(Debug, Eq, PartialEq)]
+enum Operation {
+    CloneRepo { name: String, url: String },
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 struct Executor {
     /// the operations to execute
-    operations: Vec<Box<dyn Operation>>,
+    operations: Vec<Operation>,
 }
 
 impl Executor {
@@ -26,18 +27,17 @@ impl Executor {
 mod tests {
 
     mod Executor {
-        use crate::operations::clone_repo::CloneOperation;
-        use crate::operations::Executor;
+        use crate::operations::{Executor, Operation};
 
         #[test]
         fn persistence() {
             let executor1 = Executor {
-                operations: vec![Box::new(CloneOperation {
-                    repo_name: "test-repo".into(),
-                    clone_url: "git@github.com/test-org/test-repo".into(),
-                    repo_number: 3,
+                operations: vec![Operation::CloneRepo {
+                    name: "test-repo".into(),
+                    url: "git@github.com/test-org/test-repo".into(),
+                    number: 3,
                     repo_count: 10,
-                })],
+                }],
             };
             executor1.save();
             let executor2 = Executor::load();
