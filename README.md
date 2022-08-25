@@ -1,12 +1,15 @@
 # Multi-repo tool
 
-This tool allows working with multiple Git repositories.
+This tool allows executing CLI commands in multiple Git repositories.
 
-### Start a workflow
+### Starting a workflow
 
-- [clone](documentation/clone.md) a Github organization
+Use
 
-### Workflow failures
+- [clone](documentation/clone.md) all repositoriess of a Github organization
+  onto your local machine
+
+### Dealing with failures
 
 Once a workflow steps fails, use one of these commands:
 
