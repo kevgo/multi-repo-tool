@@ -7,7 +7,8 @@ use std::mem::drop;
 
 const FILENAME: &str = "mrt.json";
 
-pub fn delete() {
+/// removes the persistent task queue
+pub fn forget() {
     drop(fs::remove_file(FILENAME));
 }
 
@@ -23,8 +24,8 @@ pub fn load() -> Option<Vec<Step>> {
     Some(result)
 }
 
-/// stores this Executor into the persistence file on disk
-pub fn save(steps: &Vec<Step>) -> Result<(), Box<dyn Error>> {
+/// stores the task queue on disk
+pub fn persist(steps: &Vec<Step>) -> Result<(), Box<dyn Error>> {
     let file = File::create(FILENAME)?;
     let writer = BufWriter::new(file);
     serde_json::to_writer_pretty(writer, steps)?;
@@ -36,7 +37,7 @@ mod tests {
 
     mod persistence {
         use crate::runtime::persistence::FILENAME;
-        use crate::runtime::{load, save, Step};
+        use crate::runtime::{load, persist, Step};
         use std::fs;
         use std::mem::drop;
 
@@ -47,7 +48,7 @@ mod tests {
                 command: "git".into(),
                 args: vec!["clone".into()],
             }];
-            drop(save(&steps1));
+            drop(persist(&steps1));
             let steps2 = load().unwrap();
             assert_eq!(steps1, steps2);
             drop(fs::remove_file(FILENAME));

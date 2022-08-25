@@ -6,7 +6,6 @@ mod runtime;
 
 use clap::StructOpt;
 use cli::Command;
-use runtime::{delete, save};
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -20,10 +19,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     let leftover_steps = runtime::run(current_steps);
     if leftover_steps.is_empty() {
-        delete();
+        runtime::forget();
         Ok(())
     } else {
         println!("Abort, Retry, Ignore?");
-        save(&leftover_steps)
+        runtime::persist(&leftover_steps)
     }
 }
