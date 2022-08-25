@@ -2,8 +2,8 @@
 
 This tool allows working with multiple Git repositories.
 
-Clone a Git organization:
+### For users
 
-```
-mrt clone github.com/org
-```
+Mrt provides these commands:
+
+- [clone](documentation/clone.md) a Github organization
