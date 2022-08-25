@@ -1,14 +1,14 @@
 use crate::github;
 use regex::Regex;
 use reqwest::header::HeaderMap;
-use std::io;
 use std::io::Write;
+use std::{io, mem};
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
 pub fn get_repos(org: &str) -> Vec<github::Repo> {
     print!("fetching Github org {} .", org);
-    let _ = io::stdout().flush();
+    mem::drop(io::stdout().flush());
     let client = reqwest::blocking::Client::builder()
         .user_agent(APP_USER_AGENT)
         .build()
@@ -53,7 +53,7 @@ mod tests {
             let want =
                 Some("https://api.github.com/organizations/108299804/repos?page=2".to_string());
             let have = super::super::extract_next_link(give);
-            assert_eq!(have, want)
+            assert_eq!(have, want);
         }
     }
 }
