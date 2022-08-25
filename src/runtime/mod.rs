@@ -3,5 +3,5 @@ mod persistence;
 mod step;
 
 pub use operation::Operation;
-pub use persistence::{load, run, save};
+pub use persistence::{delete, load, run, save};
 pub use step::Step;

@@ -10,5 +10,8 @@ pub struct Arguments {
 
 #[derive(clap::Subcommand)]
 pub enum Command {
+    Abort,
     Clone { org: String },
+    Ignore,
+    Retry,
 }
