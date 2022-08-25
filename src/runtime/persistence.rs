@@ -3,12 +3,12 @@ use std::error::Error;
 use std::fs;
 use std::fs::File;
 use std::io::{BufReader, BufWriter};
-use std::mem;
+use std::mem::drop;
 
 const FILENAME: &str = "mrt.json";
 
 pub fn delete() {
-    mem::drop(fs::remove_file(FILENAME));
+    drop(fs::remove_file(FILENAME));
 }
 
 /// loads an Executor instance from the persistence file on disk
@@ -37,7 +37,8 @@ mod tests {
     mod persistence {
         use crate::runtime::persistence::FILENAME;
         use crate::runtime::{load, save, Step};
-        use std::{fs, mem};
+        use std::fs;
+        use std::mem::drop;
 
         #[test]
         fn persistence() {
@@ -46,10 +47,10 @@ mod tests {
                 command: "git".into(),
                 args: vec!["clone".into()],
             }];
-            mem::drop(save(&steps1));
+            drop(save(&steps1));
             let steps2 = load().unwrap();
             assert_eq!(steps1, steps2);
-            mem::drop(fs::remove_file(FILENAME));
+            drop(fs::remove_file(FILENAME));
         }
     }
 }

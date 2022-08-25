@@ -1,14 +1,15 @@
 use crate::github;
 use regex::Regex;
 use reqwest::header::HeaderMap;
+use std::io;
 use std::io::Write;
-use std::{io, mem};
+use std::mem::drop;
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
 pub fn get_repos(org: &str) -> Vec<github::Repo> {
     print!("fetching Github org {} .", org);
-    mem::drop(io::stdout().flush());
+    drop(io::stdout().flush());
     let client = reqwest::blocking::Client::builder()
         .user_agent(APP_USER_AGENT)
         .build()

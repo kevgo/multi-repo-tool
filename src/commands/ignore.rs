@@ -1,11 +1,11 @@
 use crate::runtime::Step;
-use std::mem;
+use std::mem::drop;
 
 pub fn ignore(previous_steps: Option<Vec<Step>>) -> Vec<Step> {
     match previous_steps {
         Some(steps) => {
             let mut step_iter = steps.into_iter();
-            mem::drop(step_iter.next());
+            drop(step_iter.next());
             step_iter.collect()
         }
         None => vec![],
