@@ -19,10 +19,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         Command::Retry => commands::retry(persisted_steps),
     };
     let leftover_steps = runtime::run(current_steps);
-    if leftover_steps.len() > 0 {
+    if leftover_steps.is_empty() {
+        delete();
+    } else {
         println!("Abort, Retry, Ignore?");
         save(&leftover_steps)
-    } else {
-        delete()
     }
 }

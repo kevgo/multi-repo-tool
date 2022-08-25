@@ -1,5 +1,3 @@
-use clap;
-
 /// Runs CLI commands for all repositories of a Github organization.
 #[derive(clap::StructOpt)]
 #[clap(version, about, long_about = None)]
