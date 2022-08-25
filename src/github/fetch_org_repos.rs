@@ -16,7 +16,7 @@ pub fn get_repos(org: &str) -> Vec<github::Repo> {
         .user_agent(APP_USER_AGENT)
         .build()
         .expect("cannot build HTTP client");
-    let mut result: Vec<github::Repo> = vec![];
+    let mut repos: Vec<github::Repo> = vec![];
     let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
@@ -26,10 +26,10 @@ pub fn get_repos(org: &str) -> Vec<github::Repo> {
         let parsed = response
             .json::<Vec<github::Repo>>()
             .expect("cannot parse Github API response");
-        result.extend(parsed);
+        repos.extend(parsed);
     }
-    println!(" {} repositories found", result.len());
-    result
+    println!(" {} repositories found", repos.len());
+    repos
 }
 
 /// provides the URL to the next set of paginated API results
