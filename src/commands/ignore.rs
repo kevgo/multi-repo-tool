@@ -12,3 +12,39 @@ pub fn ignore(previous_steps: Option<Vec<Step>>) -> Vec<Step> {
         None => vec![],
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::runtime::Step;
+
+    #[test]
+    fn content() {
+        let give: Vec<Step> = vec![
+            Step {
+                id: 1,
+                command: "cmd1".into(),
+                args: vec![],
+            },
+            Step {
+                id: 2,
+                command: "cmd2".into(),
+                args: vec![],
+            },
+        ];
+        let want: Vec<Step> = vec![Step {
+            id: 2,
+            command: "cmd2".into(),
+            args: vec![],
+        }];
+        let have = super::ignore(Some(give));
+        assert_eq!(have, want);
+    }
+
+    #[test]
+    fn empty() {
+        let give: Vec<Step> = vec![];
+        let want: Vec<Step> = vec![];
+        let have = super::ignore(Some(give));
+        assert_eq!(have, want);
+    }
+}
