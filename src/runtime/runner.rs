@@ -5,7 +5,7 @@ use std::process::Command;
 pub fn run(steps: Vec<Step>) -> Vec<Step> {
     let mut steps_iter = steps.into_iter();
     while let Some(step) = steps_iter.next() {
-        println!("{}", step);
+        println!("\n\n{}\n", step);
         let mut command = Command::new(step.command);
         command.args(step.args);
         let success = match command.status() {

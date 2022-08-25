@@ -10,6 +10,12 @@ pub struct Step {
 
 impl Display for Step {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {} {}", self.id, self.command, self.args.join(" "))
+        write!(
+            f,
+            "step {}: {} {}",
+            self.id,
+            self.command,
+            self.args.join(" ")
+        )
     }
 }
