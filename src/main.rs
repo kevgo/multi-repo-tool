@@ -21,6 +21,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let leftover_steps = runtime::run(current_steps);
     if leftover_steps.is_empty() {
         delete();
+        Ok(())
     } else {
         println!("Abort, Retry, Ignore?");
         save(&leftover_steps)
