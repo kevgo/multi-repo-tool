@@ -54,10 +54,17 @@ mod tests {
     mod extract_next_link {
 
         #[test]
-        fn has_next_link() {
+        fn matches() {
             let give = r#"<https://api.github.com/organizations/108299804/repos?page=2>; rel="next", <https://api.github.com/organizations/108299804/repos?page=3>; rel="last""#;
             let want =
                 Some("https://api.github.com/organizations/108299804/repos?page=2".to_string());
+            let have = super::super::extract_next_link(give);
+            assert_eq!(have, want);
+        }
+        #[test]
+        fn no_match() {
+            let give = r#"<https://api.github.com/organizations/108299804/repos?page=2>; rel="prev", <https://api.github.com/organizations/108299804/repos?page=3>; rel="last""#;
+            let want = None;
             let have = super::super::extract_next_link(give);
             assert_eq!(have, want);
         }
