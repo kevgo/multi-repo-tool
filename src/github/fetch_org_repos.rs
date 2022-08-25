@@ -19,12 +19,14 @@ pub fn get_repos(org: &str) -> Vec<github::Repo> {
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
         print!(".");
-        io::stdout().flush().unwrap();
+        drop(io::stdout().flush());
         next_url = next_page_url(response.headers());
-        let parsed = response.json::<Vec<github::Repo>>().unwrap();
+        let parsed = response
+            .json::<Vec<github::Repo>>()
+            .expect("cannot parse Github API response");
         result.extend(parsed);
     }
-    println!(" {} repos found", result.len());
+    println!(" {} repositories found", result.len());
     result
 }
 
