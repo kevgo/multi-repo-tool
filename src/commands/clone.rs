@@ -1,6 +1,7 @@
 use regex::Regex;
 use reqwest::header::HeaderMap;
 use serde::Deserialize;
+use std::io::{self, Write};
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
@@ -11,30 +12,38 @@ struct GithubRepo {
 }
 
 pub fn clone(org: &str) {
-    println!("Cloning... {}", org);
-    // get repos
-    let client = reqwest::blocking::Client::builder()
-        .user_agent(APP_USER_AGENT)
-        .build()
-        .unwrap();
-    let mut repos: Vec<GithubRepo> = vec![];
-    let mut url = Some(format!("https://api.github.com/orgs/{}/repos", org));
-    while url.is_some() {
-        print!("fetch {:?} ...", &url);
-        let response = client.get(&url.unwrap()).send().unwrap();
-        println!(" ok");
-        url = next_page_url(response.headers());
-        let parsed = response.json::<Vec<GithubRepo>>().unwrap();
-        repos.extend(parsed);
-    }
-
-    // println!("{:#?}", resp);
+    println!("Cloning {} ...", org);
+    let repos = get_repos(org);
 
     // clone each repo
     println!("cloning {} repos", repos.len());
     for (i, repo) in repos.iter().enumerate() {
-        println!("cloning repo {}/{}: {}", i + 1, repos.len(), repo.name);
+        clone_repo(repo, i, repos.len());
     }
+}
+
+fn clone_repo(repo: &GithubRepo, i: usize, len: usize) {
+    println!("cloning repo {}/{}: {}", i + 1, len, repo.name);
+}
+
+fn get_repos(org: &str) -> Vec<GithubRepo> {
+    let client = reqwest::blocking::Client::builder()
+        .user_agent(APP_USER_AGENT)
+        .build()
+        .expect("cannot build HTTP client");
+    let mut result: Vec<GithubRepo> = vec![];
+    let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
+    print!("loading repo metadata ");
+    while let Some(url) = next_url {
+        let response = client.get(&url).send().expect("HTTP request failed");
+        print!(".");
+        io::stdout().flush().unwrap();
+        next_url = next_page_url(response.headers());
+        let parsed = response.json::<Vec<GithubRepo>>().unwrap();
+        result.extend(parsed);
+    }
+    println!(" {} repos found", result.len());
+    result
 }
 
 fn next_page_url(headers: &HeaderMap) -> Option<String> {
@@ -49,15 +58,7 @@ fn next_page_url(headers: &HeaderMap) -> Option<String> {
 fn extract_next_link(value: &str) -> Option<String> {
     // TODO: cache the regex
     let re = Regex::new(r#"<([^>]+)>; rel="next""#).unwrap();
-    match re.captures(value) {
-        None => return None,
-        Some(captures) => match captures.len() {
-            0 => return None,
-            1 => return None,
-            2 => return Some(captures[1].to_string()),
-            _ => panic!(""),
-        },
-    }
+    re.captures(value).map(|captures| captures[1].to_string())
 }
 
 #[cfg(test)]
