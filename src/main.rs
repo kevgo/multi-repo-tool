@@ -16,5 +16,5 @@ fn main() {
         Command::Ignore => commands::ignore(previous_steps),
         Command::Retry => commands::retry(previous_steps),
     };
-    runtime::run(&steps);
+    runtime::run(steps);
 }

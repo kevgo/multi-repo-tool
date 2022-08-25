@@ -22,31 +22,28 @@ pub fn load() -> Option<Vec<Step>> {
 }
 
 /// stores this Executor into the persistence file on disk
-pub fn save(steps: &Vec<Step>) -> Result<(), Box<dyn Error>> {
+pub fn save<SI: Iterator<Item = Step>>(steps: SI) -> Result<(), Box<dyn Error>> {
+    let steps = Vec::from_iter(steps);
     let file = File::create(FILENAME)?;
     let writer = BufWriter::new(file);
-    serde_json::to_writer(writer, steps)?;
+    serde_json::to_writer_pretty(writer, &steps)?;
     Ok(())
 }
-
-pub fn run(steps: &Vec<Step>) {}
 
 #[cfg(test)]
 mod tests {
 
     mod persistence {
-        use crate::runtime::{load, save, Operation, Step};
+        use crate::runtime::{load, save, Step};
 
         #[test]
         fn persistence() {
             let steps1 = vec![Step {
-                operation: Operation::CloneRepo {
-                    name: "test-repo".into(),
-                    url: "git@github.com/test-org/test-repo".into(),
-                },
-                step_number: 3,
+                id: 3,
+                command: "git".into(),
+                args: vec!["clone".into()],
             }];
-            let _ = save(&steps1);
+            let _ = save(steps1.clone().into_iter());
             let steps2 = load().unwrap();
             assert_eq!(steps1, steps2);
         }

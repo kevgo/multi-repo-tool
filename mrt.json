@@ -1,1 +1,9 @@
-[{"step_number":3,"operation":{"CloneRepo":{"name":"test-repo","url":"git@github.com/test-org/test-repo"}}}]
+[
+  {
+    "id": 3,
+    "command": "git",
+    "args": [
+      "clone"
+    ]
+  }
+]
