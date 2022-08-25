@@ -11,4 +11,7 @@ Mrt provides these commands:
 Once a workflow steps fails, use one of these commands:
 
 - [abort](documentation/abort.md) to stop the entire workflow
-- [retry]
+- [retry](documentation/retry.md) to try the currently failed workflow command
+  by retrying the failed command
+- [ignore](documentation/ignore.md) to continue the currently failed workflow by
+  skipping the failed command and executing the next one
