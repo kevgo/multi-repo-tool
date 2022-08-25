@@ -2,16 +2,15 @@
 
 This tool allows executing CLI commands in multiple Git repositories.
 
-### Starting a workflow
+### Available operations
 
-Use
-
-- [clone](documentation/clone.md) all repositoriess of a Github organization
-  onto your local machine
+- [clone](documentation/clone.md) all repositories of a Github organization onto
+  your local machine
 
 ### Dealing with failures
 
-Once a workflow steps fails, use one of these commands:
+If one of the executed commands fails, mrt stops execution and allows you to do
+one of these things:
 
 - [abort](documentation/abort.md) to stop the entire workflow
 - [retry](documentation/retry.md) to try the currently failed workflow command
