@@ -22,9 +22,7 @@ pub fn clone(org: &str) {
     }
 }
 
-fn clone_repo(repo: &GithubRepo, i: usize, len: usize) {
-    println!("cloning repo {}/{}: {}", i + 1, len, repo.name);
-}
+fn clone_repo(repo: &GithubRepo, i: usize, len: usize) {}
 
 fn get_repos(org: &str) -> Vec<GithubRepo> {
     let client = reqwest::blocking::Client::builder()
