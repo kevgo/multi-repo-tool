@@ -1,5 +1,6 @@
 mod cli;
 mod commands;
+mod github;
 mod operations;
 
 use clap::StructOpt;
