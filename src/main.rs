@@ -7,20 +7,22 @@ mod runtime;
 use clap::StructOpt;
 use cli::Command;
 use runtime::{delete, save};
+use std::error::Error;
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let args = cli::Arguments::parse();
-    let previous_steps = runtime::load();
-    let steps = match args.command {
-        Command::Abort => commands::abort(&previous_steps),
+    let persisted_steps = runtime::load();
+    let current_steps = match args.command {
+        Command::Abort => commands::abort(&persisted_steps),
         Command::Clone { org } => commands::clone(&org),
-        Command::Ignore => commands::ignore(previous_steps),
-        Command::Retry => commands::retry(previous_steps),
+        Command::Ignore => commands::ignore(persisted_steps),
+        Command::Retry => commands::retry(persisted_steps),
     };
-    let leftover_steps = runtime::run(steps);
+    let leftover_steps = runtime::run(current_steps);
     if leftover_steps.len() > 0 {
-        save(&leftover_steps).unwrap();
+        println!("Abort, Retry, Ignore?");
+        save(&leftover_steps)
     } else {
-        delete();
+        delete()
     }
 }

@@ -5,8 +5,9 @@ use std::io::{BufReader, BufWriter};
 
 const FILENAME: &str = "mrt.json";
 
-pub fn delete() {
-    std::fs::remove_file(FILENAME).unwrap()
+pub fn delete() -> Result<(), Box<dyn Error>> {
+    std::fs::remove_file(FILENAME)?;
+    Ok(())
 }
 
 /// loads an Executor instance from the persistence file on disk
