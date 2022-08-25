@@ -5,8 +5,7 @@ pub fn print(name: usize, number: usize, count: usize) {
 }
 
 pub fn clone_repo(clone_url: &str) {
-    let command = Command::new("git").args(["clone", clone_url]);
-    match command.status() {
+    match Command::new("git").args(["clone", clone_url]).status() {
         Ok(status) => {}
         Err(err) => {}
     }
