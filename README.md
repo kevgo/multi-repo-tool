@@ -2,11 +2,11 @@
 
 This tool allows working with multiple Git repositories.
 
-### For users
-
-Mrt provides these commands:
+### Start a workflow
 
 - [clone](documentation/clone.md) a Github organization
+
+### Workflow failures
 
 Once a workflow steps fails, use one of these commands:
 
