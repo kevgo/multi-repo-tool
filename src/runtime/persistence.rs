@@ -22,11 +22,10 @@ pub fn load() -> Option<Vec<Step>> {
 }
 
 /// stores this Executor into the persistence file on disk
-pub fn save<SI: Iterator<Item = Step>>(steps: SI) -> Result<(), Box<dyn Error>> {
-    let steps = Vec::from_iter(steps);
+pub fn save(steps: &Vec<Step>) -> Result<(), Box<dyn Error>> {
     let file = File::create(FILENAME)?;
     let writer = BufWriter::new(file);
-    serde_json::to_writer_pretty(writer, &steps)?;
+    serde_json::to_writer_pretty(writer, steps)?;
     Ok(())
 }
 
@@ -43,7 +42,7 @@ mod tests {
                 command: "git".into(),
                 args: vec!["clone".into()],
             }];
-            let _ = save(steps1.clone().into_iter());
+            let _ = save(&steps1);
             let steps2 = load().unwrap();
             assert_eq!(steps1, steps2);
         }

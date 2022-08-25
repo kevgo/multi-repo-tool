@@ -6,6 +6,7 @@ mod runtime;
 
 use clap::StructOpt;
 use cli::Command;
+use runtime::{delete, save};
 
 fn main() {
     let args = cli::Arguments::parse();
@@ -16,5 +17,10 @@ fn main() {
         Command::Ignore => commands::ignore(previous_steps),
         Command::Retry => commands::retry(previous_steps),
     };
-    runtime::run(steps);
+    let leftover_steps = runtime::run(steps);
+    if leftover_steps.len() > 0 {
+        save(&leftover_steps).unwrap();
+    } else {
+        delete();
+    }
 }

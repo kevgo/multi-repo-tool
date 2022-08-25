@@ -1,9 +1,6 @@
+use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use std::process::Command;
-
-use serde::{Deserialize, Serialize};
-
-use crate::runtime::save;
 
 pub fn clone(id: usize, url: String) -> Step {
     Step {
@@ -26,7 +23,7 @@ impl Display for Step {
     }
 }
 
-pub fn run(steps: Vec<Step>) {
+pub fn run(steps: Vec<Step>) -> Vec<Step> {
     let mut steps_iter = steps.into_iter();
     while let Some(step) = steps_iter.next() {
         println!("{}", step);
@@ -37,8 +34,8 @@ pub fn run(steps: Vec<Step>) {
             _ => false,
         };
         if !success {
-            save(steps_iter).unwrap();
-            return;
+            return steps_iter.collect();
         }
     }
+    vec![]
 }
