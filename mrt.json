@@ -1,1 +1,1 @@
-{"steps":[{"operation":{"CloneRepo":{"name":"test-repo","url":"git@github.com/test-org/test-repo"}},"repo_number":3}],"repo_count":10}
+[{"step_number":3,"operation":{"CloneRepo":{"name":"test-repo","url":"git@github.com/test-org/test-repo"}}}]
