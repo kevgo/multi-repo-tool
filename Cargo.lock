@@ -437,6 +437,7 @@ version = "0.0.0"
 dependencies = [
  "clap",
  "colored",
+ "once_cell",
  "regex",
  "reqwest",
  "serde",

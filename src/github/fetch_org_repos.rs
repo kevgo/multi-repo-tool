@@ -1,4 +1,5 @@
 use crate::github;
+use once_cell::sync::Lazy;
 use regex::Regex;
 use reqwest::header::HeaderMap;
 use std::io;
@@ -6,6 +7,7 @@ use std::io::Write;
 use std::mem::drop;
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
+static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#).unwrap());
 
 pub fn get_repos(org: &str) -> Vec<github::Repo> {
     print!("fetching Github org {} .", org);
@@ -30,6 +32,7 @@ pub fn get_repos(org: &str) -> Vec<github::Repo> {
     result
 }
 
+/// provides the URL to the next set of paginated API results
 fn next_page_url(headers: &HeaderMap) -> Option<String> {
     for (name, value) in headers {
         if name == "link" {
@@ -41,8 +44,9 @@ fn next_page_url(headers: &HeaderMap) -> Option<String> {
 
 fn extract_next_link(value: &str) -> Option<String> {
     // TODO: cache the regex
-    let re = Regex::new(r#"<([^>]+)>; rel="next""#).unwrap();
-    re.captures(value).map(|captures| captures[1].to_string())
+    LINK_RE
+        .captures(value)
+        .map(|captures| captures[1].to_string())
 }
 
 #[cfg(test)]
