@@ -1,12 +1,10 @@
-use std::process::Command;
+use crate::runtime::Step;
 
-pub fn print(name: usize, number: usize, count: usize) {
-    println!("cloning repo {}/{}: {}", number + 1, count, name);
-}
-
-pub fn clone_repo(clone_url: &str) {
-    match Command::new("git").args(["clone", clone_url]).status() {
-        Ok(status) => {}
-        Err(err) => {}
+/// provides the Step for cloning the given repo
+pub fn clone(id: usize, url: String) -> Step {
+    Step {
+        id,
+        command: "git".into(),
+        args: vec!["clone".into(), url],
     }
 }
