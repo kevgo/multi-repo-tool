@@ -35,8 +35,9 @@ pub fn save(steps: &Vec<Step>) -> Result<(), Box<dyn Error>> {
 mod tests {
 
     mod persistence {
+        use crate::runtime::persistence::FILENAME;
         use crate::runtime::{load, save, Step};
-        use std::mem;
+        use std::{fs, mem};
 
         #[test]
         fn persistence() {
@@ -48,6 +49,7 @@ mod tests {
             mem::drop(save(&steps1));
             let steps2 = load().unwrap();
             assert_eq!(steps1, steps2);
+            mem::drop(fs::remove_file(FILENAME));
         }
     }
 }
