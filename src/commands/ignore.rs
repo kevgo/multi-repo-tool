@@ -21,19 +21,16 @@ mod tests {
         let give: Vec<Step> = vec![
             Step {
                 id: 1,
-                command: "cmd1".into(),
-                args: vec![],
+                ..Step::default()
             },
             Step {
                 id: 2,
-                command: "cmd2".into(),
-                args: vec![],
+                ..Step::default()
             },
         ];
         let want: Vec<Step> = vec![Step {
             id: 2,
-            command: "cmd2".into(),
-            args: vec![],
+            ..Step::default()
         }];
         let have = super::ignore(Some(give));
         assert_eq!(have, want);
