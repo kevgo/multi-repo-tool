@@ -1,18 +1,20 @@
 use super::GithubRepo;
 use regex::Regex;
 use reqwest::header::HeaderMap;
-use std::io::{self, Write};
+use std::io;
+use std::io::Write;
 
 static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
 pub fn get_repos(org: &str) -> Vec<GithubRepo> {
+    print!("fetching Github org {} .", org);
+    let _ = io::stdout().flush();
     let client = reqwest::blocking::Client::builder()
         .user_agent(APP_USER_AGENT)
         .build()
         .expect("cannot build HTTP client");
     let mut result: Vec<GithubRepo> = vec![];
     let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
-    print!("loading repo metadata ");
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
         print!(".");
