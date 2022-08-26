@@ -31,7 +31,11 @@ fn get_subdirs(path: &Path) -> Result<Vec<String>, UserError> {
     let mut subdirs: Vec<String> = vec![];
     for entry in entries {
         let entry = entry.expect("cannot read filesystem");
-        if entry.metadata().unwrap().is_dir() {
+        if entry
+            .metadata()
+            .expect("cannot read filesystem entry")
+            .is_dir()
+        {
             let dirname = entry.file_name().to_string_lossy().to_string();
             let dirpath = path.join(dirname);
             subdirs.push(dirpath.to_string_lossy().to_string());
