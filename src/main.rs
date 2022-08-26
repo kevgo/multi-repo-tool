@@ -6,6 +6,7 @@ mod runtime;
 
 use clap::StructOpt;
 use cli::Command;
+use runtime::Outcome;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -17,12 +18,17 @@ fn main() -> Result<(), Box<dyn Error>> {
         Command::Ignore => commands::ignore(persisted_steps),
         Command::Retry => commands::retry(persisted_steps),
     };
-    let leftover_steps = runtime::execute(current_steps);
-    if leftover_steps.is_empty() {
-        runtime::forget();
-        Ok(())
-    } else {
-        println!("Abort, Retry, Ignore?");
-        runtime::persist(&leftover_steps)
+    match runtime::execute(current_steps) {
+        Outcome::Success => {
+            runtime::forget();
+            Ok(())
+        }
+        Outcome::StepFailed {
+            exitCode,
+            remainingSteps,
+        } => {
+            println!("Abort, Retry, Ignore?");
+            runtime::persist(&remainingSteps)
+        }
     }
 }
