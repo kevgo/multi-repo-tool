@@ -56,7 +56,7 @@ impl Display for UserError {
             UserError::NothingToIgnore {} => write!(f, "nothing to ignore"),
             UserError::NothingToRetry {} => write!(f, "nothing to retry"),
             UserError::StepFailed { step, exit_code: _ } => {
-                write!(f, "step {} failed\n\nAbort, Retry, Ignore?", step)
+                write!(f, "{} failed\n\nAbort, Retry, Ignore?", step)
             }
         }
     }

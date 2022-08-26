@@ -34,7 +34,7 @@ impl Display for Step {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Step::Run { id, command, args } => {
-                write!(f, "step {}: {} {}", id, command, args.join(" "))
+                write!(f, "step {}: {} {}", id + 1, command, args.join(" "))
             }
             Step::Chdir { id, dir } => write!(f, "step {}: cd {}", id, dir),
         }

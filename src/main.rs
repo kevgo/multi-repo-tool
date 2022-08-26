@@ -17,7 +17,7 @@ fn main() -> ExitCode {
     match inner() {
         Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
-            println!("\n{}{}\n", "Error".red().bold(), err.to_string().red());
+            println!("\n{}{}\n", "Error: ".red().bold(), err.to_string().red());
             err.exit_code()
         }
     }
