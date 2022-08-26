@@ -1,34 +1,62 @@
 use super::Step;
-use std::error::Error;
+use crate::error::UserError;
 use std::fs;
 use std::fs::File;
-use std::io::{BufReader, BufWriter};
-use std::mem::drop;
+use std::io::{BufReader, BufWriter, ErrorKind};
 
 const FILENAME: &str = "mrt.json";
 
 /// removes the persistent task queue
-pub fn forget() {
-    drop(fs::remove_file(FILENAME));
+pub fn forget() -> Result<(), UserError> {
+    match fs::remove_file(FILENAME) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(UserError::CannotDeletePersistenceFile {
+            filename: FILENAME.into(),
+            guidance: err.to_string(),
+        }),
+    }
 }
 
 /// loads an Executor instance from the persistence file on disk
-pub fn load() -> Result<Option<Vec<Step>>, Box<dyn Error>> {
+pub fn load() -> Result<Vec<Step>, UserError> {
     let file = match File::open(FILENAME) {
         Ok(file) => file,
-        Err(_) => return Ok(None),
+        Err(e) => match e.kind() {
+            ErrorKind::NotFound => return Ok(vec![]),
+            _ => {
+                return Err(UserError::CannotReadPersistenceFile {
+                    guidance: e.to_string(),
+                    filename: FILENAME.into(),
+                })
+            }
+        },
     };
     let reader = BufReader::new(file);
-    let result: Vec<Step> = serde_json::from_reader(reader)?;
-    Ok(Some(result))
+    match serde_json::from_reader(reader) {
+        Ok(result) => Ok(result),
+        Err(err) => Err(UserError::InvalidPersistenceFormat {
+            filename: FILENAME.into(),
+            guidance: err.to_string(),
+        }),
+    }
 }
 
 /// stores the task queue on disk
-pub fn persist(steps: &Vec<Step>) -> Result<(), Box<dyn Error>> {
-    let file = File::create(FILENAME)?;
+pub fn persist(steps: &Vec<Step>) -> Result<(), UserError> {
+    let file = match File::create(FILENAME) {
+        Ok(file) => file,
+        Err(e) => {
+            return Err(UserError::CannotWritePersistenceFile {
+                filename: FILENAME.into(),
+                guidance: e.to_string(),
+            })
+        }
+    };
     let writer = BufWriter::new(file);
-    serde_json::to_writer_pretty(writer, steps)?;
-    Ok(())
+    match serde_json::to_writer_pretty(writer, steps) {
+        Ok(_) => Ok(()),
+        Err(e) => panic!("{}", e.to_string()),
+    }
 }
 
 #[cfg(test)]
@@ -48,7 +76,7 @@ mod tests {
                 args: vec!["clone".into()],
             }];
             drop(persist(&steps1));
-            let steps2 = load().unwrap().unwrap();
+            let steps2 = load().unwrap();
             assert_eq!(steps1, steps2);
             drop(fs::remove_file(FILENAME));
         }

@@ -5,8 +5,9 @@ use std::process::Command;
 pub enum Outcome {
     Success,
     StepFailed {
-        exitCode: i32,
-        remainingSteps: Vec<Step>,
+        exit_code: i32,
+        failed_step: Step,
+        remaining_steps: Vec<Step>,
     },
 }
 
@@ -15,14 +16,15 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
     let mut steps_iter = steps.into_iter();
     while let Some(step) = steps_iter.next() {
         println!("\n\n{}\n", step.to_string().bold());
-        let mut command = Command::new(step.command);
-        command.args(step.args);
+        let mut command = Command::new(&step.command);
+        command.args(&step.args);
         if let Ok(status) = command.status() {
-            if let Some(exitCode) = status.code() {
-                if exitCode > 0 {
+            if let Some(exit_code) = status.code() {
+                if exit_code > 0 {
                     return Outcome::StepFailed {
-                        exitCode,
-                        remainingSteps: steps_iter.collect(),
+                        failed_step: step,
+                        exit_code,
+                        remaining_steps: steps_iter.collect(),
                     };
                 }
             }

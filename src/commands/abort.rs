@@ -1,9 +1,10 @@
 use crate::runtime::Step;
 
-pub fn abort(previous_steps: &Option<Vec<Step>>) -> Vec<Step> {
-    match previous_steps {
-        Some(steps) => println!("aborting {} steps", steps.len()),
-        None => println!("nothing to abort"),
+pub fn abort(previous_steps: &Vec<Step>) -> Vec<Step> {
+    if previous_steps.is_empty() {
+        println!("nothing to abort");
+    } else {
+        println!("aborting {} steps", previous_steps.len());
     }
     vec![]
 }

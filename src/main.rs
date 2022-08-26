@@ -1,15 +1,28 @@
 mod cli;
 mod commands;
+mod error;
 mod github;
 mod operations;
 mod runtime;
 
+use std::process::ExitCode;
+
 use clap::StructOpt;
 use cli::Command;
+use error::UserError;
 use runtime::Outcome;
-use std::error::Error;
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> ExitCode {
+    match main2() {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(err) => {
+            println!("Error: {}", err);
+            err.exit_code()
+        }
+    }
+}
+
+fn main2() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
     let persisted_steps = runtime::load()?;
     let current_steps = match args.command {
@@ -20,15 +33,19 @@ fn main() -> Result<(), Box<dyn Error>> {
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
-            runtime::forget();
+            runtime::forget()?;
             Ok(())
         }
         Outcome::StepFailed {
-            exitCode,
-            remainingSteps,
+            exit_code,
+            failed_step,
+            remaining_steps,
         } => {
-            println!("Abort, Retry, Ignore?");
-            runtime::persist(&remainingSteps)
+            runtime::persist(&remaining_steps)?;
+            Err(UserError::StepFailed {
+                step: failed_step,
+                exit_code: exit_code as u8,
+            })
         }
     }
 }

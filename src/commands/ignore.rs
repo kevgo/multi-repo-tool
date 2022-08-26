@@ -1,14 +1,13 @@
 use crate::runtime::Step;
 use std::mem::drop;
 
-pub fn ignore(previous_steps: Option<Vec<Step>>) -> Vec<Step> {
-    match previous_steps {
-        Some(steps) => {
-            let mut step_iter = steps.into_iter();
-            drop(step_iter.next());
-            step_iter.collect()
-        }
-        None => vec![],
+pub fn ignore(previous_steps: Vec<Step>) -> Vec<Step> {
+    if previous_steps.is_empty() {
+        vec![]
+    } else {
+        let mut step_iter = previous_steps.into_iter();
+        drop(step_iter.next());
+        step_iter.collect()
     }
 }
 
@@ -32,7 +31,7 @@ mod tests {
             id: 2,
             ..Step::default()
         }];
-        let have = super::ignore(Some(give));
+        let have = super::ignore(give);
         assert_eq!(have, want);
     }
 
@@ -40,7 +39,7 @@ mod tests {
     fn empty() {
         let give: Vec<Step> = vec![];
         let want: Vec<Step> = vec![];
-        let have = super::ignore(Some(give));
+        let have = super::ignore(give);
         assert_eq!(have, want);
     }
 }
