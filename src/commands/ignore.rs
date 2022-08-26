@@ -4,12 +4,11 @@ use std::mem::drop;
 
 pub fn ignore(previous_steps: Vec<Step>) -> Result<Vec<Step>, UserError> {
     if previous_steps.is_empty() {
-        Err(UserError::NothingToIgnore {})
-    } else {
-        let mut step_iter = previous_steps.into_iter();
-        drop(step_iter.next());
-        Ok(step_iter.collect())
+        return Err(UserError::NothingToIgnore {});
     }
+    let mut step_iter = previous_steps.into_iter();
+    drop(step_iter.next());
+    Ok(step_iter.collect())
 }
 
 #[cfg(test)]
