@@ -10,6 +10,7 @@ use cli::Command;
 use colored::Colorize;
 use error::UserError;
 use runtime::Outcome;
+use std::env;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
@@ -25,6 +26,7 @@ fn main() -> ExitCode {
 fn inner() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
     let persisted_steps = runtime::load()?;
+    let initial_dir = env::current_dir().expect("cannot determine the current directory");
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
@@ -32,7 +34,7 @@ fn inner() -> Result<(), UserError> {
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
     };
-    match runtime::execute(current_steps) {
+    let result = match runtime::execute(current_steps) {
         Outcome::Success => {
             runtime::forget()?;
             Ok(())
@@ -48,5 +50,7 @@ fn inner() -> Result<(), UserError> {
                 exit_code,
             })
         }
-    }
+    };
+    env::set_current_dir(initial_dir).expect("cannot return to initial directory");
+    result
 }
