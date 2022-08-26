@@ -3,7 +3,7 @@ use colored::Colorize;
 use std::process::Command;
 
 /// executes the given steps, returns the not executed steps in case of an issue
-pub fn run(steps: Vec<Step>) -> Vec<Step> {
+pub fn execute(steps: Vec<Step>) -> Vec<Step> {
     let mut steps_iter = steps.into_iter();
     while let Some(step) = steps_iter.next() {
         println!("\n\n{}\n", step.to_string().bold());

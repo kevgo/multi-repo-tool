@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Command::Ignore => commands::ignore(persisted_steps),
         Command::Retry => commands::retry(persisted_steps),
     };
-    let leftover_steps = runtime::run(current_steps);
+    let leftover_steps = runtime::execute(current_steps);
     if leftover_steps.is_empty() {
         runtime::forget();
         Ok(())
