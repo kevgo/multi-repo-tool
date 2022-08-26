@@ -55,7 +55,10 @@ pub fn persist(steps: &Vec<Step>) -> Result<(), UserError> {
     let writer = BufWriter::new(file);
     match serde_json::to_writer_pretty(writer, steps) {
         Ok(_) => Ok(()),
-        Err(e) => panic!("{}", e.to_string()),
+        Err(e) => Err(UserError::CannotWritePersistenceFile {
+            filename: FILENAME.into(),
+            guidance: e.to_string(),
+        }),
     }
 }
 
