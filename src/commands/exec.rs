@@ -9,8 +9,12 @@ pub fn exec(cmd: &str, args: &[String]) -> Result<Vec<Step>, UserError> {
     let current_dir = env::current_dir().expect("cannot determine current directory");
     let dirs = get_subdirs(&current_dir)?;
     for (i, dir) in dirs.into_iter().enumerate() {
-        result.push(operations::chdir(i, dir));
-        result.extend(operations::execute(i, cmd.to_string(), args.to_owned()));
+        result.push(operations::chdir(i * 2 + 1, dir));
+        result.extend(operations::execute(
+            i * 2 + 2,
+            cmd.to_string(),
+            args.to_owned(),
+        ));
     }
     Ok(result)
 }

@@ -34,7 +34,7 @@ impl Display for Step {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Step::Run { id, command, args } => {
-                write!(f, "step {}: {} {}", id + 1, command, args.join(" "))
+                write!(f, "step {}: {} {}", id, command, args.join(" "))
             }
             Step::Chdir { id, dir } => write!(f, "step {}: cd {}", id, dir),
         }
@@ -56,10 +56,12 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
     while let Some(step) = steps_iter.next() {
         println!("\n\n{}\n", step.to_string().bold());
         if let Err(exit_code) = step.execute() {
+            let mut remaining_steps = vec![step.clone()];
+            remaining_steps.extend(steps_iter);
             return Outcome::StepFailed {
                 exit_code,
                 failed_step: step,
-                remaining_steps: steps_iter.collect(),
+                remaining_steps,
             };
         }
     }
