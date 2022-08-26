@@ -65,23 +65,21 @@ pub fn persist(steps: &Vec<Step>) -> Result<(), UserError> {
 #[cfg(test)]
 mod tests {
 
-    mod persistence {
-        use crate::runtime::persistence::FILENAME;
-        use crate::runtime::{load, persist, Step};
-        use std::fs;
-        use std::mem::drop;
+    use crate::runtime::persistence::FILENAME;
+    use crate::runtime::{load, persist, Step};
+    use std::fs;
+    use std::mem::drop;
 
-        #[test]
-        fn persistence() {
-            let steps1 = vec![Step {
-                id: 3,
-                command: "git".into(),
-                args: vec!["clone".into()],
-            }];
-            drop(persist(&steps1));
-            let steps2 = load().unwrap();
-            assert_eq!(steps1, steps2);
-            drop(fs::remove_file(FILENAME));
-        }
+    #[test]
+    fn persistence() {
+        let steps1 = vec![Step {
+            id: 3,
+            command: "git".into(),
+            args: vec!["clone".into()],
+        }];
+        drop(persist(&steps1));
+        let steps2 = load().unwrap();
+        assert_eq!(steps1, steps2);
+        drop(fs::remove_file(FILENAME));
     }
 }
