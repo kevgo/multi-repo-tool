@@ -1,12 +1,11 @@
 use crate::error::UserError;
 use crate::operations;
 use crate::runtime::Step;
+use std::fs;
 use std::path::Path;
-use std::{env, fs};
 
-pub fn exec(cmd: &str, args: &[String]) -> Result<Vec<Step>, UserError> {
+pub fn exec(cmd: &str, args: &[String], current_dir: &Path) -> Result<Vec<Step>, UserError> {
     let mut result = vec![];
-    let current_dir = env::current_dir().expect("cannot determine current directory");
     let dirs = get_subdirs(&current_dir)?;
     for (i, dir) in dirs.into_iter().enumerate() {
         result.push(operations::chdir(i * 2 + 1, dir));

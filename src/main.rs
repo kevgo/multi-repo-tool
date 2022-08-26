@@ -30,7 +30,7 @@ fn inner() -> Result<(), UserError> {
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
-        Command::Exec { cmd, args } => commands::exec(&cmd, &args)?,
+        Command::Exec { cmd, args } => commands::exec(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
     };
