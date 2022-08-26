@@ -1,18 +1,20 @@
+use crate::error::UserError;
 use crate::runtime::Step;
 use std::mem::drop;
 
-pub fn ignore(previous_steps: Vec<Step>) -> Vec<Step> {
+pub fn ignore(previous_steps: Vec<Step>) -> Result<Vec<Step>, UserError> {
     if previous_steps.is_empty() {
-        vec![]
+        Err(UserError::NothingToIgnore {})
     } else {
         let mut step_iter = previous_steps.into_iter();
         drop(step_iter.next());
-        step_iter.collect()
+        Ok(step_iter.collect())
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::error::UserError;
     use crate::runtime::Step;
 
     #[test]
@@ -27,10 +29,10 @@ mod tests {
                 ..Step::default()
             },
         ];
-        let want: Vec<Step> = vec![Step {
+        let want = Ok(vec![Step {
             id: 2,
             ..Step::default()
-        }];
+        }]);
         let have = super::ignore(give);
         assert_eq!(have, want);
     }
@@ -38,8 +40,8 @@ mod tests {
     #[test]
     fn empty() {
         let give: Vec<Step> = vec![];
-        let want: Vec<Step> = vec![];
+        let want = UserError::NothingToIgnore {};
         let have = super::ignore(give);
-        assert_eq!(have, want);
+        assert_eq!(have, Err(want));
     }
 }

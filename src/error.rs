@@ -2,13 +2,16 @@ use crate::runtime::Step;
 use std::fmt::Display;
 use std::process::ExitCode;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub enum UserError {
     CannotDeletePersistenceFile { filename: String, guidance: String },
     CannotReadPersistenceFile { filename: String, guidance: String },
     CannotWritePersistenceFile { filename: String, guidance: String },
     InvalidPersistenceFormat { filename: String, guidance: String },
+    NothingToAbort {},
+    NothingToIgnore {},
+    NothingToRetry {},
     StepFailed { step: Step, exit_code: u8 },
 }
 
@@ -49,6 +52,15 @@ impl Display for UserError {
                     "persistence file \"{}\" has an invalid format: {}",
                     filename, guidance
                 )
+            }
+            UserError::NothingToAbort {} => {
+                write!(f, "nothing to abort")
+            }
+            UserError::NothingToIgnore {} => {
+                write!(f, "nothing to ignore")
+            }
+            UserError::NothingToRetry {} => {
+                write!(f, "nothing to retry")
             }
             UserError::StepFailed { step, exit_code: _ } => {
                 write!(f, "step {} failed\n\nAbort, Retry, Ignore?", step)

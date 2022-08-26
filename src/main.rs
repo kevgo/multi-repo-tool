@@ -5,13 +5,12 @@ mod github;
 mod operations;
 mod runtime;
 
-use std::process::ExitCode;
-
 use clap::StructOpt;
 use cli::Command;
 use colored::Colorize;
 use error::UserError;
 use runtime::Outcome;
+use std::process::ExitCode;
 
 fn main() -> ExitCode {
     match inner() {
@@ -27,10 +26,10 @@ fn inner() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
     let persisted_steps = runtime::load()?;
     let current_steps = match args.command {
-        Command::Abort => commands::abort(&persisted_steps),
+        Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
-        Command::Ignore => commands::ignore(persisted_steps),
-        Command::Retry => commands::retry(persisted_steps),
+        Command::Ignore => commands::ignore(persisted_steps)?,
+        Command::Retry => commands::retry(persisted_steps)?,
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
