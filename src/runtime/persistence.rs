@@ -13,15 +13,14 @@ pub fn forget() {
 }
 
 /// loads an Executor instance from the persistence file on disk
-pub fn load() -> Option<Vec<Step>> {
+pub fn load() -> Result<Option<Vec<Step>>, Box<dyn Error>> {
     let file = match File::open(FILENAME) {
         Ok(file) => file,
-        Err(_) => return None,
+        Err(_) => return Ok(None),
     };
     let reader = BufReader::new(file);
-    let result: Vec<Step> =
-        serde_json::from_reader(reader).expect("cannot deserialize persisted steps");
-    Some(result)
+    let result: Vec<Step> = serde_json::from_reader(reader)?;
+    Ok(Some(result))
 }
 
 /// stores the task queue on disk
@@ -49,7 +48,7 @@ mod tests {
                 args: vec!["clone".into()],
             }];
             drop(persist(&steps1));
-            let steps2 = load().unwrap();
+            let steps2 = load().unwrap().unwrap();
             assert_eq!(steps1, steps2);
             drop(fs::remove_file(FILENAME));
         }

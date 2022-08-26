@@ -10,7 +10,7 @@ use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args = cli::Arguments::parse();
-    let persisted_steps = runtime::load();
+    let persisted_steps = runtime::load()?;
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps),
         Command::Clone { org } => commands::clone(&org),
