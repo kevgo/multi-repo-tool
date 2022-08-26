@@ -9,20 +9,21 @@ use std::process::ExitCode;
 
 use clap::StructOpt;
 use cli::Command;
+use colored::Colorize;
 use error::UserError;
 use runtime::Outcome;
 
 fn main() -> ExitCode {
-    match main2() {
+    match inner() {
         Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
-            println!("Error: {}", err);
+            println!("\n{}{}\n", "Error".red().bold(), err.to_string().red());
             err.exit_code()
         }
     }
 }
 
-fn main2() -> Result<(), UserError> {
+fn inner() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
     let persisted_steps = runtime::load()?;
     let current_steps = match args.command {
