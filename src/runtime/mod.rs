@@ -1,7 +1,5 @@
-mod data;
 mod execution;
 mod persistence;
 
-pub use data::Step;
-pub use execution::{execute, Outcome};
+pub use execution::{change_wd, execute, run_command, Outcome, Step};
 pub use persistence::{forget, load, persist};

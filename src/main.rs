@@ -28,6 +28,7 @@ fn inner() -> Result<(), UserError> {
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
+        Command::Exec { cmd, args } => commands::exec(&cmd, &args)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
     };
@@ -44,7 +45,7 @@ fn inner() -> Result<(), UserError> {
             runtime::persist(&remaining_steps)?;
             Err(UserError::StepFailed {
                 step: failed_step,
-                exit_code: exit_code as u8,
+                exit_code,
             })
         }
     }
