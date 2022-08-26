@@ -3,12 +3,17 @@ use crate::error::UserError;
 use std::fs;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, ErrorKind};
+use std::path::PathBuf;
 
 const FILENAME: &str = "mrt.json";
 
 /// removes the persistent task queue
 pub fn forget() -> Result<(), UserError> {
-    match fs::remove_file(FILENAME) {
+    let path = PathBuf::from(FILENAME);
+    if !path.exists() {
+        return Ok(());
+    }
+    match fs::remove_file(path) {
         Ok(_) => Ok(()),
         Err(err) => Err(UserError::CannotDeletePersistenceFile {
             filename: FILENAME.into(),
