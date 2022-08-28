@@ -51,6 +51,5 @@ fn inner() -> Result<(), UserError> {
             })
         }
     };
-    env::set_current_dir(initial_dir).expect("cannot return to initial directory");
     result
 }

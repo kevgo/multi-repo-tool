@@ -7,14 +7,14 @@ use std::path::Path;
 pub fn exec(cmd: &str, args: &[String], current_dir: &Path) -> Result<Vec<Step>, UserError> {
     let mut result = vec![];
     let dirs = get_subdirs(&current_dir)?;
-    for (i, dir) in dirs.into_iter().enumerate() {
-        result.push(operations::chdir(i * 2 + 1, dir));
-        result.extend(operations::execute(
-            i * 2 + 2,
-            cmd.to_string(),
-            args.to_owned(),
-        ));
+    let mut count = 1;
+    for dir in dirs {
+        result.push(operations::chdir(count, dir));
+        count += 1;
+        result.extend(operations::execute(count, cmd.to_string(), args.to_owned()));
+        count += 1;
     }
+    result.push(operations::chdir(count, current_dir));
     Ok(result)
 }
 
