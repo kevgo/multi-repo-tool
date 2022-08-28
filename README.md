@@ -2,10 +2,17 @@
 
 This tool allows executing CLI commands in multiple Git repositories.
 
+### installation
+
+- install the binary: `cargo install --git --locked github.com/kevgo/mrt`
+- you need to run mrt through a install the shell wrapper
+
 ### Available operations
 
 - [clone](documentation/clone.md) all repositories of a Github organization onto
   your local machine
+- [run](
+- [walk](documentation/walk.md)
 
 ### Dealing with failures
 
