@@ -31,10 +31,10 @@ fn inner() -> Result<(), UserError> {
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
-        Command::Exec { cmd, args } => {
+        Command::Run { cmd, args } => {
             let file =
                 Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");
-            commands::exec(&cmd, &args, file)?
+            commands::run(&cmd, &args, file)?
         }
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,

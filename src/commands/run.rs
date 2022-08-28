@@ -4,7 +4,7 @@ use crate::runtime::Step;
 use camino::{Utf8Path, Utf8PathBuf};
 use std::fs;
 
-pub fn exec(cmd: &str, args: &[String], current_dir: Utf8PathBuf) -> Result<Vec<Step>, UserError> {
+pub fn run(cmd: &str, args: &[String], current_dir: Utf8PathBuf) -> Result<Vec<Step>, UserError> {
     let mut result = vec![];
     let dirs = get_subdirs(&current_dir)?;
     let mut count = 1;
