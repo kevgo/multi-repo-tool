@@ -2,7 +2,7 @@ use crate::runtime::Step;
 use std::fmt::Display;
 use std::process::ExitCode;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub enum UserError {
     CannotDeletePersistenceFile { filename: String, guidance: String },

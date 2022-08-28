@@ -1,4 +1,10 @@
-pub fn walk(current_dir: Utf8PathBuf) -> Vec<Step> {
+use crate::error::UserError;
+use crate::helpers::get_subdirs;
+use crate::operations;
+use crate::runtime::Step;
+use camino::Utf8PathBuf;
+
+pub fn walk(current_dir: Utf8PathBuf) -> Result<Vec<Step>, UserError> {
     let mut result = vec![];
     let dirs = get_subdirs(&current_dir)?;
     let mut count = 1;
@@ -9,5 +15,5 @@ pub fn walk(current_dir: Utf8PathBuf) -> Vec<Step> {
         count += 1;
     }
     result.push(operations::chdir(count, current_dir.into_string()));
-    result
+    Ok(result)
 }
