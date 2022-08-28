@@ -32,9 +32,9 @@ fn inner() -> Result<(), UserError> {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
         Command::Exec { cmd, args } => {
-            let filename =
-                Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode filename");
-            commands::exec(&cmd, &args, filename)?
+            let file =
+                Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");
+            commands::exec(&cmd, &args, file)?
         }
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
