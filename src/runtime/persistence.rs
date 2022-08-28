@@ -1,3 +1,5 @@
+use camino::Utf8Path;
+
 use super::Step;
 use crate::error::UserError;
 use std::fs;
@@ -47,12 +49,13 @@ pub fn load() -> Result<Vec<Step>, UserError> {
 }
 
 /// stores the task queue on disk
-pub fn persist(steps: &Vec<Step>) -> Result<(), UserError> {
-    let file = match File::create(FILENAME) {
+pub fn persist(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
+    let filepath = dir.join(FILENAME);
+    let file = match File::create(&filepath) {
         Ok(file) => file,
         Err(e) => {
             return Err(UserError::CannotWritePersistenceFile {
-                filename: FILENAME.into(),
+                filename: filepath.into(),
                 guidance: e.to_string(),
             })
         }
@@ -61,7 +64,7 @@ pub fn persist(steps: &Vec<Step>) -> Result<(), UserError> {
     match serde_json::to_writer_pretty(writer, steps) {
         Ok(_) => Ok(()),
         Err(e) => Err(UserError::CannotWritePersistenceFile {
-            filename: FILENAME.into(),
+            filename: filepath.into(),
             guidance: e.to_string(),
         }),
     }
@@ -69,9 +72,9 @@ pub fn persist(steps: &Vec<Step>) -> Result<(), UserError> {
 
 #[cfg(test)]
 mod tests {
-
     use crate::runtime::persistence::FILENAME;
     use crate::runtime::{load, persist, Step};
+    use camino::Utf8PathBuf;
     use std::fs;
 
     #[test]
@@ -87,7 +90,7 @@ mod tests {
                 args: vec!["clone".into()],
             },
         ];
-        persist(&steps1).unwrap();
+        persist(&Utf8PathBuf::from("."), &steps1).unwrap();
         let steps2 = load().unwrap();
         assert_eq!(steps1, steps2);
         fs::remove_file(FILENAME).unwrap();

@@ -35,7 +35,7 @@ fn inner() -> Result<(), UserError> {
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
-        Command::Walk => commands::walk(initial_dir)?,
+        Command::Walk => commands::walk(&initial_dir)?,
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
@@ -47,7 +47,7 @@ fn inner() -> Result<(), UserError> {
             failed_step,
             remaining_steps,
         } => {
-            runtime::persist(&remaining_steps)?;
+            runtime::persist(&initial_dir, &remaining_steps)?;
             Err(UserError::StepFailed {
                 step: failed_step,
                 exit_code,

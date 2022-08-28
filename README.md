@@ -4,8 +4,17 @@ This tool allows executing CLI commands in multiple Git repositories.
 
 ### installation
 
-- install the binary: `cargo install --git --locked github.com/kevgo/mrt`
-- you need to run mrt through a install the shell wrapper
+1. install the binary:
+
+   ```
+   cargo install --git --locked github.com/kevgo/mrt`
+   ```
+
+2. install the shell wrapper that you need to run the binary through:
+
+   ```
+   curl https://raw.githubusercontent.com/kevgo/mrt/main/Cargo.lock [dir in your $PATH]
+   ```
 
 ### Available operations
 
