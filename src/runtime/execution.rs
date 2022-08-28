@@ -15,6 +15,9 @@ pub enum Step {
         id: u32,
         dir: String,
     },
+    Exit {
+        id: u32,
+    }
 }
 
 impl Step {
@@ -26,6 +29,7 @@ impl Step {
                 args,
             } => run_command(command, args),
             Step::Chdir { id: _, dir } => change_wd(dir),
+            Step::Exit { id: _ } => Err(0),
         }
     }
 }
@@ -37,6 +41,7 @@ impl Display for Step {
                 write!(f, "step {}: {} {}", id, command, args.join(" "))
             }
             Step::Chdir { id, dir } => write!(f, "step {}: cd {}", id, dir),
+            Step::Exit { id } => write!(f, "step {}: exit", id),
         }
     }
 }

@@ -18,4 +18,6 @@ pub enum Command {
     Retry,
     /// Executes the given CLI command in all repositories
     Run { cmd: String, args: Vec<String> },
+    /// Manually visits each subdirectory
+    Walk,
 }
