@@ -3,7 +3,6 @@ mod commands;
 mod error;
 mod github;
 mod helpers;
-mod operations;
 mod runtime;
 
 use camino::Utf8PathBuf;
@@ -33,7 +32,7 @@ fn inner() -> Result<(), UserError> {
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
-        Command::Run { cmd, args } => commands::run(&cmd, &args, initial_dir)?,
+        Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
         Command::Walk => commands::walk(initial_dir)?,
