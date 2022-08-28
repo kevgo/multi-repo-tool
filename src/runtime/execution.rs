@@ -7,12 +7,12 @@ use std::process::Command;
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub enum Step {
     Run {
-        id: usize,
+        id: u32,
         command: String,
         args: Vec<String>,
     },
     Chdir {
-        id: usize,
+        id: u32,
         dir: String,
     },
 }
