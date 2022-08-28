@@ -11,7 +11,7 @@ pub fn exec(cmd: &str, args: &[String], current_dir: Utf8PathBuf) -> Result<Vec<
     for dir in dirs {
         result.push(operations::chdir(count, dir));
         count += 1;
-        result.extend(operations::execute(count, cmd.to_string(), args.to_owned()));
+        result.push(operations::execute(count, cmd.to_string(), args.to_owned()));
         count += 1;
     }
     result.push(operations::chdir(count, current_dir.into_string()));
