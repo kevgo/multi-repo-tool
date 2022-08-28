@@ -5,6 +5,7 @@ mod github;
 mod operations;
 mod runtime;
 
+use camino::Utf8PathBuf;
 use clap::StructOpt;
 use cli::Command;
 use colored::Colorize;
@@ -30,11 +31,15 @@ fn inner() -> Result<(), UserError> {
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
-        Command::Exec { cmd, args } => commands::exec(&cmd, &args, &initial_dir)?,
+        Command::Exec { cmd, args } => commands::exec(
+            &cmd,
+            &args,
+            Utf8PathBuf::from_path_buf(initial_dir).unwrap(),
+        )?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
     };
-    let result = match runtime::execute(current_steps) {
+    match runtime::execute(current_steps) {
         Outcome::Success => {
             runtime::forget()?;
             Ok(())
@@ -50,6 +55,5 @@ fn inner() -> Result<(), UserError> {
                 exit_code,
             })
         }
-    };
-    result
+    }
 }

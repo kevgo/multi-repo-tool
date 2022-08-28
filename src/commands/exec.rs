@@ -1,10 +1,10 @@
 use crate::error::UserError;
 use crate::operations;
 use crate::runtime::Step;
+use camino::{Utf8Path, Utf8PathBuf};
 use std::fs;
-use std::path::Path;
 
-pub fn exec(cmd: &str, args: &[String], current_dir: &Path) -> Result<Vec<Step>, UserError> {
+pub fn exec(cmd: &str, args: &[String], current_dir: Utf8PathBuf) -> Result<Vec<Step>, UserError> {
     let mut result = vec![];
     let dirs = get_subdirs(&current_dir)?;
     let mut count = 1;
@@ -14,16 +14,16 @@ pub fn exec(cmd: &str, args: &[String], current_dir: &Path) -> Result<Vec<Step>,
         result.extend(operations::execute(count, cmd.to_string(), args.to_owned()));
         count += 1;
     }
-    result.push(operations::chdir(count, current_dir));
+    result.push(operations::chdir(count, current_dir.into_string()));
     Ok(result)
 }
 
-fn get_subdirs(path: &Path) -> Result<Vec<String>, UserError> {
+fn get_subdirs(path: &Utf8Path) -> Result<Vec<String>, UserError> {
     let entries = match fs::read_dir(".") {
         Ok(entries) => entries,
         Err(err) => {
             return Err(UserError::CannotReadDirectory {
-                directory: path.to_string_lossy().to_string(),
+                directory: path.to_string(),
                 guidance: err.to_string(),
             })
         }
@@ -38,7 +38,7 @@ fn get_subdirs(path: &Path) -> Result<Vec<String>, UserError> {
         {
             let dirname = entry.file_name().to_string_lossy().to_string();
             let dirpath = path.join(dirname);
-            subdirs.push(dirpath.to_string_lossy().to_string());
+            subdirs.push(dirpath.to_string());
         }
     }
     Ok(subdirs)
