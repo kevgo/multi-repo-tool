@@ -19,18 +19,18 @@ mod tests {
     #[test]
     fn content() {
         let give: Vec<Step> = vec![
-            Step {
+            Step::Chdir {
                 id: 1,
-                ..Step::default()
+                dir: "one".into(),
             },
-            Step {
+            Step::Chdir {
                 id: 2,
-                ..Step::default()
+                dir: "two".into(),
             },
         ];
-        let want = Ok(vec![Step {
+        let want = Ok(vec![Step::Chdir {
             id: 2,
-            ..Step::default()
+            dir: "two".into(),
         }]);
         let have = super::ignore(give);
         assert_eq!(have, want);

@@ -73,18 +73,23 @@ mod tests {
     use crate::runtime::persistence::FILENAME;
     use crate::runtime::{load, persist, Step};
     use std::fs;
-    use std::mem::drop;
 
     #[test]
     fn persistence() {
-        let steps1 = vec![Step {
-            id: 3,
-            command: "git".into(),
-            args: vec!["clone".into()],
-        }];
-        drop(persist(&steps1));
+        let steps1 = vec![
+            Step::Chdir {
+                id: 2,
+                dir: "abc".into(),
+            },
+            Step::Run {
+                id: 3,
+                command: "git".into(),
+                args: vec!["clone".into()],
+            },
+        ];
+        persist(&steps1).unwrap();
         let steps2 = load().unwrap();
         assert_eq!(steps1, steps2);
-        drop(fs::remove_file(FILENAME));
+        fs::remove_file(FILENAME).unwrap();
     }
 }
