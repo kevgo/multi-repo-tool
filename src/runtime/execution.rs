@@ -17,7 +17,7 @@ pub enum Step {
     },
     Exit {
         id: u32,
-    }
+    },
 }
 
 impl Step {
