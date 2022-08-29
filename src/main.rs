@@ -53,5 +53,9 @@ fn inner() -> Result<(), UserError> {
                 exit_code,
             })
         }
+        Outcome::Exit { remaining_steps } => {
+            runtime::persist(&initial_dir, &remaining_steps)?;
+            Ok(())
+        }
     }
 }

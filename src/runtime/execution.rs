@@ -47,10 +47,14 @@ impl Display for Step {
 }
 
 pub enum Outcome {
+    /// exit in the middle of execution
+    Exit { remaining_steps: Vec<Step> },
+    /// all steps were successfully executed
     Success,
+    /// the given step has failed
     StepFailed {
-        exit_code: u8,
         failed_step: Step,
+        exit_code: u8,
         remaining_steps: Vec<Step>,
     },
 }
