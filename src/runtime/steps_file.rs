@@ -9,7 +9,7 @@ use std::path::PathBuf;
 const FILENAME: &str = "mrt.json";
 
 /// removes the persistent task queue
-pub fn forget() -> Result<(), UserError> {
+pub fn delete() -> Result<(), UserError> {
     let path = PathBuf::from(FILENAME);
     if !path.exists() {
         return Ok(());
@@ -48,7 +48,7 @@ pub fn load() -> Result<Vec<Step>, UserError> {
 }
 
 /// stores the task queue on disk
-pub fn persist(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
+pub fn save(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
     let filepath = dir.join(FILENAME);
     let file = match File::create(&filepath) {
         Ok(file) => file,
@@ -71,8 +71,8 @@ pub fn persist(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
 
 #[cfg(test)]
 mod tests {
-    use crate::runtime::persistence::FILENAME;
-    use crate::runtime::{load, persist, Step};
+    use crate::runtime::steps_file::FILENAME;
+    use crate::runtime::{load, save, Step};
     use camino::Utf8PathBuf;
     use std::fs;
 
@@ -89,7 +89,7 @@ mod tests {
                 args: vec!["clone".into()],
             },
         ];
-        persist(&Utf8PathBuf::from("."), &steps1).unwrap();
+        save(&Utf8PathBuf::from("."), &steps1).unwrap();
         let steps2 = load().unwrap();
         assert_eq!(steps1, steps2);
         fs::remove_file(FILENAME).unwrap();

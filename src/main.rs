@@ -39,7 +39,7 @@ fn inner() -> Result<(), UserError> {
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
-            runtime::forget()?;
+            runtime::delete()?;
             Ok(())
         }
         Outcome::StepFailed {
@@ -47,14 +47,14 @@ fn inner() -> Result<(), UserError> {
             failed_step,
             remaining_steps,
         } => {
-            runtime::persist(&initial_dir, &remaining_steps)?;
+            runtime::save(&initial_dir, &remaining_steps)?;
             Err(UserError::StepFailed {
                 step: failed_step,
                 exit_code,
             })
         }
         Outcome::Exit { remaining_steps } => {
-            runtime::persist(&initial_dir, &remaining_steps)?;
+            runtime::save(&initial_dir, &remaining_steps)?;
             Ok(())
         }
     }
