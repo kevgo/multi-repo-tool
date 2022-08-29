@@ -12,7 +12,7 @@ pub fn get_subdirs(path: &Utf8Path) -> Result<Vec<String>, UserError> {
         let entry = entry.expect("cannot read filesystem");
         if entry
             .metadata()
-            .expect("cannot read filesystem entry")
+            .expect("cannot read filesystem metadata")
             .is_dir()
         {
             let dirname = entry.file_name().to_string_lossy().to_string();
