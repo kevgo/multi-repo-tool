@@ -1,4 +1,4 @@
-use crate::github;
+use crate::helpers::github;
 use crate::runtime::Step;
 
 pub fn clone(org: &str) -> Vec<Step> {

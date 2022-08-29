@@ -1,7 +1,6 @@
 mod cli;
 mod commands;
 mod error;
-mod github;
 mod helpers;
 mod runtime;
 
