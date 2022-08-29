@@ -41,21 +41,14 @@ fn inner() -> Result<(), UserError> {
             runtime::delete()?;
             Ok(())
         }
-        Outcome::StepFailed {
-            exit_code,
-            remaining_steps,
-            exit_dir,
-        } => {
-            runtime::save(&initial_dir, &remaining_steps)?;
-            dir_file::save(&initial_dir, &exit_dir)?;
-            Err(UserError::StepFailed { exit_code })
+        Outcome::StepFailed { code, steps, dir } => {
+            runtime::save(&initial_dir, &steps)?;
+            dir_file::save(&initial_dir, &dir)?;
+            Err(UserError::StepFailed { code })
         }
-        Outcome::Exit {
-            remaining_steps,
-            exit_dir,
-        } => {
-            runtime::save(&initial_dir, &remaining_steps)?;
-            dir_file::save(&initial_dir, &exit_dir)?;
+        Outcome::Exit { steps, dir } => {
+            runtime::save(&initial_dir, &steps)?;
+            dir_file::save(&initial_dir, &dir)?;
             Ok(())
         }
     }

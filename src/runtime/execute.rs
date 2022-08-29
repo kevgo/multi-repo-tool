@@ -5,16 +5,21 @@ use std::process::Command;
 pub enum Outcome {
     /// exit in the middle of execution
     Exit {
-        exit_dir: String,
-        remaining_steps: Vec<Step>,
+        /// the folder into which to exit
+        dir: String,
+        /// the remaining steps
+        steps: Vec<Step>,
     },
     /// all steps were successfully executed
     Success,
     /// the given step has failed
     StepFailed {
-        exit_code: u8,
-        remaining_steps: Vec<Step>,
-        exit_dir: String,
+        /// error code
+        code: u8,
+        /// remaining steps
+        steps: Vec<Step>,
+        /// subfolder in which the problem happened
+        dir: String,
     },
 }
 
@@ -34,8 +39,8 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
             Step::Exit { id: _ } => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
                 return Outcome::Exit {
-                    exit_dir: current_dir.to_string_lossy().to_string(),
-                    remaining_steps: steps_iter.collect(),
+                    dir: current_dir.to_string_lossy().to_string(),
+                    steps: steps_iter.collect(),
                 };
             }
         };
@@ -44,9 +49,9 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
             let mut remaining_steps = vec![step];
             remaining_steps.extend(steps_iter);
             return Outcome::StepFailed {
-                exit_code,
-                remaining_steps,
-                exit_dir: current_dir.to_string_lossy().to_string(),
+                code: exit_code,
+                steps: remaining_steps,
+                dir: current_dir.to_string_lossy().to_string(),
             };
         }
     }
