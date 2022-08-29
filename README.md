@@ -20,8 +20,9 @@ This tool allows executing CLI commands in multiple Git repositories.
 
 - [clone](documentation/clone.md) all repositories of a Github organization onto
   your local machine
-- [run](
-- [walk](documentation/walk.md)
+- [run](documentation/run.md) a CLI command in all subdirectories
+- [walk](documentation/walk.md) through all subdirectories and manually do
+  something in each
 
 ### Dealing with failures
 
