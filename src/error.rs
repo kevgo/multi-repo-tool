@@ -13,6 +13,7 @@ pub enum UserError {
     NothingToAbort {},
     NothingToIgnore {},
     NothingToRetry {},
+    // TODO: remove "step" field
     StepFailed { step: Step, exit_code: u8 },
 }
 
@@ -55,8 +56,11 @@ impl Display for UserError {
             UserError::NothingToAbort {} => write!(f, "nothing to abort"),
             UserError::NothingToIgnore {} => write!(f, "nothing to ignore"),
             UserError::NothingToRetry {} => write!(f, "nothing to retry"),
-            UserError::StepFailed { step, exit_code: _ } => {
-                write!(f, "{} failed\n\nAbort, Retry, Ignore?", step)
+            UserError::StepFailed {
+                step: _,
+                exit_code: _,
+            } => {
+                write!(f, "Abort, Retry, Ignore?")
             }
         }
     }
