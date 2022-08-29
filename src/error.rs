@@ -1,4 +1,3 @@
-use crate::runtime::Step;
 use std::fmt::Display;
 use std::process::ExitCode;
 
@@ -14,13 +13,13 @@ pub enum UserError {
     NothingToIgnore {},
     NothingToRetry {},
     // TODO: remove "step" field
-    StepFailed { step: Step, exit_code: u8 },
+    StepFailed { exit_code: u8 },
 }
 
 impl UserError {
     pub fn exit_code(&self) -> ExitCode {
         match self {
-            UserError::StepFailed { step: _, exit_code } => ExitCode::from(exit_code.to_owned()),
+            UserError::StepFailed { exit_code } => ExitCode::from(exit_code.to_owned()),
             _ => ExitCode::FAILURE,
         }
     }
@@ -56,10 +55,7 @@ impl Display for UserError {
             UserError::NothingToAbort {} => write!(f, "nothing to abort"),
             UserError::NothingToIgnore {} => write!(f, "nothing to ignore"),
             UserError::NothingToRetry {} => write!(f, "nothing to retry"),
-            UserError::StepFailed {
-                step: _,
-                exit_code: _,
-            } => {
+            UserError::StepFailed { exit_code: _ } => {
                 write!(f, "Abort, Retry, Ignore?")
             }
         }

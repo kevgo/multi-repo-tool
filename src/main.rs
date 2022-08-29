@@ -43,16 +43,12 @@ fn inner() -> Result<(), UserError> {
         }
         Outcome::StepFailed {
             exit_code,
-            failed_step,
             remaining_steps,
             exit_dir,
         } => {
             runtime::save(&initial_dir, &remaining_steps)?;
             dir_file::save(&initial_dir, &exit_dir)?;
-            Err(UserError::StepFailed {
-                step: failed_step,
-                exit_code,
-            })
+            Err(UserError::StepFailed { exit_code })
         }
         Outcome::Exit {
             remaining_steps,

@@ -12,7 +12,6 @@ pub enum Outcome {
     Success,
     /// the given step has failed
     StepFailed {
-        failed_step: Step,
         exit_code: u8,
         remaining_steps: Vec<Step>,
         exit_dir: String,
@@ -42,11 +41,10 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
         };
         if let Err(exit_code) = result {
             let current_dir = env::current_dir().expect("cannot determine current directory");
-            let mut remaining_steps = vec![step.clone()];
+            let mut remaining_steps = vec![step];
             remaining_steps.extend(steps_iter);
             return Outcome::StepFailed {
                 exit_code,
-                failed_step: step,
                 remaining_steps,
                 exit_dir: current_dir.to_string_lossy().to_string(),
             };
