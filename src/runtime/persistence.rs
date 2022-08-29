@@ -1,7 +1,6 @@
-use camino::Utf8Path;
-
 use super::Step;
 use crate::error::UserError;
+use camino::Utf8Path;
 use std::fs;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, ErrorKind};
