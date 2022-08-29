@@ -8,7 +8,6 @@ use std::path::PathBuf;
 
 const FILENAME: &str = "mrt.json";
 
-/// removes the persistent task queue
 pub fn delete() -> Result<(), UserError> {
     let path = PathBuf::from(FILENAME);
     if !path.exists() {
@@ -23,7 +22,6 @@ pub fn delete() -> Result<(), UserError> {
     }
 }
 
-/// loads an Executor instance from the persistence file on disk
 pub fn load() -> Result<Vec<Step>, UserError> {
     let file = match File::open(FILENAME) {
         Ok(file) => file,
@@ -47,22 +45,16 @@ pub fn load() -> Result<Vec<Step>, UserError> {
     }
 }
 
-/// stores the task queue on disk
 pub fn save(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
     let filepath = dir.join(FILENAME);
-    let file = match File::create(&filepath) {
-        Ok(file) => file,
-        Err(e) => {
-            return Err(UserError::CannotWritePersistenceFile {
-                filename: filepath.into(),
-                guidance: e.to_string(),
-            })
-        }
-    };
+    let file = File::create(&filepath).map_err(|err| UserError::CannotWriteFile {
+        filename: filepath.to_string(),
+        guidance: err.to_string(),
+    })?;
     let writer = BufWriter::new(file);
     match serde_json::to_writer_pretty(writer, steps) {
         Ok(_) => Ok(()),
-        Err(e) => Err(UserError::CannotWritePersistenceFile {
+        Err(e) => Err(UserError::CannotWriteFile {
             filename: filepath.into(),
             guidance: e.to_string(),
         }),
@@ -71,7 +63,7 @@ pub fn save(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
 
 #[cfg(test)]
 mod tests {
-    use crate::runtime::steps_file::FILENAME;
+    use crate::runtime::step_queue::FILENAME;
     use crate::runtime::{load, save, Step};
     use camino::Utf8PathBuf;
     use std::fs;

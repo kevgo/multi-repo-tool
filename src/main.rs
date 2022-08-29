@@ -9,7 +9,7 @@ use clap::StructOpt;
 use cli::Command;
 use colored::Colorize;
 use error::UserError;
-use runtime::Outcome;
+use runtime::{dir_file, Outcome};
 use std::env;
 use std::process::ExitCode;
 
@@ -45,15 +45,21 @@ fn inner() -> Result<(), UserError> {
             exit_code,
             failed_step,
             remaining_steps,
+            exit_dir,
         } => {
             runtime::save(&initial_dir, &remaining_steps)?;
+            dir_file::save(&initial_dir, &exit_dir)?;
             Err(UserError::StepFailed {
                 step: failed_step,
                 exit_code,
             })
         }
-        Outcome::Exit { remaining_steps } => {
+        Outcome::Exit {
+            remaining_steps,
+            exit_dir,
+        } => {
             runtime::save(&initial_dir, &remaining_steps)?;
+            dir_file::save(&initial_dir, &exit_dir)?;
             Ok(())
         }
     }

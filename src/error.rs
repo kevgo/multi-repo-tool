@@ -8,7 +8,7 @@ pub enum UserError {
     CannotDeletePersistenceFile { filename: String, guidance: String },
     CannotReadDirectory { directory: String, guidance: String },
     CannotReadPersistenceFile { filename: String, guidance: String },
-    CannotWritePersistenceFile { filename: String, guidance: String },
+    CannotWriteFile { filename: String, guidance: String },
     InvalidPersistenceFormat { filename: String, guidance: String },
     NothingToAbort {},
     NothingToIgnore {},
@@ -42,7 +42,7 @@ impl Display for UserError {
                 "cannot read persistence file \"{}\": {}",
                 filename, guidance
             ),
-            UserError::CannotWritePersistenceFile { filename, guidance } => write!(
+            UserError::CannotWriteFile { filename, guidance } => write!(
                 f,
                 "cannot write persistence file \"{}\": {}",
                 filename, guidance

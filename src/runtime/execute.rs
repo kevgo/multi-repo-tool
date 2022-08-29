@@ -5,7 +5,10 @@ use std::process::Command;
 
 pub enum Outcome {
     /// exit in the middle of execution
-    Exit { remaining_steps: Vec<Step> },
+    Exit {
+        exit_dir: String,
+        remaining_steps: Vec<Step>,
+    },
     /// all steps were successfully executed
     Success,
     /// the given step has failed
@@ -13,6 +16,7 @@ pub enum Outcome {
         failed_step: Step,
         exit_code: u8,
         remaining_steps: Vec<Step>,
+        exit_dir: String,
     },
 }
 
@@ -25,18 +29,22 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
             Step::Run { id: _, cmd, args } => run_command(cmd, args),
             Step::Chdir { id: _, dir } => change_wd(dir),
             Step::Exit { id: _ } => {
+                let current_dir = env::current_dir().expect("cannot determine current directory");
                 return Outcome::Exit {
+                    exit_dir: current_dir.to_string_lossy().to_string(),
                     remaining_steps: steps_iter.collect(),
-                }
+                };
             }
         };
         if let Err(exit_code) = result {
+            let current_dir = env::current_dir().expect("cannot determine current directory");
             let mut remaining_steps = vec![step.clone()];
             remaining_steps.extend(steps_iter);
             return Outcome::StepFailed {
                 exit_code,
                 failed_step: step,
                 remaining_steps,
+                exit_dir: current_dir.to_string_lossy().to_string(),
             };
         }
     }
