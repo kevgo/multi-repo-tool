@@ -3,15 +3,10 @@ use camino::Utf8Path;
 use std::fs;
 
 pub fn get_subdirs(path: &Utf8Path) -> Result<Vec<String>, UserError> {
-    let entries = match fs::read_dir(".") {
-        Ok(entries) => entries,
-        Err(err) => {
-            return Err(UserError::CannotReadDirectory {
-                directory: path.to_string(),
-                guidance: err.to_string(),
-            })
-        }
-    };
+    let entries = fs::read_dir(".").map_err(|err| UserError::CannotReadDirectory {
+        directory: path.to_string(),
+        guidance: err.to_string(),
+    })?;
     let mut subdirs: Vec<String> = vec![];
     for entry in entries {
         let entry = entry.expect("cannot read filesystem");
