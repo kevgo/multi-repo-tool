@@ -1,4 +1,3 @@
-use super::{change_wd, run_command};
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
@@ -16,20 +15,6 @@ pub enum Step {
     Exit {
         id: u32,
     },
-}
-
-impl Step {
-    pub fn execute(&self) -> Result<(), u8> {
-        match self {
-            Step::Run {
-                id: _,
-                command,
-                args,
-            } => run_command(command, args),
-            Step::Chdir { id: _, dir } => change_wd(dir),
-            Step::Exit { id: _ } => Err(0),
-        }
-    }
 }
 
 impl Display for Step {

@@ -21,7 +21,16 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
     let mut steps_iter = steps.into_iter();
     while let Some(step) = steps_iter.next() {
         println!("\n\n{}\n", step.to_string().bold());
-        if let Err(exit_code) = step.execute() {
+        let result = match &step {
+            Step::Run {
+                id: _,
+                command,
+                args,
+            } => run_command(command, args),
+            Step::Chdir { id: _, dir } => change_wd(dir),
+            Step::Exit { id: _ } => Err(0),
+        };
+        if let Err(exit_code) = result {
             let mut remaining_steps = vec![step.clone()];
             remaining_steps.extend(steps_iter);
             return if exit_code == 0 {
