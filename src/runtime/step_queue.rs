@@ -22,8 +22,25 @@ pub fn delete() -> Result<(), UserError> {
     }
 }
 
+/// provides the location of the persistence file
+fn location() -> Option<PathBuf> {
+    let path = PathBuf::from(".").join(FILENAME);
+    if path.exists() {
+        return Some(path);
+    }
+    let path = PathBuf::from("..").join(FILENAME);
+    if path.exists() {
+        return Some(path);
+    }
+    None
+}
+
 pub fn load() -> Result<Vec<Step>, UserError> {
-    let file = match File::open(FILENAME) {
+    let filepath = match location() {
+        Some(path) => path,
+        None => return Ok(vec![]),
+    };
+    let file = match File::open(filepath) {
         Ok(file) => file,
         Err(e) => match e.kind() {
             ErrorKind::NotFound => return Ok(vec![]),
@@ -63,8 +80,9 @@ pub fn save(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
 
 #[cfg(test)]
 mod tests {
+    use crate::runtime::step_queue;
     use crate::runtime::step_queue::FILENAME;
-    use crate::runtime::{load, save, Step};
+    use crate::runtime::Step;
     use camino::Utf8PathBuf;
     use std::fs;
 
@@ -81,8 +99,8 @@ mod tests {
                 args: vec!["clone".into()],
             },
         ];
-        save(&Utf8PathBuf::from("."), &steps1).unwrap();
-        let steps2 = load().unwrap();
+        step_queue::save(&Utf8PathBuf::from("."), &steps1).unwrap();
+        let steps2 = step_queue::load().unwrap();
         assert_eq!(steps1, steps2);
         fs::remove_file(FILENAME).unwrap();
     }

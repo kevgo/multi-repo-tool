@@ -9,7 +9,7 @@ use clap::StructOpt;
 use cli::Command;
 use colored::Colorize;
 use error::UserError;
-use runtime::{dir_file, Outcome};
+use runtime::{dir_file, step_queue, Outcome};
 use std::env;
 use std::process::ExitCode;
 
@@ -25,7 +25,7 @@ fn main() -> ExitCode {
 
 fn inner() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
-    let persisted_steps = runtime::load()?;
+    let persisted_steps = step_queue::load()?;
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
     let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");
     let current_steps = match args.command {
@@ -38,16 +38,16 @@ fn inner() -> Result<(), UserError> {
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
-            runtime::delete()?;
+            step_queue::delete()?;
             Ok(())
         }
         Outcome::StepFailed { code, steps, dir } => {
-            runtime::save(&initial_dir, &steps)?;
+            step_queue::save(&initial_dir, &steps)?;
             dir_file::save(&initial_dir, &dir)?;
             Err(UserError::StepFailed { code })
         }
         Outcome::Exit { steps, dir } => {
-            runtime::save(&initial_dir, &steps)?;
+            step_queue::save(&initial_dir, &steps)?;
             dir_file::save(&initial_dir, &dir)?;
             Ok(())
         }

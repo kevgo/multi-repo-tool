@@ -6,15 +6,15 @@ use camino::Utf8PathBuf;
 pub fn walk(root_dir: &Utf8PathBuf) -> Result<Vec<Step>, UserError> {
     let mut result = vec![];
     let dirs = get_subdirs(root_dir)?;
-    let mut count = 1;
-    for dir in dirs {
-        result.push(Step::Chdir { id: count, dir });
-        count += 1;
-        result.push(Step::Exit { id: count });
-        count += 1;
+    for (i, dir) in dirs.into_iter().enumerate() {
+        result.push(Step::Chdir {
+            id: (i as u32) + 1,
+            dir,
+        });
+        result.push(Step::Exit { id: (i as u32) + 1 });
     }
     result.push(Step::Chdir {
-        id: count,
+        id: (result.len() as u32) + 1,
         dir: root_dir.to_string(),
     });
     Ok(result)
