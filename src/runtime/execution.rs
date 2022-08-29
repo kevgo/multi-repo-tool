@@ -67,6 +67,9 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
         if let Err(exit_code) = step.execute() {
             let mut remaining_steps = vec![step.clone()];
             remaining_steps.extend(steps_iter);
+            if exit_code == 0 {
+                return Outcome::Exit { remaining_steps };
+            }
             return Outcome::StepFailed {
                 exit_code,
                 failed_step: step,
