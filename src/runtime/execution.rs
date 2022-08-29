@@ -1,50 +1,7 @@
+use super::Step;
 use colored::Colorize;
-use serde::{Deserialize, Serialize};
 use std::env;
-use std::fmt::Display;
 use std::process::Command;
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-pub enum Step {
-    Run {
-        id: u32,
-        command: String,
-        args: Vec<String>,
-    },
-    Chdir {
-        id: u32,
-        dir: String,
-    },
-    Exit {
-        id: u32,
-    },
-}
-
-impl Step {
-    pub fn execute(&self) -> Result<(), u8> {
-        match self {
-            Step::Run {
-                id: _,
-                command,
-                args,
-            } => run_command(command, args),
-            Step::Chdir { id: _, dir } => change_wd(dir),
-            Step::Exit { id: _ } => Err(0),
-        }
-    }
-}
-
-impl Display for Step {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Step::Run { id, command, args } => {
-                write!(f, "step {}: {} {}", id, command, args.join(" "))
-            }
-            Step::Chdir { id, dir } => write!(f, "step {}: cd {}", id, dir),
-            Step::Exit { id } => write!(f, "step {}: exit", id),
-        }
-    }
-}
 
 pub enum Outcome {
     /// exit in the middle of execution
@@ -67,13 +24,14 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
         if let Err(exit_code) = step.execute() {
             let mut remaining_steps = vec![step.clone()];
             remaining_steps.extend(steps_iter);
-            if exit_code == 0 {
-                return Outcome::Exit { remaining_steps };
-            }
-            return Outcome::StepFailed {
-                exit_code,
-                failed_step: step,
-                remaining_steps,
+            return if exit_code == 0 {
+                Outcome::Exit { remaining_steps }
+            } else {
+                Outcome::StepFailed {
+                    exit_code,
+                    failed_step: step,
+                    remaining_steps,
+                }
             };
         }
     }
