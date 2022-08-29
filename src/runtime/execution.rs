@@ -28,19 +28,19 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
                 args,
             } => run_command(command, args),
             Step::Chdir { id: _, dir } => change_wd(dir),
-            Step::Exit { id: _ } => Err(0),
+            Step::Exit { id: _ } => {
+                return Outcome::Exit {
+                    remaining_steps: steps_iter.collect(),
+                }
+            }
         };
         if let Err(exit_code) = result {
             let mut remaining_steps = vec![step.clone()];
             remaining_steps.extend(steps_iter);
-            return if exit_code == 0 {
-                Outcome::Exit { remaining_steps }
-            } else {
-                Outcome::StepFailed {
-                    exit_code,
-                    failed_step: step,
-                    remaining_steps,
-                }
+            return Outcome::StepFailed {
+                exit_code,
+                failed_step: step,
+                remaining_steps,
             };
         }
     }
