@@ -1,7 +1,6 @@
 mod abort;
 mod clone;
 mod ignore;
-mod next;
 mod retry;
 mod run;
 mod walk;
