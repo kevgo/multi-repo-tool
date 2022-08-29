@@ -22,11 +22,7 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
     while let Some(step) = steps_iter.next() {
         println!("\n\n{}\n", step.to_string().bold());
         let result = match &step {
-            Step::Run {
-                id: _,
-                command,
-                args,
-            } => run_command(command, args),
+            Step::Run { id: _, cmd, args } => run_command(cmd, args),
             Step::Chdir { id: _, dir } => change_wd(dir),
             Step::Exit { id: _ } => {
                 return Outcome::Exit {

@@ -85,7 +85,7 @@ mod tests {
             },
             Step::Run {
                 id: 3,
-                command: "git".into(),
+                cmd: "git".into(),
                 args: vec!["clone".into()],
             },
         ];

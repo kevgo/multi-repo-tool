@@ -12,7 +12,7 @@ pub fn run(cmd: &str, args: &[String], root_dir: &Utf8PathBuf) -> Result<Vec<Ste
         count += 1;
         result.push(Step::Run {
             id: count,
-            command: cmd.to_string(),
+            cmd: cmd.to_string(),
             args: args.to_owned(),
         });
         count += 1;
