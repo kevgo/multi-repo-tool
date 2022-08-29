@@ -9,11 +9,11 @@ use std::path::PathBuf;
 const FILENAME: &str = "mrt.json";
 
 pub fn delete() -> Result<(), UserError> {
-    let path = PathBuf::from(FILENAME);
-    if !path.exists() {
-        return Ok(());
-    }
-    match fs::remove_file(path) {
+    let filepath = match location() {
+        Some(path) => path,
+        None => return Ok(()),
+    };
+    match fs::remove_file(filepath) {
         Ok(_) => Ok(()),
         Err(err) => Err(UserError::CannotDeletePersistenceFile {
             filename: FILENAME.into(),
@@ -23,7 +23,7 @@ pub fn delete() -> Result<(), UserError> {
 }
 
 /// provides the location of the persistence file
-fn location() -> Option<PathBuf> {
+pub fn location() -> Option<PathBuf> {
     let path = PathBuf::from(".").join(FILENAME);
     if path.exists() {
         return Some(path);
