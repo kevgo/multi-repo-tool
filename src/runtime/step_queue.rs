@@ -48,13 +48,10 @@ pub fn load(filepath: &Utf8Path) -> Result<Vec<Step>, UserError> {
         },
     };
     let reader = BufReader::new(file);
-    match serde_json::from_reader(reader) {
-        Ok(result) => Ok(result),
-        Err(err) => Err(UserError::InvalidPersistenceFormat {
-            filename: FILENAME.into(),
-            guidance: err.to_string(),
-        }),
-    }
+    serde_json::from_reader(reader).map_err(|err| UserError::InvalidPersistenceFormat {
+        filename: FILENAME.into(),
+        guidance: err.to_string(),
+    })
 }
 
 pub fn save(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
