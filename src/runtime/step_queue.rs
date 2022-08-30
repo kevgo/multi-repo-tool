@@ -75,7 +75,7 @@ mod tests {
     use crate::runtime::step_queue::FILENAME;
     use crate::runtime::Step;
     use camino::Utf8PathBuf;
-    use std::fs;
+    use std::{env, fs};
 
     #[test]
     fn persistence() {
@@ -90,10 +90,12 @@ mod tests {
                 args: vec!["clone".into()],
             },
         ];
-        let config_path = Utf8PathBuf::from(".").join("test.json");
+        let current = env::current_dir().unwrap();
+        let config_path = current.join(FILENAME);
+        let config_path = Utf8PathBuf::from_path_buf(config_path).unwrap();
         step_queue::save(config_path.clone(), &steps1).unwrap();
         let steps2 = step_queue::load(&config_path).unwrap();
         assert_eq!(steps1, steps2);
-        fs::remove_file(FILENAME).unwrap();
+        fs::remove_file(config_path).unwrap();
     }
 }

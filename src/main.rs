@@ -46,18 +46,18 @@ fn inner() -> Result<(), UserError> {
             step_queue::delete(&config_path)?;
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != initial_dir {
-                dir_file::save(initial_dir, &cwd.to_string_lossy())?;
+                dir_file::save(&initial_dir, &cwd.to_string_lossy())?;
             }
             Ok(())
         }
         Outcome::StepFailed { code, steps, dir } => {
             step_queue::save(config_path, &steps)?;
-            dir_file::save(initial_dir, &dir)?;
+            dir_file::save(&initial_dir, &dir)?;
             Err(UserError::StepFailed { code })
         }
         Outcome::Exit { steps, dir } => {
             step_queue::save(config_path, &steps)?;
-            dir_file::save(initial_dir, &dir)?;
+            dir_file::save(&initial_dir, &dir)?;
             Ok(())
         }
     }
