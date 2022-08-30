@@ -90,8 +90,9 @@ mod tests {
                 args: vec!["clone".into()],
             },
         ];
-        step_queue::save(Utf8PathBuf::from("."), &steps1).unwrap();
-        let steps2 = step_queue::load(&Utf8PathBuf::from(".")).unwrap();
+        let config_path = Utf8PathBuf::from(".").join("test.json");
+        step_queue::save(config_path.clone(), &steps1).unwrap();
+        let steps2 = step_queue::load(&config_path).unwrap();
         assert_eq!(steps1, steps2);
         fs::remove_file(FILENAME).unwrap();
     }
