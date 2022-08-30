@@ -13,7 +13,7 @@ This tool allows executing CLI commands in multiple Git repositories.
 2. install the shell wrapper that you need to run the binary through:
 
    ```
-   curl https://raw.githubusercontent.com/kevgo/mrt/main/Cargo.lock [dir in your $PATH]
+   curl https://raw.githubusercontent.com/kevgo/mrt/main/stubs/mrt.fish -o <somewhere in your $PATH>
    ```
 
 ### Usage
