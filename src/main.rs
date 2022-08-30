@@ -32,14 +32,13 @@ fn inner() -> Result<(), UserError> {
         None => initial_dir.join(step_queue::FILENAME),
     };
     let persisted_steps = step_queue::load(&config_path)?;
-    let root_dir = config_path.parent().expect("cannot determine root dir");
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Next | Command::Retry => commands::retry(persisted_steps)?,
-        Command::Walk => commands::walk(root_dir)?,
+        Command::Walk => commands::walk(&initial_dir)?,
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
