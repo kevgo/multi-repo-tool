@@ -1,3 +1,5 @@
+use colored::Colorize;
+
 use super::Step;
 use std::env;
 use std::process::Command;
@@ -27,12 +29,12 @@ pub enum Outcome {
 pub fn execute(steps: Vec<Step>) -> Outcome {
     let mut steps_iter = steps.into_iter();
     while let Some(step) = steps_iter.next() {
-        println!("\n\n");
-        match &step {
-            Step::Run { id, cmd, args } => println!("step {}: run {} {}", id, cmd, args.join(" ")),
-            Step::Chdir { id, dir } => println!("step {}: cd {}", id, dir),
-            Step::Exit { id: _ } => {}
-        }
+        let text = match &step {
+            Step::Run { id, cmd, args } => format!("step {}: run {} {}", id, cmd, args.join(" ")),
+            Step::Chdir { id, dir } => format!("step {}: cd {}", id, dir),
+            Step::Exit { id: _ } => "".into(),
+        };
+        println!("\n\n{}", text.bold());
         let result = match &step {
             Step::Run { id: _, cmd, args } => run_command(cmd, args),
             Step::Chdir { id: _, dir } => change_wd(dir),

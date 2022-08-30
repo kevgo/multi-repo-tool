@@ -37,7 +37,8 @@ fn inner() -> Result<(), UserError> {
         Command::Clone { org } => commands::clone(&org),
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
-        Command::Next | Command::Retry => commands::retry(persisted_steps)?,
+        Command::Next => commands::next(persisted_steps)?,
+        Command::Retry => commands::retry(persisted_steps)?,
         Command::Walk => commands::walk(&initial_dir)?,
     };
     match runtime::execute(current_steps) {

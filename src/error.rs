@@ -9,6 +9,7 @@ pub enum UserError {
     CannotReadPersistenceFile { filename: String, guidance: String },
     CannotWriteFile { filename: String, guidance: String },
     InvalidPersistenceFormat { filename: String, guidance: String },
+    NoNextFolder {},
     NothingToAbort {},
     NothingToIgnore {},
     NothingToRetry {},
@@ -51,6 +52,7 @@ impl Display for UserError {
                 "persistence file \"{}\" has an invalid format: {}",
                 filename, guidance
             ),
+            UserError::NoNextFolder {} => write!(f, "no next subfolder"),
             UserError::NothingToAbort {} => write!(f, "nothing to abort"),
             UserError::NothingToIgnore {} => write!(f, "nothing to ignore"),
             UserError::NothingToRetry {} => write!(f, "nothing to retry"),
