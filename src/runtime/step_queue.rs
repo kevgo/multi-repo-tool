@@ -54,8 +54,7 @@ pub fn load(filepath: &Utf8Path) -> Result<Vec<Step>, UserError> {
     })
 }
 
-pub fn save(dir: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
-    let filepath = dir.join(FILENAME);
+pub fn save(filepath: Utf8PathBuf, steps: &Vec<Step>) -> Result<(), UserError> {
     let file = File::create(&filepath).map_err(|err| UserError::CannotWriteFile {
         filename: filepath.to_string(),
         guidance: err.to_string(),
@@ -91,7 +90,7 @@ mod tests {
                 args: vec!["clone".into()],
             },
         ];
-        step_queue::save(&Utf8PathBuf::from("."), &steps1).unwrap();
+        step_queue::save(Utf8PathBuf::from("."), &steps1).unwrap();
         let steps2 = step_queue::load(&Utf8PathBuf::from(".")).unwrap();
         assert_eq!(steps1, steps2);
         fs::remove_file(FILENAME).unwrap();
