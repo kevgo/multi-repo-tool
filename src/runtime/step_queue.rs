@@ -1,18 +1,13 @@
 use super::Step;
 use crate::error::UserError;
-use camino::Utf8Path;
+use camino::{Utf8Path, Utf8PathBuf};
 use std::fs;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, ErrorKind};
-use std::path::PathBuf;
 
-const FILENAME: &str = "mrt.json";
+pub const FILENAME: &str = "mrt.json";
 
-pub fn delete() -> Result<(), UserError> {
-    let filepath = match location() {
-        Some(path) => path,
-        None => return Ok(()),
-    };
+pub fn delete(filepath: &Utf8Path) -> Result<(), UserError> {
     match fs::remove_file(filepath) {
         Ok(_) => Ok(()),
         Err(err) => Err(UserError::CannotDeletePersistenceFile {
@@ -23,23 +18,23 @@ pub fn delete() -> Result<(), UserError> {
 }
 
 /// provides the location of the persistence file
-pub fn location() -> Option<PathBuf> {
-    let path = PathBuf::from(".").join(FILENAME);
+pub fn location(initial: &Utf8Path) -> Option<Utf8PathBuf> {
+    let path = initial.join(FILENAME);
     if path.exists() {
         return Some(path);
     }
-    let path = PathBuf::from("..").join(FILENAME);
+    let parent = match initial.parent() {
+        Some(parent) => parent,
+        None => return None,
+    };
+    let path = parent.join(FILENAME);
     if path.exists() {
         return Some(path);
     }
     None
 }
 
-pub fn load() -> Result<Vec<Step>, UserError> {
-    let filepath = match location() {
-        Some(path) => path,
-        None => return Ok(vec![]),
-    };
+pub fn load(filepath: &Utf8Path) -> Result<Vec<Step>, UserError> {
     let file = match File::open(filepath) {
         Ok(file) => file,
         Err(e) => match e.kind() {
@@ -100,7 +95,7 @@ mod tests {
             },
         ];
         step_queue::save(&Utf8PathBuf::from("."), &steps1).unwrap();
-        let steps2 = step_queue::load().unwrap();
+        let steps2 = step_queue::load(&Utf8PathBuf::from(".")).unwrap();
         assert_eq!(steps1, steps2);
         fs::remove_file(FILENAME).unwrap();
     }
