@@ -14,8 +14,12 @@ pub enum Command {
     Clone { org: String },
     /// Skips the current workflow step and executes the next one
     Ignore,
+    /// Goes to the next subdirectory during walk
+    Next,
     /// Continues the currently running workflow by retrying the last failed step
     Retry,
     /// Executes the given CLI command in all repositories
     Run { cmd: String, args: Vec<String> },
+    /// Manually visits each subdirectory
+    Walk,
 }
