@@ -1,6 +1,5 @@
-use colored::Colorize;
-
 use super::Step;
+use colored::Colorize;
 use std::env;
 use std::process::Command;
 
