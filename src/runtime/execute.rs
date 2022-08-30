@@ -33,7 +33,7 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
             Step::Chdir { id, dir } => format!("step {}: cd {}", id, dir),
             Step::Exit { id: _ } => "".into(),
         };
-        println!("\n\n{}", text.bold());
+        println!("\n{}", text.bold());
         let result = match &step {
             Step::Run { id: _, cmd, args } => run_command(cmd, args),
             Step::Chdir { id: _, dir } => change_wd(dir),
