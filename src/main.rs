@@ -48,12 +48,14 @@ fn inner() -> Result<(), UserError> {
         }
         Outcome::StepFailed { code, steps, dir } => {
             step_queue::save(&config_path, &steps)?;
-            dir_file::save(&Utf8PathBuf::from("."), &dir)?;
+            let current_dir = env::current_dir().expect("cannot determine current dir");
+            dir_file::save(&current_dir, &dir)?;
             Err(UserError::StepFailed { code })
         }
         Outcome::Exit { steps, dir } => {
-            step_queue::save(&initial_dir, &steps)?;
-            dir_file::save(&Utf8PathBuf::from("."), &dir)?;
+            step_queue::save(&config_path, &steps)?;
+            let current_dir = env::current_dir().expect("cannot determine current dir");
+            dir_file::save(&current_dir, &dir)?;
             Ok(())
         }
     }
