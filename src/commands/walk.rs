@@ -14,7 +14,7 @@ pub fn walk(root_dir: &Utf8Path) -> Result<Vec<Step>, UserError> {
         result.push(Step::Exit { id: (i as u32) + 1 });
     }
     result.push(Step::Chdir {
-        id: (result.len() as u32) + 1,
+        id: (result.len() as u32) / 2 + 1,
         dir: root_dir.to_string(),
     });
     Ok(result)
