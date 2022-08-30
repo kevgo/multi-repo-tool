@@ -7,8 +7,8 @@ use std::io::{BufReader, BufWriter, ErrorKind};
 
 pub const FILENAME: &str = "mrt.json";
 
-pub fn delete(filepath: &Utf8Path) -> Result<(), UserError> {
-    match fs::remove_file(filepath) {
+pub fn delete(config_path: &Utf8Path) -> Result<(), UserError> {
+    match fs::remove_file(config_path) {
         Ok(_) => Ok(()),
         Err(err) => Err(UserError::CannotDeletePersistenceFile {
             filename: FILENAME.into(),
@@ -18,12 +18,12 @@ pub fn delete(filepath: &Utf8Path) -> Result<(), UserError> {
 }
 
 /// provides the location of the persistence file
-pub fn location(initial: &Utf8Path) -> Option<Utf8PathBuf> {
-    let path = initial.join(FILENAME);
+pub fn location(initial_dir: &Utf8Path) -> Option<Utf8PathBuf> {
+    let path = initial_dir.join(FILENAME);
     if path.exists() {
         return Some(path);
     }
-    let parent = match initial.parent() {
+    let parent = match initial_dir.parent() {
         Some(parent) => parent,
         None => return None,
     };
@@ -34,8 +34,8 @@ pub fn location(initial: &Utf8Path) -> Option<Utf8PathBuf> {
     None
 }
 
-pub fn load(filepath: &Utf8Path) -> Result<Vec<Step>, UserError> {
-    let file = match File::open(filepath) {
+pub fn load(config_path: &Utf8Path) -> Result<Vec<Step>, UserError> {
+    let file = match File::open(config_path) {
         Ok(file) => file,
         Err(e) => match e.kind() {
             ErrorKind::NotFound => return Ok(vec![]),
@@ -54,16 +54,16 @@ pub fn load(filepath: &Utf8Path) -> Result<Vec<Step>, UserError> {
     })
 }
 
-pub fn save(filepath: Utf8PathBuf, steps: &Vec<Step>) -> Result<(), UserError> {
-    let file = File::create(&filepath).map_err(|err| UserError::CannotWriteFile {
-        filename: filepath.to_string(),
+pub fn save(config_path: Utf8PathBuf, steps: &Vec<Step>) -> Result<(), UserError> {
+    let file = File::create(&config_path).map_err(|err| UserError::CannotWriteFile {
+        filename: config_path.to_string(),
         guidance: err.to_string(),
     })?;
     let writer = BufWriter::new(file);
     match serde_json::to_writer_pretty(writer, steps) {
         Ok(_) => Ok(()),
         Err(e) => Err(UserError::CannotWriteFile {
-            filename: filepath.into(),
+            filename: config_path.into(),
             guidance: e.to_string(),
         }),
     }
