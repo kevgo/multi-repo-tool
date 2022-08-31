@@ -37,7 +37,6 @@ fn inner() -> Result<(), UserError> {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Activate => commands::activate(),
         Command::Clone { org } => commands::clone(&org),
-        Command::Completions => commands::completions::fish(),
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Next => commands::next(persisted_steps)?,

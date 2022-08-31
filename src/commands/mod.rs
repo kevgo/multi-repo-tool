@@ -1,7 +1,6 @@
 mod abort;
 mod activate;
 mod clone;
-pub mod completions;
 mod ignore;
 mod next;
 mod retry;
