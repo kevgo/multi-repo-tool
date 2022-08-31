@@ -14,17 +14,11 @@ repositories. Execution can happen automated or manual.
 2. install the shell wrapper that you need to run the binary through:
 
    ```
-   mrt activate | source
+   ~/.cargo/bin/mrt activate | source
    ```
 
-To set up auto-completion for Fish shell, add this to your
-`~/.config/fish/config.fish`:
-
-```
-if test -f ~/.cargo/bin/mrt
-  ~/.cargo/bin/mrt completions | source
-end
-```
+Now you can run mrt by calling `m`. No need to change the `$PATH` environment
+variable. This also gives you auto-completion in your shell.
 
 ### Usage
 
