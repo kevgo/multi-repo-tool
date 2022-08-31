@@ -41,6 +41,7 @@ fn inner() -> Result<(), UserError> {
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Next => commands::next(persisted_steps)?,
         Command::Retry => commands::retry(persisted_steps)?,
+        Command::Status => commands::status(&persisted_steps),
         Command::Walk => commands::walk(&initial_dir)?,
     };
     match runtime::execute(current_steps) {

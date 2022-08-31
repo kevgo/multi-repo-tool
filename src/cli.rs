@@ -22,6 +22,8 @@ pub enum Command {
     Retry,
     /// Executes the given CLI command in all repositories
     Run { cmd: String, args: Vec<String> },
+    /// Displays the current status of the command queue
+    Status,
     /// Manually visits each subdirectory
     Walk,
 }

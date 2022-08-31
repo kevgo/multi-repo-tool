@@ -21,6 +21,7 @@ end
     println!("complete -c m -a 'walk' -d 'manually iterate the subfolders'");
     println!("complete -c m -a 'run' -d 'execute the given command in all subfolders'");
     println!("complete -c m -a 'clone' -d 'clone all repos in the given GitHub org'");
+    println!("complete -c m -a 'status' -d 'display the current status of the work queue'");
     println!("complete -c m -a 'abort' -d 'abort a failed run'");
     println!("complete -c m -a 'retry' -d 'retry a failed step in a run'");
     println!("complete -c m -a 'ignore' -d 'ignore the currently failing step in a run'");
