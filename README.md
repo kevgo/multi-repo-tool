@@ -46,7 +46,3 @@ Mrt provides three main operations:
 
 If one of the executed commands fails, mrt stops execution and allows you to do
 one of these things:
-
-```
-
-```
