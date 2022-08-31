@@ -1,8 +1,9 @@
 # Multi-repo tool
 
-This tool allows executing CLI commands in multiple Git repositories.
+Mrt, pronounced _murt_, allows executing CLI commands in multiple Git
+repositories. Execution can happen automated or manual.
 
-### installation
+### Installation
 
 1. install the binary:
 
