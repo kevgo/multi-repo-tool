@@ -4,8 +4,6 @@
 pub struct Arguments {
     #[clap(subcommand)]
     pub command: Command,
-    #[structopt(long)]
-    pub activated: bool,
 }
 
 #[derive(clap::Subcommand)]

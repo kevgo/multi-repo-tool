@@ -27,7 +27,7 @@ fn inner() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
     match args.command {
         Command::Activate => {}
-        _ => helpers::ensure_activated(&args)?,
+        _ => helpers::ensure_activated()?,
     }
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
     let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");

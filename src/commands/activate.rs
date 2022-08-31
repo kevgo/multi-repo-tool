@@ -4,7 +4,7 @@ pub fn activate() -> Vec<Step> {
     println!(
         r#"
 function m -d "Fish shell stub for mrt" -w mrt
-    mrt --activated $argv
+    mrt $argv
     if test -e ./mrt.nextdir
         set --local nextdir (cat ./mrt.nextdir)
         echo "Found nextdir: $nextdir"
@@ -12,6 +12,7 @@ function m -d "Fish shell stub for mrt" -w mrt
         cd $nextdir
     end
 end
+set -x MRT_ACTIVATED true
 "#
     );
     vec![]
