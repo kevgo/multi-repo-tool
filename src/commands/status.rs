@@ -1,6 +1,5 @@
-use std::process;
-
 use crate::runtime::Step;
+use std::process;
 
 pub fn status(persisted_steps: &Vec<Step>) -> Vec<Step> {
     if persisted_steps.is_empty() {
