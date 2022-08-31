@@ -4,12 +4,16 @@
 pub struct Arguments {
     #[clap(subcommand)]
     pub command: Command,
+    #[structopt(long)]
+    pub activated: bool,
 }
 
 #[derive(clap::Subcommand)]
 pub enum Command {
     /// Deletes the currently running workflow
     Abort,
+    /// Enable shell integration,
+    Activate,
     /// Clones a Github organization into the current directory
     Clone { org: String },
     /// Outputs shell completions

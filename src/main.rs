@@ -25,6 +25,10 @@ fn main() -> ExitCode {
 
 fn inner() -> Result<(), UserError> {
     let args = cli::Arguments::parse();
+    match args.command {
+        Command::Activate => {}
+        _ => helpers::ensure_activated(&args)?,
+    }
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
     let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");
     let config_path = match step_queue::location(&initial_dir) {
@@ -34,6 +38,7 @@ fn inner() -> Result<(), UserError> {
     let persisted_steps = step_queue::load(&config_path)?;
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
+        Command::Activate => commands::activate(),
         Command::Clone { org } => commands::clone(&org),
         Command::Completions => commands::completions::fish(),
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,

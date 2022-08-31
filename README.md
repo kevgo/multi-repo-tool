@@ -14,7 +14,7 @@ repositories. Execution can happen automated or manual.
 2. install the shell wrapper that you need to run the binary through:
 
    ```
-   curl https://raw.githubusercontent.com/kevgo/mrt/main/stubs/mrt.fish -o <somewhere in your $PATH>
+   mrt activate | source
    ```
 
 To set up auto-completion for Fish shell, add this to your
