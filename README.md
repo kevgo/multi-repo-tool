@@ -27,15 +27,15 @@ Mrt provides three main operations:
 - [clone](documentation/clone.md) all repositories of a Github organization onto
   your local machine
 - [run](documentation/run.md) a CLI command in all subdirectories
-  - [abort](documentation/abort.md) to stop the queue
-  - [retry](documentation/retry.md) to continue the command queue by retrying
-    the failed command
-  - [ignore](documentation/ignore.md) to continue the command queue by skipping
-    the failed command and executing the next one
-- [walk](documentation/walk.md) through all subdirectories and manually do
-  something in each
-  - [next](documentation/next.md)
-- [status](doc
+  - [abort](documentation/abort.md) the currently running queue
+  - [retry](documentation/retry.md) the last failed step and continue the queue
+  - [ignore](documentation/ignore.md) the last failed step and continue the
+    queue
+- [walk](documentation/walk.md) through all subdirectories and open a shell
+  prompt in each
+  - [next](documentation/next.md) goes to the next subdirectory
+- [status](documentation/status.md) displays the current status of the command
+  queue
 
 ### Dealing with failures
 
