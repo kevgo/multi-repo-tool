@@ -7,14 +7,8 @@ use std::io::{BufReader, BufWriter, ErrorKind};
 
 pub const FILENAME: &str = "mrt.json";
 
-pub fn delete(config_path: &Utf8Path) -> Result<(), UserError> {
-    match fs::remove_file(config_path) {
-        Ok(_) => Ok(()),
-        Err(err) => Err(UserError::CannotDeletePersistenceFile {
-            filename: FILENAME.into(),
-            guidance: err.to_string(),
-        }),
-    }
+pub fn delete(config_path: &Utf8Path) {
+    drop(fs::remove_file(config_path));
 }
 
 /// provides the location of the persistence file

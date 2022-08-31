@@ -1,5 +1,6 @@
 mod abort;
 mod clone;
+pub mod completions;
 mod ignore;
 mod next;
 mod retry;

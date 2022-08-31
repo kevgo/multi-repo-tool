@@ -35,6 +35,7 @@ fn inner() -> Result<(), UserError> {
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Clone { org } => commands::clone(&org),
+        Command::Completions => commands::completions::fish(),
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Next => commands::next(persisted_steps)?,
@@ -43,7 +44,7 @@ fn inner() -> Result<(), UserError> {
     };
     match runtime::execute(current_steps) {
         Outcome::Success => {
-            step_queue::delete(&config_path)?;
+            step_queue::delete(&config_path);
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != initial_dir {
                 dir_file::save(&initial_dir, &cwd.to_string_lossy())?;

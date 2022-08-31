@@ -17,6 +17,15 @@ repositories. Execution can happen automated or manual.
    curl https://raw.githubusercontent.com/kevgo/mrt/main/stubs/mrt.fish -o <somewhere in your $PATH>
    ```
 
+To set up auto-completion for Fish shell, add this to your
+`~/.config/fish/config.fish`:
+
+```
+if test -f ~/.cargo/bin/mrt
+  ~/.cargo/bin/mrt completions | source
+end
+```
+
 ### Usage
 
 Mrt provides three main operations:
@@ -37,3 +46,7 @@ Mrt provides three main operations:
 
 If one of the executed commands fails, mrt stops execution and allows you to do
 one of these things:
+
+```
+
+```
