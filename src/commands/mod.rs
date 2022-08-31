@@ -5,6 +5,7 @@ mod ignore;
 mod next;
 mod retry;
 mod run;
+mod status;
 mod walk;
 
 pub use abort::abort;
@@ -14,4 +15,5 @@ pub use ignore::ignore;
 pub use next::next;
 pub use retry::retry;
 pub use run::run;
+pub use status::status;
 pub use walk::walk;
