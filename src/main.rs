@@ -30,17 +30,13 @@ fn inner() -> Result<(), UserError> {
         _ => helpers::ensure_activated()?,
     }
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
-    let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");
-    let config_path = match step_queue::location(&initial_dir) {
-        Some(dir) => dir,
-        None => initial_dir.join(step_queue::FILENAME),
-    };
+    let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode current dir");
+    let config_path = step_queue::filepath();
     let persisted_steps = step_queue::load(&config_path)?;
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
         Command::Activate => commands::activate(),
         Command::Clone { org } => commands::clone(&org),
-        Command::Completions => commands::completions::fish(),
         Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
         Command::Ignore => commands::ignore(persisted_steps)?,
         Command::Next => commands::next(persisted_steps)?,
@@ -52,18 +48,18 @@ fn inner() -> Result<(), UserError> {
             step_queue::delete(&config_path);
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != initial_dir {
-                dir_file::save(&initial_dir, &cwd.to_string_lossy())?;
+                dir_file::save(&cwd.to_string_lossy())?;
             }
             Ok(())
         }
         Outcome::StepFailed { code, steps, dir } => {
-            step_queue::save(config_path, &steps)?;
-            dir_file::save(&initial_dir, &dir)?;
+            step_queue::save(&config_path, &steps)?;
+            dir_file::save(&dir)?;
             Err(UserError::StepFailed { code })
         }
         Outcome::Exit { steps, dir } => {
-            step_queue::save(config_path, &steps)?;
-            dir_file::save(&initial_dir, &dir)?;
+            step_queue::save(&config_path, &steps)?;
+            dir_file::save(&dir)?;
             Ok(())
         }
     }

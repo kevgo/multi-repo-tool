@@ -9,7 +9,7 @@ pub enum UserError {
     CannotWriteFile { filename: String, guidance: String },
     InvalidPersistenceFormat { filename: String, guidance: String },
     NoNextFolder,
-    NotActivated,
+    NotWrapped,
     NothingToAbort,
     NothingToIgnore,
     NothingToRetry,
@@ -47,10 +47,10 @@ impl Display for UserError {
                 "persistence file \"{}\" has an invalid format: {}",
                 filename, guidance
             ),
-            UserError::NotActivated => {
+            UserError::NotWrapped => {
                 write!(
                     f,
-                    "please don't call the mrt binary directly, run \"mrt activate | source\" and call \"m\""
+                    "please don't call the mrt binary directly, run \"mrt activate | source\" and then call the shell function \"m\""
                 )
             }
             UserError::NoNextFolder {} => write!(f, "no next subfolder"),

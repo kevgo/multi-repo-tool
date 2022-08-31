@@ -2,10 +2,10 @@ use crate::error::UserError;
 use std::env;
 
 pub fn ensure_activated() -> Result<(), UserError> {
-    for (name, value) in env::vars() {
-        if name == "MRT_ACTIVATED" && value == "true" {
+    if let Ok(value) = env::var("MRT_WRAPPED") {
+        if value == "true" {
             return Ok(());
         }
     }
-    Err(UserError::NotActivated)
+    Err(UserError::NotWrapped)
 }
