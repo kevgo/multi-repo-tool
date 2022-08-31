@@ -1,4 +1,5 @@
 mod abort;
+mod activate;
 mod clone;
 pub mod completions;
 mod ignore;
@@ -8,6 +9,7 @@ mod run;
 mod walk;
 
 pub use abort::abort;
+pub use activate::activate;
 pub use clone::clone;
 pub use ignore::ignore;
 pub use next::next;

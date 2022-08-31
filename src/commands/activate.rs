@@ -1,4 +1,9 @@
-function m -d "Fish shell stub for mrt"
+use crate::runtime::Step;
+
+pub fn activate() -> Vec<Step> {
+    println!(
+        r#"
+function m -d "Fish shell stub for mrt" -w mrt
     mrt $argv
     if test -e ./mrt.nextdir
         set --local nextdir (cat ./mrt.nextdir)
@@ -7,3 +12,8 @@ function m -d "Fish shell stub for mrt"
         cd $nextdir
     end
 end
+set -x MRT_ACTIVATED true
+"#
+    );
+    vec![]
+}

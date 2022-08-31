@@ -10,6 +10,8 @@ pub struct Arguments {
 pub enum Command {
     /// Deletes the currently running workflow
     Abort,
+    /// Enable shell integration,
+    Activate,
     /// Clones a Github organization into the current directory
     Clone { org: String },
     /// Outputs shell completions
