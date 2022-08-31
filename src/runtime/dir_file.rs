@@ -12,9 +12,8 @@ pub fn filepath() -> Utf8PathBuf {
 }
 
 pub fn save(next_dir: &str) -> Result<(), UserError> {
-    let file_path = filepath();
-    fs::write(&file_path, next_dir).map_err(|err| UserError::CannotWriteFile {
-        filename: file_path.to_string(),
+    fs::write(&filepath(), next_dir).map_err(|err| UserError::CannotWriteFile {
+        filename: filepath().to_string(),
         guidance: err.to_string(),
     })?;
     Ok(())
