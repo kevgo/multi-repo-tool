@@ -19,7 +19,7 @@ pub fn filepath() -> Utf8PathBuf {
 }
 
 pub fn load(config_path: &Utf8Path) -> Result<Vec<Step>, UserError> {
-    let file = match File::open(filepath()) {
+    let file = match File::open(config_path) {
         Ok(file) => file,
         Err(e) => match e.kind() {
             ErrorKind::NotFound => return Ok(vec![]),
@@ -39,7 +39,7 @@ pub fn load(config_path: &Utf8Path) -> Result<Vec<Step>, UserError> {
 }
 
 pub fn save(config_path: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> {
-    let file = File::create(filepath()).map_err(|err| UserError::CannotWriteFile {
+    let file = File::create(config_path).map_err(|err| UserError::CannotWriteFile {
         filename: config_path.to_string(),
         guidance: err.to_string(),
     })?;
@@ -55,9 +55,10 @@ pub fn save(config_path: &Utf8Path, steps: &Vec<Step>) -> Result<(), UserError> 
 
 #[cfg(test)]
 mod tests {
-    use crate::runtime::step_queue::{self, delete};
+    use crate::runtime::step_queue;
     use crate::runtime::Step;
     use camino::Utf8PathBuf;
+    use std::fs;
 
     #[test]
     fn persistence() {
@@ -76,6 +77,6 @@ mod tests {
         step_queue::save(&config_path, &steps1).unwrap();
         let steps2 = step_queue::load(&config_path).unwrap();
         assert_eq!(steps1, steps2);
-        delete(&config_path);
+        fs::remove_file(&config_path).unwrap();
     }
 }

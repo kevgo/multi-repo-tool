@@ -35,6 +35,7 @@ Mrt provides three main operations:
 - [walk](documentation/walk.md) through all subdirectories and manually do
   something in each
   - [next](documentation/next.md)
+- [status](doc
 
 ### Dealing with failures
 
