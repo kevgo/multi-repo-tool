@@ -50,7 +50,7 @@ impl Display for UserError {
             UserError::NotActivated => {
                 write!(
                     f,
-                    "please don't call the mrt binary directly, run \"mrt activate | source\" and call \"m\""
+                    "please don't call the mrt binary directly, run \"mrt activate | source\" and then call \"m\""
                 )
             }
             UserError::NoNextFolder {} => write!(f, "no next subfolder"),
