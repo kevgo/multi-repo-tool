@@ -12,6 +12,8 @@ pub enum Command {
     Abort,
     /// Clones a Github organization into the current directory
     Clone { org: String },
+    /// Outputs shell completions
+    Completions,
     /// Skips the current workflow step and executes the next one
     Ignore,
     /// Goes to the next subdirectory during walk

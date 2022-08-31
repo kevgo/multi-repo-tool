@@ -4,7 +4,6 @@ use std::process::ExitCode;
 #[derive(Debug, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub enum UserError {
-    CannotDeletePersistenceFile { filename: String, guidance: String },
     CannotReadDirectory { directory: String, guidance: String },
     CannotReadPersistenceFile { filename: String, guidance: String },
     CannotWriteFile { filename: String, guidance: String },
@@ -28,11 +27,6 @@ impl UserError {
 impl Display for UserError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            UserError::CannotDeletePersistenceFile { filename, guidance } => write!(
-                f,
-                "cannot delete persistence file \"{}\": {}",
-                filename, guidance
-            ),
             UserError::CannotReadDirectory {
                 directory,
                 guidance,
