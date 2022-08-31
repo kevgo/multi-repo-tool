@@ -30,11 +30,8 @@ fn inner() -> Result<(), UserError> {
         _ => helpers::ensure_activated()?,
     }
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
-    let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode in filename");
-    let config_path = match step_queue::location(&initial_dir) {
-        Some(dir) => dir,
-        None => initial_dir.join(step_queue::FILENAME),
-    };
+    let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode current dir");
+    let config_path = step_queue::filepath();
     let persisted_steps = step_queue::load(&config_path)?;
     let current_steps = match args.command {
         Command::Abort => commands::abort(&persisted_steps)?,
@@ -57,12 +54,12 @@ fn inner() -> Result<(), UserError> {
             Ok(())
         }
         Outcome::StepFailed { code, steps, dir } => {
-            step_queue::save(config_path, &steps)?;
+            step_queue::save(&config_path, &steps)?;
             dir_file::save(&initial_dir, &dir)?;
             Err(UserError::StepFailed { code })
         }
         Outcome::Exit { steps, dir } => {
-            step_queue::save(config_path, &steps)?;
+            step_queue::save(&config_path, &steps)?;
             dir_file::save(&initial_dir, &dir)?;
             Ok(())
         }
