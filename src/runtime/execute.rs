@@ -63,9 +63,13 @@ pub fn execute(config: Config) -> Outcome {
             };
         }
     }
+    if let Some(dir) = config.root_dir {
+        env::set_current_dir(dir).expect("cannot cd into the initial directory");
+    }
     Outcome::Success {
         config: Config {
             steps: vec![],
+            root_dir: None,
             ..config
         },
     }
