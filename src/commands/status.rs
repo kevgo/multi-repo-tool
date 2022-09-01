@@ -1,11 +1,21 @@
-use crate::runtime::Step;
 use std::process;
 
-pub fn status(persisted_steps: &Vec<Step>) -> Vec<Step> {
-    if persisted_steps.is_empty() {
+use crate::config::Config;
+
+pub fn status(config: Config) -> Config {
+    match config.folders {
+        Some(folders) => {
+            println!("Running only in these folders:");
+            for folder in folders {
+                println!("- {}", folder);
+            }
+        }
+        None => println!("Running in all folders."),
+    }
+    if config.steps.is_empty() {
         println!("I'm not doing anything right now.");
     } else {
-        for step in persisted_steps {
+        for step in config.steps {
             println!("{}", step);
         }
     }

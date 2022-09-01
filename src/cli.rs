@@ -12,10 +12,14 @@ pub enum Command {
     Abort,
     /// Enable shell integration,
     Activate,
+    /// removes the limit
+    All,
     /// Clones a Github organization into the current directory
     Clone { org: String },
     /// Skips the current workflow step and executes the next one
     Ignore,
+    /// Limits activities to a subset of subfolders that match the given criteria
+    Limit { cmd: String, args: Vec<String> },
     /// Goes to the next subdirectory during walk
     Next,
     /// Continues the currently running workflow by retrying the last failed step
