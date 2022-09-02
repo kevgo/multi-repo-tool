@@ -11,11 +11,16 @@ back to processing [all](all.md) folders.
 m limit <command>
 ```
 
-As an example, let's say some of your subfolders contain Python code, some
-Node.js code. To limit work to the Node.js codebases:
+### examples
+
+Limit to folders that contain a certain file or folder:
 
 ```
-m limit ls package.json
+m limit ls <file or folder name>
 ```
 
-The `ls` command exits with code `1` if the given file doesn't exist.
+Limit to repos that contain a certain branch:
+
+```
+m limit -- git show-ref --verify --quiet refs/heads/<branch name>
+```
