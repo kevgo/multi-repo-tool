@@ -9,3 +9,12 @@ folder subset, you can go back to processing [all](all.md) folders.
 ```
 m limit <command>
 ```
+
+As an example, let's say some of your subfolders contain Python code, some
+Node.js code. To limit work to the Node.js codebases:
+
+```
+m limit ls package.json
+```
+
+The `ls` command exits with code `1` if the given file doesn't exist.

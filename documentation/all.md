@@ -1,6 +1,6 @@
 # "all" command
 
-The `all` command removes a previously set [limit command](limit.md).
+The `all` command removes an existing subfolder [limit](limit.md).
 
 ```
 m all
