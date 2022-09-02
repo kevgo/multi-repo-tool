@@ -18,6 +18,8 @@ pub enum Command {
     Clone { org: String },
     /// Skips the current workflow step and executes the next one
     Ignore,
+    /// Skips all workflow steps that fail
+    IgnoreAll,
     /// Limits activities to a subset of subfolders that match the given criteria
     Limit { cmd: String, args: Vec<String> },
     /// Goes to the next subdirectory during walk
