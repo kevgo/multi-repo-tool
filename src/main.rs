@@ -49,12 +49,14 @@ fn inner() -> Result<(), UserError> {
     };
     match runtime::execute(config_to_execute) {
         Outcome::Success { config } => {
-            let config_to_save = Config {
-                steps: vec![],
-                root_dir: None,
-                ..config
-            };
-            config::save(&config_path, &config_to_save)?;
+            config::save(
+                &config_path,
+                &(Config {
+                    steps: vec![],
+                    root_dir: None,
+                    ..config
+                }),
+            )?;
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != initial_dir {
                 dir_file::save(&cwd.to_string_lossy())?;
