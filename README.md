@@ -1,7 +1,7 @@
 # Multi-Repo Tool (mrt)
 
-`mrt`, pronounced _murt_, makes working with a large number of Git repositories
-efficient by executing user-provided CLI commands in them.
+`mrt`, pronounced _murt_, makes executing CLI commands in a large number of Git
+repositories efficient.
 
 ### Installation
 
