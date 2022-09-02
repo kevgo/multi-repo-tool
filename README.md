@@ -41,4 +41,4 @@ Main operations:
   [abort](documentation/abort.md) stops the walk.
 - [status](documentation/status.md) displays the current status of the command
   queue
-- You can limit execution to a subset of folders
+- You can [limit](doc execution to a subset of folders
