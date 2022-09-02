@@ -30,15 +30,15 @@ Main operations:
 
 - [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
-- [run](documentation/run.md) a given CLI command in all subdirectories. _mrt_
-  prints the outputs. If the command fails in a subdirectory, _mrt_ exits in
-  this subdirectory to let you inspect the problem. Then you can
+- [run](documentation/run.md) a given CLI command in all subdirectories and
+  print the outputs. If a command fails, _mrt_ exits in the respective
+  subdirectory to let you inspect/fix the problem. Then you can
   [abort](documentation/abort.md) the entire command queue,
   [retry](documentation/retry.md), or [ignore](documentation/ignore.md) the
   failed step.
 - [walk](documentation/walk.md) through all subdirectories and interactively run
-  commands in each. [next](documentation/next.md) goes to the next subdirectory.
-  [abort](documentation/abort.md) stops the walk.
+  commands in each. When done with a folder, you can go to the
+  [next](documentation/next.md) one or [abort](documentation/abort.md) the walk.
 - [status](documentation/status.md) displays the current status of the command
   queue
 - You can [limit](doc execution to a subset of folders
