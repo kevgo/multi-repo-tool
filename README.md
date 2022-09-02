@@ -26,8 +26,6 @@ arguments.
 
 ### Usage
 
-Main operations:
-
 - [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
 - [run](documentation/run.md) a given CLI command in all subdirectories and
