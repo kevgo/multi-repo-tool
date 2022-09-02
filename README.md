@@ -17,12 +17,13 @@ repositories. Execution can happen automated or manual.
    ~/.cargo/bin/mrt activate | source
    ```
 
-Now you can run mrt by calling `m`. No need to change the `$PATH` environment
-variable. This also gives you auto-completion in your shell.
+Now you can run mrt by calling the shell function `m`. No need to change the
+`$PATH` environment variable. This also gives you auto-completion of mrt
+arguments.
 
 ### Usage
 
-Mrt provides three main operations:
+Main operations:
 
 - [clone](documentation/clone.md) all repositories of a Github organization onto
   your local machine
@@ -41,3 +42,5 @@ Mrt provides three main operations:
 
 If one of the executed commands fails, mrt stops execution and allows you to do
 one of these things:
+
+### Limiting to a subset of folders
