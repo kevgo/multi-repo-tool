@@ -12,7 +12,7 @@ pub enum Command {
     Abort,
     /// Enable shell integration,
     Activate,
-    /// removes the limit
+    /// Removes a previously set limit
     All,
     /// Clones a Github organization into the current directory
     Clone { org: String },
