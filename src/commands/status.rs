@@ -1,6 +1,5 @@
-use std::process;
-
 use crate::config::Config;
+use std::process;
 
 pub fn status(config: Config) -> Config {
     match config.folders {
