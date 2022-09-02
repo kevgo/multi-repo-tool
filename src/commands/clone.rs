@@ -9,7 +9,7 @@ pub fn clone(org: &str, dir: String) -> Config {
         steps.push(Step::Run {
             id: (i as u32) + 1,
             cmd: "git".into(),
-            args: vec!["clone".into(), repo.clone_url],
+            args: vec!["clone".into(), repo.ssh_url],
         });
     }
     Config {

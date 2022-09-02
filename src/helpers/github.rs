@@ -12,7 +12,7 @@ static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#
 #[derive(Deserialize)]
 pub struct Repo {
     pub name: String,
-    pub clone_url: String,
+    pub ssh_url: String,
 }
 
 pub fn get_repos(org: &str) -> Vec<Repo> {
