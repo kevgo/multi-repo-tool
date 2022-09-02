@@ -51,11 +51,11 @@ fn inner() -> Result<(), UserError> {
         Outcome::Success { config } => {
             config::save(
                 &config_path,
-                &(Config {
+                &Config {
                     steps: vec![],
                     root_dir: None,
                     ..config
-                }),
+                },
             )?;
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != initial_dir {
