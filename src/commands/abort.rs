@@ -8,6 +8,7 @@ pub fn abort(config: Config) -> Result<Config, UserError> {
     }
     println!("aborting {} steps", config.steps.len());
     if let Some(dir) = config.root_dir {
+        println!("returning to the {} dir", &dir);
         env::set_current_dir(dir).expect("cannot cd into the initial directory");
     }
     Ok(Config {

@@ -15,6 +15,9 @@ pub fn run(
         None => get_subdirs(root_dir)?,
         Some(folders) => folders,
     };
+    if dirs.is_empty() {
+        return Err(UserError::NoFoldersToIterate);
+    }
     let mut count = 1;
     for dir in dirs {
         steps.push(Step::Chdir { id: count, dir });
