@@ -1,5 +1,6 @@
 mod cli;
 mod commands;
+mod config;
 mod error;
 mod helpers;
 mod runtime;
@@ -8,8 +9,9 @@ use camino::Utf8PathBuf;
 use clap::StructOpt;
 use cli::Command;
 use colored::Colorize;
+use config::Config;
 use error::UserError;
-use runtime::{dir_file, step_queue, Outcome};
+use runtime::{dir_file, Outcome};
 use std::env;
 use std::process::ExitCode;
 
@@ -24,42 +26,50 @@ fn main() -> ExitCode {
 }
 
 fn inner() -> Result<(), UserError> {
-    let args = cli::Arguments::parse();
-    match args.command {
-        Command::Activate => {}
-        _ => helpers::ensure_activated()?,
+    let cli_args = cli::Arguments::parse();
+    if cli_args.command != Command::Activate {
+        helpers::ensure_activated()?;
     }
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
     let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode current dir");
-    let config_path = step_queue::filepath();
-    let persisted_steps = step_queue::load(&config_path)?;
-    let current_steps = match args.command {
-        Command::Abort => commands::abort(&persisted_steps)?,
+    let config_path = config::filepath();
+    let persisted_config = config::load(&config_path)?;
+    let config_to_execute = match cli_args.command {
+        Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
-        Command::Clone { org } => commands::clone(&org),
-        Command::Run { cmd, args } => commands::run(&cmd, &args, &initial_dir)?,
-        Command::Ignore => commands::ignore(persisted_steps)?,
-        Command::Next => commands::next(persisted_steps)?,
-        Command::Retry => commands::retry(persisted_steps)?,
-        Command::Status => commands::status(&persisted_steps),
-        Command::Walk => commands::walk(&initial_dir)?,
+        Command::All => commands::all(persisted_config),
+        Command::Clone { org } => commands::clone(&org, initial_dir.to_string()),
+        Command::Run { cmd, args } => commands::run(&cmd, &args, persisted_config, &initial_dir)?,
+        Command::Ignore => commands::ignore(persisted_config)?,
+        Command::Limit { cmd, args } => commands::limit(&cmd, &args, &initial_dir)?,
+        Command::Next => commands::next(persisted_config)?,
+        Command::Retry => commands::retry(persisted_config)?,
+        Command::Status => commands::status(persisted_config),
+        Command::Walk => commands::walk(&initial_dir, persisted_config)?,
     };
-    match runtime::execute(current_steps) {
-        Outcome::Success => {
-            step_queue::delete(&config_path);
+    match runtime::execute(config_to_execute) {
+        Outcome::Success { config } => {
+            config::save(
+                &config_path,
+                &Config {
+                    steps: vec![],
+                    root_dir: None,
+                    ..config
+                },
+            )?;
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != initial_dir {
                 dir_file::save(&cwd.to_string_lossy())?;
             }
             Ok(())
         }
-        Outcome::StepFailed { code, steps, dir } => {
-            step_queue::save(&config_path, &steps)?;
+        Outcome::StepFailed { code, config, dir } => {
+            config::save(&config_path, &config)?;
             dir_file::save(&dir)?;
             Err(UserError::StepFailed { code })
         }
-        Outcome::Exit { steps, dir } => {
-            step_queue::save(&config_path, &steps)?;
+        Outcome::Exit { config, dir } => {
+            config::save(&config_path, &config)?;
             dir_file::save(&dir)?;
             Ok(())
         }

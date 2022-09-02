@@ -1,6 +1,6 @@
-use crate::runtime::Step;
+use crate::config::Config;
 
-pub fn activate() -> Vec<Step> {
+pub fn activate() -> Config {
     // define wrapper shell function
     println!(
         r#"
@@ -26,5 +26,5 @@ end
     println!("complete -c m -a 'retry' -d 'retry a failed step in a run'");
     println!("complete -c m -a 'ignore' -d 'ignore the currently failing step in a run'");
     println!("complete -c m -a 'next' -d 'go to the next subdir in walk'");
-    vec![]
+    Config::default()
 }

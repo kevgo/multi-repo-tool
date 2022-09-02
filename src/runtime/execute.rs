@@ -1,4 +1,5 @@
 use super::Step;
+use crate::config::Config;
 use colored::Colorize;
 use std::env;
 use std::process::Command;
@@ -9,24 +10,24 @@ pub enum Outcome {
         /// the folder into which to exit
         dir: String,
         /// the remaining steps
-        steps: Vec<Step>,
+        config: Config,
     },
     /// all steps were successfully executed
-    Success,
+    Success { config: Config },
     /// the given step has failed
     StepFailed {
         /// error code
         code: u8,
         /// remaining steps
-        steps: Vec<Step>,
+        config: Config,
         /// subfolder in which the problem happened
         dir: String,
     },
 }
 
 /// executes the given steps, returns the not executed steps in case of an issue
-pub fn execute(steps: Vec<Step>) -> Outcome {
-    let mut steps_iter = steps.into_iter();
+pub fn execute(config: Config) -> Outcome {
+    let mut steps_iter = config.steps.into_iter();
     while let Some(step) = steps_iter.next() {
         let text = match &step {
             Step::Run { id, cmd, args } => format!("step {}: run {} {}", id, cmd, args.join(" ")),
@@ -41,7 +42,10 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
                 return Outcome::Exit {
                     dir: current_dir.to_string_lossy().to_string(),
-                    steps: steps_iter.collect(),
+                    config: Config {
+                        steps: steps_iter.collect(),
+                        ..config
+                    },
                 };
             }
         };
@@ -51,12 +55,25 @@ pub fn execute(steps: Vec<Step>) -> Outcome {
             remaining_steps.extend(steps_iter);
             return Outcome::StepFailed {
                 code: exit_code,
-                steps: remaining_steps,
+                config: Config {
+                    steps: remaining_steps,
+                    ..config
+                },
                 dir: current_dir.to_string_lossy().to_string(),
             };
         }
     }
-    Outcome::Success
+    if let Some(dir) = config.root_dir {
+        env::set_current_dir(dir).expect("cannot cd into the initial directory");
+    }
+    println!("\n{}\n", "ALL DONE".bold());
+    Outcome::Success {
+        config: Config {
+            steps: vec![],
+            root_dir: None,
+            ..config
+        },
+    }
 }
 
 pub fn change_wd(dir: &str) -> Result<(), u8> {

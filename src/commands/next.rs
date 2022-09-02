@@ -1,9 +1,9 @@
+use crate::config::Config;
 use crate::error::UserError;
-use crate::runtime::Step;
 
-pub fn next(previous_steps: Vec<Step>) -> Result<Vec<Step>, UserError> {
-    if previous_steps.is_empty() {
+pub fn next(config: Config) -> Result<Config, UserError> {
+    if config.steps.is_empty() {
         return Err(UserError::NoNextFolder {});
     }
-    Ok(previous_steps)
+    Ok(config)
 }

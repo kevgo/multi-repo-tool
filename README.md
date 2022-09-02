@@ -1,43 +1,44 @@
-# Multi-repo tool
+# Multi-Repo Tool (mrt)
 
-Mrt, pronounced _murt_, allows executing CLI commands in multiple Git
-repositories. Execution can happen automated or manual.
+`mrt`, pronounced _murt_, makes executing CLI commands in a large number of Git
+repositories efficient.
 
 ### Installation
 
-1. install the binary:
+1. install [rustup](https://rustup.rs) and through that the current stable
+   version of [Rust](https://www.rust-lang.org)
+
+2. install mrt:
 
    ```
    cargo install --git --locked github.com/kevgo/mrt`
    ```
 
-2. install the shell wrapper that you need to run the binary through:
+3. install the shell wrapper through which you will run mrt:
 
    ```
    ~/.cargo/bin/mrt activate | source
    ```
 
-Now you can run mrt by calling `m`. No need to change the `$PATH` environment
-variable. This also gives you auto-completion in your shell.
+Now you can run mrt by calling the shell function `m`. No need to change the
+`$PATH` environment variable. This also gives you auto-completion of mrt
+arguments.
 
 ### Usage
 
-Mrt provides three main operations:
-
-- [clone](documentation/clone.md) all repositories of a Github organization onto
+- [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
-- [run](documentation/run.md) a CLI command in all subdirectories
-  - [abort](documentation/abort.md) the currently running queue
-  - [retry](documentation/retry.md) the last failed step and continue the queue
-  - [ignore](documentation/ignore.md) the last failed step and continue the
-    queue
-- [walk](documentation/walk.md) through all subdirectories and open a shell
-  prompt in each
-  - [next](documentation/next.md) goes to the next subdirectory
+- [run](documentation/run.md) a given CLI command in all subdirectories and
+  print the outputs. If a command fails, _mrt_ exits in the respective
+  subdirectory to let you inspect/fix the problem. Then you can
+  [abort](documentation/abort.md) the entire command queue,
+  [retry](documentation/retry.md), or [ignore](documentation/ignore.md) the
+  failed step.
+- [walk](documentation/walk.md) through all subdirectories and interactively run
+  commands in each. When done with a folder, you can go to the
+  [next](documentation/next.md) one or [abort](documentation/abort.md) the walk.
 - [status](documentation/status.md) displays the current status of the command
   queue
-
-### Dealing with failures
-
-If one of the executed commands fails, mrt stops execution and allows you to do
-one of these things:
+- You can [limit](documentation/limit.md) execution to a subset of folders. When
+  done with the folder subset, you can go back to processing
+  [all](documentation/all.md) folders.
