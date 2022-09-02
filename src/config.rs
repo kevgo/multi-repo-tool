@@ -7,8 +7,7 @@ use std::fs::File;
 use std::io::{BufReader, BufWriter, ErrorKind};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-#[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct Config {
     /// the root directory
     pub root_dir: Option<String>,
