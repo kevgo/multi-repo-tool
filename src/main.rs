@@ -27,9 +27,8 @@ fn main() -> ExitCode {
 
 fn inner() -> Result<(), UserError> {
     let cli_args = cli::Arguments::parse();
-    match cli_args.command {
-        Command::Activate => {}
-        _ => helpers::ensure_activated()?,
+    if cli_args.command != Command::Activate {
+        helpers::ensure_activated()?;
     }
     let initial_dir = env::current_dir().expect("cannot determine the current directory");
     let initial_dir = Utf8PathBuf::from_path_buf(initial_dir).expect("invalid unicode current dir");
