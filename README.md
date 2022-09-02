@@ -34,8 +34,8 @@ Main operations:
   prints the outputs. If the command fails in a subdirectory, _mrt_ exits in
   this subdirectory to let you inspect the problem. Then you can
   [abort](documentation/abort.md) the entire command queue,
-  [retry](documentation/retry.md) the last failed step, or
-  [ignore](documentation/ignore.md) the last failed step.
+  [retry](documentation/retry.md) or [ignore](documentation/ignore.md) the last
+  failed step.
 - [walk](documentation/walk.md) through all subdirectories and interactively run
   commands in each. [next](documentation/next.md) goes to the next subdirectory.
   [abort](documentation/abort.md) stops the walk.
