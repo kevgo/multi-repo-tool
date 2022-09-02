@@ -7,7 +7,7 @@ use crate::runtime::Step;
 use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct Config {
@@ -19,16 +19,6 @@ pub struct Config {
     /// None --> all folders
     /// Some --> only the specified folders
     pub folders: Option<Vec<String>>,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            root_dir: None,
-            steps: vec![],
-            folders: None,
-        }
-    }
 }
 
 /// provides the full path to the config file

@@ -12,7 +12,7 @@ pub fn run(
 ) -> Result<Config, UserError> {
     let mut steps = vec![];
     let dirs = match config.folders.clone() {
-        None => get_subdirs(&root_dir)?,
+        None => get_subdirs(root_dir)?,
         Some(folders) => folders,
     };
     let mut count = 1;
