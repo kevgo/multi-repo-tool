@@ -28,7 +28,7 @@ arguments.
 
 Main operations:
 
-- [clone](documentation/clone.md) all repositories of a Github organization onto
+- [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
 - [run](documentation/run.md) a CLI command in all subdirectories
   - [abort](documentation/abort.md) the currently running queue
