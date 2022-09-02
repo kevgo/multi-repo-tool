@@ -1,17 +1,20 @@
 # Multi-repo tool
 
-Mrt, pronounced _murt_, allows executing CLI commands in multiple Git
-repositories. Execution can happen automated or manual.
+Mrt, pronounced _murt_, makes working with a large number of Git repositories
+efficient by executing user-provided CLI commands in them.
 
 ### Installation
 
-1. install the binary:
+1. install [rustup](https://rustup.rs) and through that the current stable
+   version of [Rust](https://www.rust-lang.org)
+
+2. install mrt:
 
    ```
    cargo install --git --locked github.com/kevgo/mrt`
    ```
 
-2. install the shell wrapper that you need to run the binary through:
+3. install the shell wrapper through which you will run mrt:
 
    ```
    ~/.cargo/bin/mrt activate | source

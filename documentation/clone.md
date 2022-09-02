@@ -5,7 +5,7 @@ folder of your local machine.
 
 ### example
 
-To clone the [Ory](https://github.com/ory) Github organization:
+To clone all repositories of the Github organization https://github.com/ory:
 
 ```
 m clone ory
