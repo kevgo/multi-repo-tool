@@ -28,18 +28,18 @@ arguments.
 
 Main operations:
 
-- [m clone](documentation/clone.md) all repositories of a Github organization to
+- [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
-- [m run <command to execute>](documentation/run.md) a CLI command fully
-  automated in all subdirectories. If the command fails in a subdirectory, _mrt_
-  exits in this subdirectory to let you inspect the problem. Then you can
-  [abort](documentation/abort.md) the currently running command queue,
+- [run](documentation/run.md) a CLI command fully automated in all
+  subdirectories. If the command fails in a subdirectory, _mrt_ exits in this
+  subdirectory to let you inspect the problem. Then you can
+  [abort](documentation/abort.md) the command queue,
   [retry](documentation/retry.md) the last failed step and continue the command
   queue, or [ignore](documentation/ignore.md) the last failed step and continue
   the queue.
-- [walk](documentation/walk.md) through all subdirectories and open a shell
-  prompt in each. When you are done, [next](documentation/next.md) goes to the
-  next subdirectory.
+- [walk](documentation/walk.md) through all subdirectories and interactively run
+  commands in each. [next](documentation/next.md) goes to the next subdirectory.
+  [abort](documentation/abort.md) stops the walk.
 - [status](documentation/status.md) displays the current status of the command
   queue
 
