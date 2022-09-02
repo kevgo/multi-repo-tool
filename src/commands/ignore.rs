@@ -52,8 +52,8 @@ mod tests {
             steps: vec![],
             ..Config::default()
         };
-        let want = UserError::NothingToIgnore {};
+        let want = Err(UserError::NothingToIgnore);
         let have = super::ignore(give);
-        assert_eq!(have, Err(want));
+        assert_eq!(have, want);
     }
 }
