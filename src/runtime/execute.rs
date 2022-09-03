@@ -26,7 +26,7 @@ pub enum Outcome {
 }
 
 /// executes the given steps, returns the not executed steps in case of an issue
-pub fn execute(config: Config) -> Outcome {
+pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     let mut steps_iter = config.steps.into_iter();
     while let Some(step) = steps_iter.next() {
         let text = match &step {
@@ -36,7 +36,7 @@ pub fn execute(config: Config) -> Outcome {
         };
         println!("\n{}", text.bold());
         let result = match &step {
-            Step::Run { id: _, cmd, args } => run_command(cmd, args),
+            Step::Run { id: _, cmd, args } => run_command(cmd, args, ignore_all),
             Step::Chdir { id: _, dir } => change_wd(dir),
             Step::Exit { id: _ } => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
@@ -84,15 +84,13 @@ pub fn change_wd(dir: &str) -> Result<(), u8> {
 }
 
 /// executes the given command in the current working directory
-pub fn run_command(cmd: &str, args: &Vec<String>) -> Result<(), u8> {
+pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<(), u8> {
     let mut command = Command::new(cmd);
     command.args(args);
-    if let Ok(status) = command.status() {
-        if let Some(exit_code) = status.code() {
-            if exit_code > 0 {
-                return Err(exit_code as u8);
-            }
-        }
+    let status = command.status().expect("cannot determine exit status");
+    let exit_code = status.code().expect("cannot determine exit code");
+    if exit_code > 0 && !ignore_all {
+        return Err(exit_code as u8);
     }
     Ok(())
 }

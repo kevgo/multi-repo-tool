@@ -25,6 +25,7 @@ end
     println!("complete -c m -a 'abort' -d 'abort a failed run'");
     println!("complete -c m -a 'retry' -d 'retry a failed step in a run'");
     println!("complete -c m -a 'ignore' -d 'ignore the currently failing step in a run'");
+    println!("complete -c m -a 'ignore-all' -d 'ignore all failing steps in a run'");
     println!("complete -c m -a 'next' -d 'go to the next subdir in walk'");
     Config::default()
 }
