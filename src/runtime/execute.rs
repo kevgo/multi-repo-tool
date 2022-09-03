@@ -87,14 +87,10 @@ pub fn change_wd(dir: &str) -> Result<(), u8> {
 pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<(), u8> {
     let mut command = Command::new(cmd);
     command.args(args);
-    if let Ok(status) = command.status() {
-        if !ignore_all {
-            if let Some(exit_code) = status.code() {
-                if exit_code > 0 {
-                    return Err(exit_code as u8);
-                }
-            }
-        }
+    let status = command.status().expect("cannot determine exit status");
+    let exit_code = status.code().expect("cannot determine exit code");
+    if exit_code > 0 && !ignore_all {
+        return Err(exit_code as u8);
     }
     Ok(())
 }
