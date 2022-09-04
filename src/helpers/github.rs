@@ -34,6 +34,8 @@ pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
     let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
+        print!(".");
+        drop(io::stdout().flush());
         next_url = next_page_url(response.headers());
         match response.status() {
             StatusCode::OK => {
@@ -56,8 +58,6 @@ pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
                 })
             }
         }
-        print!(".");
-        drop(io::stdout().flush());
     }
     println!(" {} repositories found", repos.len());
     Ok(repos)
