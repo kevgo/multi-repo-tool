@@ -70,14 +70,31 @@ pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
     }
     let mut repos: Vec<Repo> = vec![];
     for org_repo in org_repos {
-        let response = client
-            .get(&org_repo.url)
-            .send()
-            .expect("HTTP request failed");
+        let url = org_repo.url;
+        let response = client.get(&url).send().expect("HTTP request failed");
         print!(".");
         io::stdout().flush().expect("cannot flush stdout");
-        let parsed: Repo = response.json().expect("cannot parse Github API response");
-        repos.push(parsed);
+        match response.status() {
+            StatusCode::OK => {
+                let parsed: Repo = response.json().expect("cannot parse Github API response");
+                repos.push(parsed);
+            }
+            StatusCode::FORBIDDEN => {
+                let error: ErrorMessage = response.json().expect("cannot parse Github API error");
+                return Err(UserError::ApiRequestFailed {
+                    url,
+                    error: error.message,
+                    guidance: error.documentation_url,
+                });
+            }
+            code => {
+                return Err(UserError::UnknownApiError {
+                    url,
+                    code: code.as_u16(),
+                    response: response.text().expect("cannot convert API error to text"),
+                })
+            }
+        }
     }
     println!(" {} repositories found", repos.len());
     Ok(repos)
