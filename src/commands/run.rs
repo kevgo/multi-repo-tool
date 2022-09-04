@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::get_subdirs;
-use crate::runtime::Step;
+use crate::runtime::steps::{self, Step};
 use camino::Utf8PathBuf;
 
 pub fn run(
@@ -15,19 +15,15 @@ pub fn run(
         None => get_subdirs(root_dir)?,
         Some(folders) => folders,
     };
-    let mut count = 1;
     for dir in dirs {
-        steps.push(Step::Chdir { id: count, dir });
-        count += 1;
+        steps.push(Step::Chdir { dir });
         steps.push(Step::Run {
-            id: count,
             cmd: cmd.to_string(),
             args: args.to_owned(),
         });
-        count += 1;
     }
     Ok(Config {
-        steps,
+        steps: steps::numbered(steps),
         root_dir: Some(root_dir.to_string()),
         ..config
     })

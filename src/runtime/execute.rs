@@ -1,6 +1,6 @@
-use super::Step;
 use crate::config::Config;
 use crate::helpers::println::println_bold;
+use crate::runtime::steps::Step;
 use colored::Colorize;
 use std::env;
 use std::process::Command;
@@ -38,16 +38,16 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     }
     let mut steps_iter = config.steps.into_iter();
     while let Some(step) = steps_iter.next() {
-        let text = match &step {
-            Step::Run { id, cmd, args } => format!("step {}: run {} {}", id, cmd, args.join(" ")),
-            Step::Chdir { id, dir } => format!("step {}: cd {}", id, dir),
-            Step::Exit { id: _ } => "".into(),
+        let text = match &step.step {
+            Step::Run { cmd, args } => format!("step {}: run {} {}", step.id, cmd, args.join(" ")),
+            Step::Chdir { dir } => format!("step {}: cd {}", step.id, dir),
+            Step::Exit => "".into(),
         };
         println_bold!("\n{}", text);
-        let result = match &step {
-            Step::Run { id: _, cmd, args } => run_command(cmd, args, ignore_all),
-            Step::Chdir { id: _, dir } => change_wd(dir),
-            Step::Exit { id: _ } => {
+        let result = match &step.step {
+            Step::Run { cmd, args } => run_command(cmd, args, ignore_all),
+            Step::Chdir { dir } => change_wd(dir),
+            Step::Exit => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
                 return Outcome::Exit {
                     dir: current_dir.to_string_lossy().to_string(),

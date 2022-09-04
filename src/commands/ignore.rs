@@ -18,27 +18,27 @@ pub fn ignore(config: Config) -> Result<Config, UserError> {
 mod tests {
     use crate::config::Config;
     use crate::error::UserError;
-    use crate::runtime::Step;
+    use crate::runtime::steps::{NumberedStep, Step};
 
     #[test]
     fn content() {
         let give = Config {
             steps: vec![
-                Step::Chdir {
+                NumberedStep {
                     id: 1,
-                    dir: "one".into(),
+                    step: Step::Chdir { dir: "one".into() },
                 },
-                Step::Chdir {
+                NumberedStep {
                     id: 2,
-                    dir: "two".into(),
+                    step: Step::Chdir { dir: "two".into() },
                 },
             ],
             ..Config::default()
         };
         let want = Ok(Config {
-            steps: vec![Step::Chdir {
+            steps: vec![NumberedStep {
                 id: 2,
-                dir: "two".into(),
+                step: Step::Chdir { dir: "two".into() },
             }],
             ..Config::default()
         });
