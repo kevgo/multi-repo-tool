@@ -13,6 +13,7 @@ static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#
 
 #[derive(Deserialize)]
 pub struct Repo {
+    pub name: String,
     /// URL for API access
     pub url: String,
     /// URL for `git clone`
