@@ -12,6 +12,18 @@ static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#
 #[derive(Deserialize)]
 pub struct Repo {
     pub name: String,
+    /// URL for API access
+    pub url: String,
+    /// URL for `git clone`
+    pub ssh_url: String,
+    /// whether this repo is a fork
+    pub fork: bool,
+    /// the parent of the fork
+    pub parent: Option<RepoParent>,
+}
+
+#[derive(Deserialize)]
+pub struct RepoParent {
     pub ssh_url: String,
 }
 
@@ -22,17 +34,30 @@ pub fn get_repos(org: &str) -> Vec<Repo> {
         .user_agent(APP_USER_AGENT)
         .build()
         .expect("cannot build HTTP client");
-    let mut repos: Vec<Repo> = vec![];
+    let mut org_repos: Vec<Repo> = vec![];
     let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
         print!(".");
-        drop(io::stdout().flush());
+        io::stdout().flush().expect("cannot flush stdout");
         next_url = next_page_url(response.headers());
         let parsed = response
             .json::<Vec<Repo>>()
             .expect("cannot parse Github API response");
-        repos.extend(parsed);
+        org_repos.extend(parsed);
+    }
+    let mut repos: Vec<Repo> = vec![];
+    for org_repo in org_repos {
+        let response = client
+            .get(&org_repo.url)
+            .send()
+            .expect("HTTP request failed");
+        print!(".");
+        io::stdout().flush().expect("cannot flush stdout");
+        let parsed = response
+            .json::<Repo>()
+            .expect("cannot parse Github API response");
+        repos.push(parsed);
     }
     println!(" {} repositories found", repos.len());
     repos
