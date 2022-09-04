@@ -34,6 +34,11 @@ pub enum UserError {
     StepFailed {
         code: u8,
     },
+    UnknownApiError {
+        url: String,
+        code: u16,
+        response: String,
+    },
 }
 
 impl UserError {
@@ -90,6 +95,15 @@ impl Display for UserError {
             UserError::StepFailed { code: _ } => {
                 write!(f, "Abort, Retry, Ignore?")
             }
+            UserError::UnknownApiError {
+                url,
+                code,
+                response,
+            } => write!(
+                f,
+                "unexpected GitHub API error:\n- url: {}\n- code: {}\n- response: {}",
+                url, code, response
+            ),
         }
     }
 }

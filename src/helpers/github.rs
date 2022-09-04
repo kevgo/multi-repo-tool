@@ -1,6 +1,4 @@
 use crate::error::UserError;
-use crate::helpers::println::println_error;
-use colored::Colorize;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use reqwest::header::HeaderMap;
@@ -50,9 +48,12 @@ pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
                     guidance: error.documentation_url,
                 });
             }
-            _ => {
-                println_error!("{}", "unknown HTTP response");
-                println!("{}", &response.status());
+            code => {
+                return Err(UserError::UnknownApiError {
+                    url,
+                    code: code.as_u16(),
+                    response: response.text().expect("cannot convert API error to text"),
+                })
             }
         }
         print!(".");
