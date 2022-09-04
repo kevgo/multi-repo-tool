@@ -54,9 +54,7 @@ pub fn get_repos(org: &str) -> Vec<Repo> {
             .expect("HTTP request failed");
         print!(".");
         io::stdout().flush().expect("cannot flush stdout");
-        let parsed = response
-            .json::<Repo>()
-            .expect("cannot parse Github API response");
+        let parsed: Repo = response.json().expect("cannot parse Github API response");
         repos.push(parsed);
     }
     println!(" {} repositories found", repos.len());
