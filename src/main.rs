@@ -15,11 +15,14 @@ use runtime::{dir_file, Outcome};
 use std::env;
 use std::process::ExitCode;
 
+use crate::helpers::println::println_error;
+
 fn main() -> ExitCode {
     match inner() {
         Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
-            println!("\n{}{}\n", "Error: ".red().bold(), err.to_string().red());
+            println!();
+            println_error!("{}\n", err);
             err.exit_code()
         }
     }
