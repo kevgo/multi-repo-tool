@@ -69,23 +69,21 @@ where
     match response.status() {
         StatusCode::OK => {
             let parsed: T = response.json().expect("cannot parse Github API response");
-            return Ok(parsed);
+            Ok(parsed)
         }
         StatusCode::FORBIDDEN => {
             let error: ErrorMessage = response.json().expect("cannot parse Github API error");
-            return Err(UserError::ApiRequestFailed {
+            Err(UserError::ApiRequestFailed {
                 url,
                 error: error.message,
                 guidance: error.documentation_url,
-            });
-        }
-        code => {
-            return Err(UserError::UnknownApiError {
-                url,
-                code: code.as_u16(),
-                response: response.text().expect("cannot convert API error to text"),
             })
         }
+        code => Err(UserError::UnknownApiError {
+            url,
+            code: code.as_u16(),
+            response: response.text().expect("cannot convert API error to text"),
+        }),
     }
 }
 
