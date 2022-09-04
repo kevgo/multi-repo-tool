@@ -1,5 +1,5 @@
 use crate::error::UserError;
-use crate::runtime::Step;
+use crate::runtime::steps::NumberedStep;
 use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -12,7 +12,7 @@ pub struct Config {
     /// the root directory
     pub root_dir: Option<String>,
     /// steps to execute
-    pub steps: Vec<Step>,
+    pub steps: Vec<NumberedStep>,
     /// folders to execute the steps in
     /// None --> all folders
     /// Some --> only the specified folders
@@ -63,7 +63,7 @@ pub fn save(config_path: &Utf8Path, config: &Config) -> Result<(), UserError> {
 #[cfg(test)]
 mod tests {
     use crate::config::{self, Config};
-    use crate::runtime::Step;
+    use crate::runtime::steps::{NumberedStep, Step};
     use camino::Utf8PathBuf;
     use std::fs;
 
@@ -71,14 +71,16 @@ mod tests {
     fn persistence() {
         let config1 = Config {
             steps: vec![
-                Step::Chdir {
+                NumberedStep {
                     id: 2,
-                    dir: "abc".into(),
+                    step: Step::Chdir { dir: "abc".into() },
                 },
-                Step::Run {
+                NumberedStep {
                     id: 3,
-                    cmd: "git".into(),
-                    args: vec!["clone".into()],
+                    step: Step::Run {
+                        cmd: "git".into(),
+                        args: vec!["clone".into()],
+                    },
                 },
             ],
             folders: Some(vec!["sub1".into(), "sub2".into()]),
