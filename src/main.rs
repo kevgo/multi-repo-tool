@@ -5,6 +5,7 @@ mod error;
 mod helpers;
 mod runtime;
 
+use crate::helpers::println::println_error;
 use camino::Utf8PathBuf;
 use clap::StructOpt;
 use cli::Command;
@@ -14,8 +15,6 @@ use error::UserError;
 use runtime::{dir_file, Outcome};
 use std::env;
 use std::process::ExitCode;
-
-use crate::helpers::println::println_error;
 
 fn main() -> ExitCode {
     match inner() {
