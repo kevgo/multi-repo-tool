@@ -35,29 +35,31 @@ pub struct ErrorMessage {
 pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
     print!("fetching Github org {} ", org);
     print_dot();
-    let client = reqwest::blocking::Client::builder()
-        .user_agent(USER_AGENT)
-        .build()
-        .expect("cannot build HTTP client");
+    let client = create_client();
     let mut org_repos: Vec<Repo> = vec![];
     let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
         print_dot();
         next_url = next_page_url(response.headers());
-        let parsed: Vec<Repo> = parse_response(response, url)?;
-        org_repos.extend(parsed);
+        org_repos.extend(parse_response::<Vec<Repo>>(response, url)?);
     }
     let mut repos: Vec<Repo> = vec![];
     for org_repo in org_repos {
         let url = org_repo.url;
         let response = client.get(&url).send().expect("HTTP request failed");
         print_dot();
-        let repo: Repo = parse_response(response, url)?;
-        repos.push(repo);
+        repos.push(parse_response::<Repo>(response, url)?);
     }
     println!(" {} repositories found", repos.len());
     Ok(repos)
+}
+
+fn create_client() -> reqwest::blocking::Client {
+    reqwest::blocking::Client::builder()
+        .user_agent(USER_AGENT)
+        .build()
+        .expect("cannot build HTTP client")
 }
 
 fn parse_response<T>(response: reqwest::blocking::Response, url: String) -> Result<T, UserError>
