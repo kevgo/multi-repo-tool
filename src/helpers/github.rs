@@ -1,6 +1,9 @@
+use crate::helpers::println::println_error;
+use colored::Colorize;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use reqwest::header::HeaderMap;
+use reqwest::StatusCode;
 use serde::Deserialize;
 use std::io;
 use std::io::Write;
@@ -13,6 +16,12 @@ static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#
 pub struct Repo {
     pub name: String,
     pub ssh_url: String,
+}
+
+#[derive(Deserialize)]
+pub struct ErrorMessage {
+    message: String,
+    documentation_url: String,
 }
 
 pub fn get_repos(org: &str) -> Vec<Repo> {
@@ -29,10 +38,21 @@ pub fn get_repos(org: &str) -> Vec<Repo> {
         print!(".");
         drop(io::stdout().flush());
         next_url = next_page_url(response.headers());
-        let parsed = response
-            .json::<Vec<Repo>>()
-            .expect("cannot parse Github API response");
-        repos.extend(parsed);
+        match response.status() {
+            StatusCode::FORBIDDEN => {
+                let error: ErrorMessage = response.json().expect("cannot parse Github API error");
+                println_error!("{}", error.message.red());
+                println!("more info: {}", error.documentation_url);
+            }
+            StatusCode::OK => {
+                let parsed: Vec<Repo> = response.json().expect("cannot parse Github API response");
+                repos.extend(parsed);
+            }
+            _ => {
+                println_error!("{}", "unknown HTTP response".red());
+                println!("{}", response.status());
+            }
+        }
     }
     println!(" {} repositories found", repos.len());
     repos
