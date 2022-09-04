@@ -67,10 +67,7 @@ where
     T: DeserializeOwned,
 {
     match response.status() {
-        StatusCode::OK => {
-            let parsed: T = response.json().expect("cannot parse Github API response");
-            Ok(parsed)
-        }
+        StatusCode::OK => Ok(response.json().expect("cannot parse Github API response")),
         StatusCode::FORBIDDEN => {
             let error: ErrorMessage = response.json().expect("cannot parse Github API error");
             Err(UserError::ApiRequestFailed {
