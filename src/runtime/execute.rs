@@ -37,14 +37,16 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
         };
     }
     let mut steps_iter = config.steps.into_iter();
-    while let Some(step) = steps_iter.next() {
-        let text = match &step.step {
-            Step::Run { cmd, args } => format!("step {}: run {} {}", step.id, cmd, args.join(" ")),
-            Step::Chdir { dir } => format!("step {}: cd {}", step.id, dir),
+    while let Some(numbered) = steps_iter.next() {
+        let text = match &numbered.step {
+            Step::Run { cmd, args } => {
+                format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+            }
+            Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
             Step::Exit => "".into(),
         };
         println_bold!("\n{}", text);
-        let result = match &step.step {
+        let result = match &numbered.step {
             Step::Run { cmd, args } => run_command(cmd, args, ignore_all),
             Step::Chdir { dir } => change_wd(dir),
             Step::Exit => {
@@ -60,7 +62,7 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
         };
         if let Err(exit_code) = result {
             let current_dir = env::current_dir().expect("cannot determine current directory");
-            let mut remaining_steps = vec![step];
+            let mut remaining_steps = vec![numbered];
             remaining_steps.extend(steps_iter);
             return Outcome::StepFailed {
                 code: exit_code,
