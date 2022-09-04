@@ -34,7 +34,7 @@ pub struct ErrorMessage {
 }
 
 pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
-    print!("fetching Github org {} ", org);
+    print!("analyzing github.com/{} ", org);
     print_dot();
     let client = create_client();
     let mut org_repos: Vec<Repo> = vec![];
