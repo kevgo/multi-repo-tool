@@ -8,7 +8,7 @@ use std::io;
 use std::io::Write;
 use std::mem::drop;
 
-static APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
+static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#).unwrap());
 
 #[derive(Deserialize)]
@@ -27,7 +27,7 @@ pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
     print!("fetching Github org {} .", org);
     drop(io::stdout().flush());
     let client = reqwest::blocking::Client::builder()
-        .user_agent(APP_USER_AGENT)
+        .user_agent(USER_AGENT)
         .build()
         .expect("cannot build HTTP client");
     let mut repos: Vec<Repo> = vec![];
