@@ -1,6 +1,8 @@
+use crate::error::UserError;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use reqwest::header::HeaderMap;
+use reqwest::StatusCode;
 use serde::Deserialize;
 use std::io;
 use std::io::Write;
@@ -15,7 +17,13 @@ pub struct Repo {
     pub ssh_url: String,
 }
 
-pub fn get_repos(org: &str) -> Vec<Repo> {
+#[derive(Deserialize)]
+pub struct ErrorMessage {
+    message: String,
+    documentation_url: String,
+}
+
+pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
     print!("fetching Github org {} .", org);
     drop(io::stdout().flush());
     let client = reqwest::blocking::Client::builder()
@@ -29,13 +37,30 @@ pub fn get_repos(org: &str) -> Vec<Repo> {
         print!(".");
         drop(io::stdout().flush());
         next_url = next_page_url(response.headers());
-        let parsed = response
-            .json::<Vec<Repo>>()
-            .expect("cannot parse Github API response");
-        repos.extend(parsed);
+        match response.status() {
+            StatusCode::OK => {
+                let parsed: Vec<Repo> = response.json().expect("cannot parse Github API response");
+                repos.extend(parsed);
+            }
+            StatusCode::FORBIDDEN => {
+                let error: ErrorMessage = response.json().expect("cannot parse Github API error");
+                return Err(UserError::ApiRequestFailed {
+                    url,
+                    error: error.message,
+                    guidance: error.documentation_url,
+                });
+            }
+            code => {
+                return Err(UserError::UnknownApiError {
+                    url,
+                    code: code.as_u16(),
+                    response: response.text().expect("cannot convert API error to text"),
+                })
+            }
+        }
     }
     println!(" {} repositories found", repos.len());
-    repos
+    Ok(repos)
 }
 
 /// provides the URL to the next set of paginated API results
