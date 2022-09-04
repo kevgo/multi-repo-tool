@@ -29,12 +29,9 @@ impl Display for NumberedStep {
 }
 
 pub fn numbered(steps: Vec<Step>) -> Vec<NumberedStep> {
-    steps
-        .into_iter()
-        .enumerate()
-        .map(|(id, step)| NumberedStep {
-            id: id as u32,
-            step,
-        })
-        .collect()
+    let mut numbered_steps = vec![];
+    for (i, step) in steps.into_iter().enumerate() {
+        numbered_steps.push(NumberedStep { id: i as u32, step });
+    }
+    numbered_steps
 }
