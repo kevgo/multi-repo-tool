@@ -4,17 +4,41 @@ use std::process::ExitCode;
 #[derive(Debug, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub enum UserError {
-    CannotReadDirectory { directory: String, guidance: String },
-    CannotReadPersistenceFile { filename: String, guidance: String },
-    CannotWriteFile { filename: String, guidance: String },
-    InvalidPersistenceFormat { filename: String, guidance: String },
+    ApiRequestFailed {
+        url: String,
+        error: String,
+        guidance: String,
+    },
+    CannotReadDirectory {
+        directory: String,
+        guidance: String,
+    },
+    CannotReadPersistenceFile {
+        filename: String,
+        guidance: String,
+    },
+    CannotWriteFile {
+        filename: String,
+        guidance: String,
+    },
+    InvalidPersistenceFormat {
+        filename: String,
+        guidance: String,
+    },
     NoFoldersToIterate,
     NoNextFolder,
     NotWrapped,
     NothingToAbort,
     NothingToIgnore,
     NothingToRetry,
-    StepFailed { code: u8 },
+    StepFailed {
+        code: u8,
+    },
+    UnknownApiError {
+        url: String,
+        code: u16,
+        response: String,
+    },
 }
 
 impl UserError {
@@ -29,6 +53,15 @@ impl UserError {
 impl Display for UserError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            UserError::ApiRequestFailed {
+                url,
+                error,
+                guidance,
+            } => write!(
+                f,
+                "cannot read GitHub API:\n- url: {}\n- error: {}\n- guidance: {}",
+                url, error, guidance
+            ),
             UserError::CannotReadDirectory {
                 directory,
                 guidance,
@@ -62,6 +95,15 @@ impl Display for UserError {
             UserError::StepFailed { code: _ } => {
                 write!(f, "Abort, Retry, Ignore?")
             }
+            UserError::UnknownApiError {
+                url,
+                code,
+                response,
+            } => write!(
+                f,
+                "unexpected GitHub API error:\n- url: {}\n- code: {}\n- response: {}",
+                url, code, response
+            ),
         }
     }
 }

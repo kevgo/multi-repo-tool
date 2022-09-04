@@ -1,10 +1,11 @@
 use crate::config::Config;
+use crate::error::UserError;
 use crate::helpers::github;
 use crate::runtime::Step;
 
-pub fn clone(org: &str, dir: String) -> Config {
+pub fn clone(org: &str, dir: String) -> Result<Config, UserError> {
     let mut steps = vec![];
-    let repos = github::get_repos(org);
+    let repos = github::get_repos(org)?;
     let mut id = 1;
     for repo in repos {
         steps.push(Step::Run {
@@ -27,9 +28,9 @@ pub fn clone(org: &str, dir: String) -> Config {
             id += 1;
         }
     }
-    Config {
+    Ok(Config {
         steps,
         folders: None,
         root_dir: Some(dir),
-    }
+    })
 }
