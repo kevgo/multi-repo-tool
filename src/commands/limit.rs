@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::get_subdirs;
+use crate::helpers::println_bold;
 use camino::Utf8Path;
 use colored::Colorize;
 use std::process::Command;
@@ -22,10 +23,7 @@ pub fn limit(cmd: &str, args: &[String], root_dir: &Utf8Path) -> Result<Config, 
     if folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    println!(
-        "\n{}",
-        "Execution has been limited to these folders:".bold()
-    );
+    println_bold!("\n{}", "Execution has been limited to these folders:");
     for (i, folder) in folders.iter().enumerate() {
         println!("{}. {}", i + 1, folder);
     }
