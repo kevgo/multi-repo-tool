@@ -1,6 +1,6 @@
 use super::Step;
 use crate::config::Config;
-use crate::helpers::println_bold;
+use crate::helpers::println::println_bold;
 use colored::Colorize;
 use std::env;
 use std::process::Command;

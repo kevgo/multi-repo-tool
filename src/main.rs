@@ -5,6 +5,7 @@ mod error;
 mod helpers;
 mod runtime;
 
+use crate::helpers::println::println_error;
 use camino::Utf8PathBuf;
 use clap::StructOpt;
 use cli::Command;
@@ -19,7 +20,8 @@ fn main() -> ExitCode {
     match inner() {
         Ok(_) => ExitCode::SUCCESS,
         Err(err) => {
-            println!("\n{}{}\n", "Error: ".red().bold(), err.to_string().red());
+            println!();
+            println_error!("{}\n", err);
             err.exit_code()
         }
     }

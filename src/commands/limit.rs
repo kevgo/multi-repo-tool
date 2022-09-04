@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::get_subdirs;
-use crate::helpers::println_bold;
+use crate::helpers::println::println_bold;
 use camino::Utf8Path;
 use colored::Colorize;
 use std::process::Command;
