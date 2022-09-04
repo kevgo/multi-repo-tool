@@ -41,7 +41,7 @@ fn inner() -> Result<(), UserError> {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
         Command::All => commands::all(persisted_config),
-        Command::Clone { org } => commands::clone(&org, initial_dir.to_string()),
+        Command::Clone { org } => commands::clone(&org, initial_dir.to_string())?,
         Command::Run { cmd, args } => commands::run(&cmd, &args, persisted_config, &initial_dir)?,
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
         Command::Limit { cmd, args } => commands::limit(&cmd, &args, &initial_dir)?,

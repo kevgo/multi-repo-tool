@@ -1,3 +1,4 @@
+use crate::error::UserError;
 use crate::helpers::println::println_error;
 use colored::Colorize;
 use once_cell::sync::Lazy;
@@ -24,7 +25,7 @@ pub struct ErrorMessage {
     documentation_url: String,
 }
 
-pub fn get_repos(org: &str) -> Vec<Repo> {
+pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
     print!("fetching Github org {} .", org);
     drop(io::stdout().flush());
     let client = reqwest::blocking::Client::builder()
@@ -35,27 +36,30 @@ pub fn get_repos(org: &str) -> Vec<Repo> {
     let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
-        print!(".");
-        drop(io::stdout().flush());
         next_url = next_page_url(response.headers());
         match response.status() {
-            StatusCode::FORBIDDEN => {
-                let error: ErrorMessage = response.json().expect("cannot parse Github API error");
-                println_error!("{}", error.message.red());
-                println!("more info: {}", error.documentation_url);
-            }
             StatusCode::OK => {
                 let parsed: Vec<Repo> = response.json().expect("cannot parse Github API response");
                 repos.extend(parsed);
             }
+            StatusCode::FORBIDDEN => {
+                let error: ErrorMessage = response.json().expect("cannot parse Github API error");
+                return Err(UserError::ApiRequestFailed {
+                    url,
+                    error: error.message,
+                    guidance: error.documentation_url,
+                });
+            }
             _ => {
-                println_error!("{}", "unknown HTTP response".red());
-                println!("{}", response.status());
+                println_error!("{}", "unknown HTTP response");
+                println!("{}", &response.status());
             }
         }
+        print!(".");
+        drop(io::stdout().flush());
     }
     println!(" {} repositories found", repos.len());
-    repos
+    Ok(repos)
 }
 
 /// provides the URL to the next set of paginated API results
