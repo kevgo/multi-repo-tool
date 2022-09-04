@@ -27,6 +27,14 @@ pub enum Outcome {
 
 /// executes the given steps, returns the not executed steps in case of an issue
 pub fn execute(config: Config, ignore_all: bool) -> Outcome {
+    if config.steps.is_empty() {
+        return Outcome::Success {
+            config: Config {
+                root_dir: None,
+                ..config
+            },
+        };
+    }
     let mut steps_iter = config.steps.into_iter();
     while let Some(step) = steps_iter.next() {
         let text = match &step {
