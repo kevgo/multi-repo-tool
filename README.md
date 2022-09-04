@@ -32,13 +32,13 @@ arguments.
   print the outputs. If a command fails, _mrt_ exits in the respective
   subdirectory to let you inspect/fix the problem. Then you can
   [abort](documentation/abort.md) the entire command queue,
-  [retry](documentation/retry.md), or [ignore](documentation/ignore.md) the
-  failed step.
+  [retry](documentation/retry.md), [ignore](documentation/ignore.md) the failed
+  step, or [ignore all](src/commands/ignore-all.rs) failed steps.
 - [walk](documentation/walk.md) through all subdirectories and interactively run
   commands in each. When done with a folder, you can go to the
   [next](documentation/next.md) one or [abort](documentation/abort.md) the walk.
-- [status](documentation/status.md) displays the current status of the command
+- [status](documentation/status.md) displays the current state of the command
   queue
-- You can [limit](documentation/limit.md) execution to a subset of folders. When
-  done with the folder subset, you can go back to processing
+- [limit](documentation/limit.md) execution to a subset of folders. When done
+  with the folder subset, you can go back to processing
   [all](documentation/all.md) folders.
