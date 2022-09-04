@@ -18,8 +18,6 @@ pub struct Repo {
     pub url: String,
     /// URL for `git clone`
     pub ssh_url: String,
-    /// whether this repo is a fork
-    pub fork: bool,
     /// the parent of the fork
     pub parent: Option<RepoParent>,
 }
