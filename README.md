@@ -31,7 +31,7 @@ a GitHub organization.
   with the folder subset, you can go back to processing
   [all](documentation/all.md) folders.
 
-### reference
+### recipes
 
-- [recipes for limiting](documentation/limit.md#recipes)
-- [recipes for running](documentation/limit.md#recipes)
+- [limiting](documentation/limit.md#recipes)
+- [running](documentation/limit.md#recipes)
