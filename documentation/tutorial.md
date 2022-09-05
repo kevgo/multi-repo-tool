@@ -5,12 +5,12 @@ has become available. Your job is to update this dependency company-wide. You
 estimate this update needs to happen in around 200 Git repositories. For each
 repo, you need to do these steps:
 
-- clone the repo onto your machine
-- run `git checkout -b critical-update` (or since we use
-  [Git Town](https://www.git-town.com): `git hack critical-update`)
-- run `npm update <dependency>`
-- run `git add -A && git commit -m "Update critical dependency"`
-- submit a pull request
+1. clone the repo onto your machine
+2. run `git checkout -b critical-update` (or since we use
+   [Git Town](https://www.git-town.com): `git hack critical-update`)
+3. run `npm update <dependency>`
+4. run `git add -A && git commit -m "Update critical dependency"`
+5. submit a pull request to the team maintaining that codebase
 
 Five activities times two hundred repositories --> you are looking at doing one
 thousand activities manually. You could automate some of them via Bash scripts
