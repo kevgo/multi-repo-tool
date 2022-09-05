@@ -21,10 +21,8 @@ Limit to ...
   m limit ls <file or folder name>
   ```
 
-<details>
-  <summary>repos that contain a certain branch</summary>
+- repos that contain a certain branch
 
-  <pre>
+  ```
   m limit -- git show-ref --verify --quiet refs/heads/<branch name>
-  </pre>
-</details>
+  ```
