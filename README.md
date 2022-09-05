@@ -12,7 +12,7 @@ a GitHub organization.
 - [installation](documentation/install.md)
 - [tutorial](documentation/tutorial.md)
 
-### reference
+### commands
 
 - [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
@@ -30,3 +30,8 @@ a GitHub organization.
 - [limit](documentation/limit.md) execution to a subset of folders. When done
   with the folder subset, you can go back to processing
   [all](documentation/all.md) folders.
+
+### reference
+
+- [recipes for limiting](documentation/limit.md#recipes)
+- [recipes for running](documentation/limit.md#recipes)

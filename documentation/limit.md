@@ -11,22 +11,22 @@ back to processing [all](all.md) folders.
 m limit <command>
 ```
 
-### examples
+### recipes
 
-Limit to folders that contain a certain file or folder:
+Limit to ...
 
-```
-m limit ls <file or folder name>
-```
+<details>
+  <summary>folders that contain a certain file or folder</summary>
 
-Limit to repos that contain a certain branch:
+  <pre>
+  m limit ls <file or folder name>
+  </pre>
+</details>
 
-```
-m limit -- git show-ref --verify --quiet refs/heads/<branch name>
-```
+<details>
+  <summary>repos that contain a certain branch</summary>
 
-Update a dependency managed by npm:
-
-```
-m run -- npx npm-check-updates -u <dependency>
-```
+  <pre>
+  m limit -- git show-ref --verify --quiet refs/heads/<branch name>
+  </pre>
+</details>
