@@ -17,7 +17,9 @@ Limit to ...
 
 - folders that contain a certain file or folder
 
-          m limit ls <file or folder name>
+  ```
+  m limit ls <file or folder name>
+  ```
 
 <details>
   <summary>repos that contain a certain branch</summary>
