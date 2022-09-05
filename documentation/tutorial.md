@@ -8,7 +8,7 @@ repo, you need to:
 1. clone the repo onto your machine
 2. run `git checkout -b critical-update` (or since we use
    [Git Town](https://www.git-town.com): `git hack critical-update`)
-3. run `npm update <dependency>`
+3. run `npx npm-check-updates -u <dependency>`
 4. run `git add -A && git commit -m "Update critical dependency"`
 5. submit a pull request to the team maintaining that codebase
 
@@ -49,7 +49,7 @@ m run git hack critical-update
 This creates a branch called `critical-update` in each of the 200 Node.js repos.
 
 ```
-m run npm update <dependency>`
+m run npx npm-check-updates -u <dependency>
 ```
 
 This runs `npm update <dependency>` in each of the 200 repos.
