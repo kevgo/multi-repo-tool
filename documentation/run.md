@@ -41,8 +41,5 @@ step 7: cd ..
 
 ### recipes
 
-Update a dependency managed by npm:
-
-```
-m run -- npx npm-check-updates -u <dependency>
-```
+- update a dependency managed by npm:
+  `m run -- npx npm-check-updates -u <dependency>`
