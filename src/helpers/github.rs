@@ -1,10 +1,11 @@
 use crate::error::UserError;
 use once_cell::sync::Lazy;
 use regex::Regex;
-use reqwest::header::HeaderMap;
+use reqwest::header::{self, HeaderMap};
 use reqwest::StatusCode;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
+use std::env;
 use std::io;
 use std::io::Write;
 
@@ -57,7 +58,19 @@ pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
 }
 
 fn create_client() -> reqwest::blocking::Client {
+    let mut headers = reqwest::header::HeaderMap::new();
+    headers.insert(
+        header::ACCEPT,
+        "application/vnd.github.v3+json".parse().unwrap(),
+    );
+    if let Ok(token) = env::var("GITHUB_TOKEN") {
+        headers.insert(
+            header::AUTHORIZATION,
+            format!("token {}", token).parse().unwrap(),
+        );
+    }
     reqwest::blocking::Client::builder()
+        .default_headers(headers)
         .user_agent(USER_AGENT)
         .build()
         .expect("cannot build HTTP client")
