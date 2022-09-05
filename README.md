@@ -4,8 +4,8 @@
   <img alt="mrt logo" src="documentation/logo_800_light.png">
 </picture>
 
-`mrt`, pronounced _murt_, is a multi-repo tool that makes executing CLI commands
-in a large number of Git repositories efficient.
+`mrt`, pronounced _murt_, executes CLI commands in all/some Git repositories of
+a GitHub organization.
 
 ### Installation
 
@@ -15,7 +15,7 @@ in a large number of Git repositories efficient.
 2. install mrt:
 
    ```
-   cargo install --git --locked github.com/kevgo/mrt`
+   cargo install --locked --git github.com/kevgo/mrt`
    ```
 
 3. install the shell wrapper through which you will run mrt:
