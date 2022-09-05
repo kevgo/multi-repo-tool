@@ -13,8 +13,10 @@ reqwest = { version = "0.11", features = ["blocking", "json"] }
 serde = { version = "1.0.137", features = ["derive"] }
 serde_json = "1.0.81"
 
-# TODO: uncomment when production ready
 [profile.release]
+debug = 0
 strip = "symbols"
-# lto = "thin"
-panic = 'abort'
+lto = true
+panic = "abort"
+opt-level = "z"
+codegen-units = 1
