@@ -6,7 +6,10 @@ use camino::Utf8Path;
 
 pub fn walk(root_dir: &Utf8Path, config: Config) -> Result<Config, UserError> {
     let mut steps = vec![];
-    let dirs = get_subdirs(root_dir)?;
+    let dirs = match config.folders.clone() {
+        None => get_subdirs(root_dir)?,
+        Some(folders) => folders,
+    };
     for dir in dirs {
         steps.push(Step::Chdir { dir });
         steps.push(Step::Exit);
