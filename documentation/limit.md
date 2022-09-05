@@ -15,11 +15,8 @@ m limit <command>
 
 Limit to ...
 
-- folders that contain a certain file or folder
-
-  ```
-  m limit ls <file or folder name>
-  ```
+- folders that contain a certain file or folder:
+  `m limit ls <file or folder name>`
 
 - repos that contain a certain branch
 
