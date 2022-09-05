@@ -15,7 +15,7 @@ m limit <command>
 
 Limit to ...
 
-- folders that contain a certain file or folder:
+- repos that contain a certain file or folder:
   `m limit ls <file or folder name>`
 - repos that contain a certain branch:
   `m limit -- git show-ref --verify --quiet refs/heads/<branch name>`
