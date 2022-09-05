@@ -4,8 +4,8 @@
   <img alt="mrt logo" src="documentation/logo_800_light.png">
 </picture>
 
-`mrt`, pronounced _murt_, executes CLI commands in all/some Git repositories of
-a GitHub organization.
+_mrt_, the multi-repo tool, executes CLI commands in all/some Git repositories
+of a GitHub organization.
 
 ### getting started
 
