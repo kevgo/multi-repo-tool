@@ -4,31 +4,15 @@
   <img alt="mrt logo" src="documentation/logo_800_light.png">
 </picture>
 
-`mrt`, pronounced _murt_, is a multi-repo tool that makes executing CLI commands
-in a large number of Git repositories efficient.
+`mrt`, pronounced _murt_, executes CLI commands in all/some Git repositories of
+a GitHub organization.
 
-### Installation
+### getting started
 
-1. install [rustup](https://rustup.rs) and through that the current stable
-   version of [Rust](https://www.rust-lang.org)
+- [installation](documentation/install.md)
+- [tutorial](documentation/tutorial.md)
 
-2. install mrt:
-
-   ```
-   cargo install --git --locked github.com/kevgo/mrt`
-   ```
-
-3. install the shell wrapper through which you will run mrt:
-
-   ```
-   ~/.cargo/bin/mrt activate | source
-   ```
-
-Now you can run mrt by calling the shell function `m`. No need to change the
-`$PATH` environment variable. This also gives you auto-completion of mrt
-arguments.
-
-### Usage
+### reference
 
 - [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
