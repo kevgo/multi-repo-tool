@@ -1,10 +1,9 @@
 # Tutorial
 
-Let's say you work at ACME Corp. ACME hosts its code on GitHub. One of the
-vendors has released a critical security update to a library that is widely used
-at ACME. Your job is to update this dependency company-wide. You estimate this
-update needs to happen in around 200 Git repositories. For each repo, you need
-to do these 7 steps:
+A critical security update to a library that is widely used at your organization
+has become available. Your job is to update this dependency company-wide. You
+estimate this update needs to happen in around 200 Git repositories. For each
+repo, you need to do these steps:
 
 - clone the repo onto your machine
 - run `git checkout -b critical-update` (or since we use
