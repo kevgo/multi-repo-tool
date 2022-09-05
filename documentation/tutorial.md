@@ -1,9 +1,9 @@
 # Tutorial
 
 A critical security update to a library that is widely used at your organization
-has become available. Your job is to update this dependency company-wide. You
+has become available. You want to update this dependency company-wide. You
 estimate this update needs to happen in around 200 Git repositories. For each
-repo, you need to do these steps:
+repo, you need to:
 
 1. clone the repo onto your machine
 2. run `git checkout -b critical-update` (or since we use
