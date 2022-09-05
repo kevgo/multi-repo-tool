@@ -34,4 +34,4 @@ of a GitHub organization.
 ### recipes
 
 - [limiting](documentation/limit.md#recipes)
-- [running](documentation/limit.md#recipes)
+- [running](documentation/run.md#recipes)
