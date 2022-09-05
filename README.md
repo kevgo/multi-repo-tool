@@ -7,12 +7,12 @@
 `mrt`, pronounced _murt_, executes CLI commands in all/some Git repositories of
 a GitHub organization.
 
-### Getting started
+### getting started
 
 - [installation](documentation/install.md)
 - [tutorial](documentation/tutorial.md)
 
-### Reference
+### reference
 
 - [clone](documentation/clone.md) all repositories of a Github organization to
   your local machine
