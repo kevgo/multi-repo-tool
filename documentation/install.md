@@ -17,4 +17,5 @@
 
 Now you can run mrt by calling the shell function `m`. No need to change the
 `$PATH` environment variable. This also gives you auto-completion of mrt
-arguments.
+arguments. The shell wrapper is necessary for exiting the current shell in
+folders that encounter problems.
