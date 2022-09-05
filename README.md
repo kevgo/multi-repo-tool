@@ -1,7 +1,11 @@
-# Multi-Repo Tool (mrt)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="documentation/logo_800_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="documentation/logo_800_light.png">
+  <img alt="mrt logo" src="documentation/logo_800_light.png">
+</picture>
 
-`mrt`, pronounced _murt_, makes executing CLI commands in a large number of Git
-repositories efficient.
+`mrt`, pronounced _murt_, is a multi-repo tool that makes executing CLI commands
+in a large number of Git repositories efficient.
 
 ### Installation
 
