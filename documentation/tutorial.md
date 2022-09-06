@@ -23,14 +23,23 @@ m clone <org name>
 ```
 
 `m` is the shell wrapper for _mrt_. This command [clones](clone.md) all 600
-repos of your GitHub organization onto your machine. To try out _mrt_, run this:
+repos of your GitHub organization onto your machine.
+
+If a clone fails, _mrt_ quits and lets you inspect the problem. When you are
+ready to continue, you can run:
+
+- `m retry` to retry the failed command
+- `m abort` to step cloning
+- `m ignore` to skip the failed clone and continue cloning the remaining
+  repositories
+- `m ignore-all` to skip all failed clones
 
 ```
-m run pwd
+m run git status
 ```
 
-This runs `pwd` in all 600 repos and prints the output. That's great but let's
-limit the next couple of commands to repositories that contain Node.js
+This runs `git status` in all 600 repos and prints the output. That's great but
+let's limit the next couple of commands to repositories that contain Node.js
 codebases.
 
 ```
@@ -59,9 +68,9 @@ m run -- git add -A
 m run -- git commit -m "Update critical dependency"
 ```
 
-Since the CLI commands given to `m` contain switches like `-A` or `-m` run them
-after a double-dash (`--`) to signify that they aren't options for _mrt_. Time
-to submit 200 pull requests:
+Since the CLI commands given to `m` contain switches like `-A` or `-m` we have
+to run them after a double-dash (`--`) to signify that they aren't options for
+_mrt_. Time to submit 200 pull requests:
 
 ```
 m run git new-pull-request
