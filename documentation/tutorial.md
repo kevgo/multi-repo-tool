@@ -19,7 +19,7 @@ but how do you continue when one of the codebases encounters a problem?
 _mrt_ enters the chat.
 
 ```
-m clone acme
+m clone <org name>
 ```
 
 `m` is the shell wrapper for _mrt_. This command [clones](clone.md) all 600
