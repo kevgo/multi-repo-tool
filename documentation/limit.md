@@ -24,5 +24,5 @@ Limit to ...
 - repos that contain a certain branch:
 
   ```
-  m limit -- git show-ref --verify --quiet refs/heads/<branch name>
+  m limit git show-ref --verify --quiet refs/heads/<branch name>
   ```
