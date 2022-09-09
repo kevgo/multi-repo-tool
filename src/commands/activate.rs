@@ -5,7 +5,13 @@ pub fn activate() -> Config {
     println!(
         r#"
 function m -d "Fish shell wrapper for mrt"
-    env MRT_WRAPPED=true mrt $argv
+    set cmd $argv[1]
+    set args $argv[2..-1]
+    if test "$cmd" = "--"
+        set cmd $argv[2]
+        set args $argv[3..-1]
+    end
+    env MRT_WRAPPED=true mrt $cmd -- $args
     set --local next_dir_path ~/.config/mrt.next_dir
     if test -e $next_dir_path
         set --local nextdir (cat $next_dir_path)
