@@ -64,13 +64,11 @@ m run npx npm-check-updates -u <dependency>
 This runs `npm update <dependency>` in each of the 200 repos.
 
 ```
-m run -- git add -A
-m run -- git commit -m "Update critical dependency"
+m run git add -A
+m run git commit -m "Update critical dependency"
 ```
 
-Since the CLI commands given to `m` contain switches like `-A` or `-m` we have
-to run them after a double-dash (`--`) to signify that they aren't options for
-_mrt_. Time to submit 200 pull requests:
+Time to submit 200 pull requests:
 
 ```
 m run git new-pull-request
