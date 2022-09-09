@@ -16,5 +16,5 @@ failing directory. You can investigate the failure and then have three options:
 - update a dependency managed by npm:
 
   ```
-  m run -- npx npm-check-updates -u <dependency>
+  m run npx npm-check-updates -u <dependency>
   ```
