@@ -4,8 +4,8 @@
   <img alt="mrt logo" src="documentation/logo_800_light.png">
 </picture>
 
-_mrt_, the multi-repo tool, executes CLI commands in all/some Git repositories
-of a GitHub organization.
+_mrt_, short for _multi-repo tool_, is an open-source CLI tool for large-scale
+code maintenance.
 
 ### getting started
 
