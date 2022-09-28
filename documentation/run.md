@@ -18,3 +18,9 @@ failing directory. You can investigate the failure and then have three options:
   ```
   m run npx npm-check-updates -u <dependency>
   ```
+
+- run a bash command:
+
+  ```
+  m run bash -c "echo hello"
+  ```
