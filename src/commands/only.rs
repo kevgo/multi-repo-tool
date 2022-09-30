@@ -6,7 +6,7 @@ use camino::Utf8Path;
 use colored::Colorize;
 use std::process::Command;
 
-pub fn limit(cmd: &str, args: &[String], root_dir: &Utf8Path) -> Result<Config, UserError> {
+pub fn only(cmd: &str, args: &[String], root_dir: &Utf8Path) -> Result<Config, UserError> {
     let mut folders = vec![];
     for dir in get_subdirs(root_dir)? {
         let mut command = Command::new(&cmd);

@@ -21,7 +21,7 @@ pub enum Command {
     /// Skips all workflow steps that fail
     IgnoreAll,
     /// Limits activities to a subset of subfolders that match the given criteria
-    Limit { cmd: String, args: Vec<String> },
+    Only { cmd: String, args: Vec<String> },
     /// Goes to the next subdirectory during walk
     Next,
     /// Continues the currently running workflow by retrying the last failed step
