@@ -27,11 +27,11 @@ code maintenance.
   [next](documentation/next.md) one or [abort](documentation/abort.md) the walk.
 - [status](documentation/status.md) displays the current state of the command
   queue
-- [limit](documentation/limit.md) execution to a subset of folders. When done
-  with the folder subset, you can go back to processing
-  [all](documentation/all.md) folders.
+- [only](documentation/only.md) execution to a subset of folders. When done with
+  the folder subset, you can go back to processing [all](documentation/all.md)
+  folders.
 
 ### recipes
 
-- [limiting](documentation/limit.md#recipes)
+- [limiting](documentation/only.md#recipes)
 - [running](documentation/run.md#recipes)

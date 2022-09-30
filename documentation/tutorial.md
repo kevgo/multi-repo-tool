@@ -43,13 +43,13 @@ let's limit the next couple of commands to repositories that contain Node.js
 codebases.
 
 ```
-m limit ls package.json
+m only ls package.json
 ```
 
-The ["limit" command](limit.md) limits _mrt_ activities to repositories for
-which the given CLI command returns an exit code of `0`. Node.js codebases
-contain a file `package.json`. The `ls` command returns exit code `1` if the
-given file doesn't exist.
+The ["only" command](only.md) limits _mrt_ activities to repositories for which
+the given CLI command returns an exit code of `0`. Node.js codebases contain a
+file `package.json`. The `ls` command returns exit code `1` if the given file
+doesn't exist.
 
 ```
 m run git hack critical-update
