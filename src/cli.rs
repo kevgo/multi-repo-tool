@@ -30,6 +30,6 @@ pub enum Command {
     Run { cmd: String, args: Vec<String> },
     /// Displays the current status of the command queue
     Status,
-    /// Manually visits each subdirectory
-    Walk,
+    /// Manually visits each subdirectory, optionally starting at the given one
+    Walk { start: Option<String> },
 }
