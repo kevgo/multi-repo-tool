@@ -36,6 +36,13 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
             },
         };
     }
+
+    // somehow this is enough to ensure a graceful exit
+    ctrlc::set_handler(move || {
+        println!("Canceling current step...");
+    })
+    .expect("Error setting Ctrl-C handler");
+
     let mut steps_iter = config.steps.into_iter();
     while let Some(numbered) = steps_iter.next() {
         let text = match &numbered.step {
@@ -99,9 +106,8 @@ pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<()
     let mut command = Command::new(cmd);
     command.args(args);
     let status = command.status().expect("cannot determine exit status");
-    let exit_code = status.code().expect("cannot determine exit code");
-    if exit_code > 0 && !ignore_all {
-        return Err(exit_code as u8);
+    if ignore_all {
+        return Ok(());
     }
-    Ok(())
+    Err(status.code().unwrap_or(1) as u8)
 }
