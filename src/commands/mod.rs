@@ -16,7 +16,7 @@ pub use all::all;
 pub use clone::clone;
 pub use ignore::ignore;
 pub use next::next;
-pub use only::only;
+pub use only::limit;
 pub use retry::retry;
 pub use run::run;
 pub use status::status;
