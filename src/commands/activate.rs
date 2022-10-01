@@ -1,6 +1,7 @@
 use crate::config::Config;
+use std::process::ExitCode;
 
-pub fn activate() -> Config {
+pub fn activate() -> (Config, Option<ExitCode>) {
     // define wrapper shell function
     println!(
         r#"
@@ -33,5 +34,5 @@ end
     println!("complete -c m -a 'ignore' -d 'ignore the currently failing step in a run'");
     println!("complete -c m -a 'ignore-all' -d 'ignore all failing steps in a run'");
     println!("complete -c m -a 'next' -d 'go to the next subdir in walk'");
-    Config::default()
+    (Config::default(), Some(ExitCode::SUCCESS))
 }

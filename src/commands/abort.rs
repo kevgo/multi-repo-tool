@@ -4,8 +4,9 @@ use crate::helpers::println::println_bold;
 use colored::Colorize;
 use std::env;
 use std::path::PathBuf;
+use std::process::ExitCode;
 
-pub fn abort(config: Config) -> Result<Config, UserError> {
+pub fn abort(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
     if config.steps.is_empty() {
         return Err(UserError::NothingToAbort {});
     }
@@ -17,9 +18,12 @@ pub fn abort(config: Config) -> Result<Config, UserError> {
             env::set_current_dir(dir).expect("cannot cd into the initial directory");
         }
     }
-    Ok(Config {
-        steps: vec![],
-        root_dir: None,
-        ..config
-    })
+    Ok((
+        Config {
+            steps: vec![],
+            root_dir: None,
+            ..config
+        },
+        None,
+    ))
 }

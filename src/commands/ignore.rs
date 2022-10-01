@@ -1,17 +1,21 @@
 use crate::config::Config;
 use crate::error::UserError;
 use std::mem::drop;
+use std::process::ExitCode;
 
-pub fn ignore(config: Config) -> Result<Config, UserError> {
+pub fn ignore(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
     if config.steps.is_empty() {
         return Err(UserError::NothingToIgnore {});
     }
     let mut step_iter = config.steps.into_iter();
     drop(step_iter.next());
-    Ok(Config {
-        steps: step_iter.collect(),
-        ..config
-    })
+    Ok((
+        Config {
+            steps: step_iter.collect(),
+            ..config
+        },
+        None,
+    ))
 }
 
 #[cfg(test)]
@@ -35,15 +39,20 @@ mod tests {
             ],
             ..Config::default()
         };
-        let want = Ok(Config {
+        let want = Config {
             steps: vec![NumberedStep {
                 id: 2,
                 step: Step::Chdir { dir: "two".into() },
             }],
             ..Config::default()
-        });
-        let have = super::ignore(give);
-        assert_eq!(have, want);
+        };
+        match super::ignore(give) {
+            Ok((config, exit_code)) => {
+                assert_eq!(config, want);
+                assert!(exit_code.is_none());
+            }
+            Err(err) => panic!("{}", err),
+        }
     }
 
     #[test]
@@ -52,8 +61,10 @@ mod tests {
             steps: vec![],
             ..Config::default()
         };
-        let want = Err(UserError::NothingToIgnore);
-        let have = super::ignore(give);
-        assert_eq!(have, want);
+        let want = UserError::NothingToIgnore;
+        match super::ignore(give) {
+            Ok(data) => panic!("{:?}", data),
+            Err(err) => assert_eq!(err, want),
+        }
     }
 }

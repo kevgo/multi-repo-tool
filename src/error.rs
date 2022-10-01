@@ -1,3 +1,5 @@
+use crate::commands;
+use crate::config::Config;
 use std::fmt::Display;
 use std::process::ExitCode;
 
@@ -31,6 +33,9 @@ pub enum UserError {
     NothingToAbort,
     NothingToIgnore,
     NothingToRetry,
+    SessionAlreadyActive {
+        config: Config,
+    },
     StepFailed {
         code: u8,
     },
@@ -92,6 +97,12 @@ impl Display for UserError {
             UserError::NothingToAbort => write!(f, "nothing to abort"),
             UserError::NothingToIgnore => write!(f, "nothing to ignore"),
             UserError::NothingToRetry => write!(f, "nothing to retry"),
+            #[allow(clippy::print_in_format_impl)]
+            UserError::SessionAlreadyActive { config } => {
+                commands::status(config);
+                println!();
+                write!(f, "a session is already active. Please abort this currently running session before starting a new one.")
+            }
             UserError::StepFailed { code: _ } => {
                 write!(f, "Abort, Retry, Ignore?")
             }

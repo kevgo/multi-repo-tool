@@ -4,7 +4,7 @@ use crate::helpers::get_subdirs;
 use crate::helpers::println::println_bold;
 use camino::Utf8Path;
 use colored::Colorize;
-use std::process::Command;
+use std::process::{Command, ExitCode};
 
 /// defines which folders get included
 pub enum Mode {
@@ -19,7 +19,7 @@ pub fn limit(
     args: &[String],
     root_dir: &Utf8Path,
     mode: &Mode,
-) -> Result<Config, UserError> {
+) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut folders = vec![];
     for dir in get_subdirs(root_dir)? {
         let mut command = Command::new(&cmd);
@@ -42,8 +42,11 @@ pub fn limit(
     for (i, folder) in folders.iter().enumerate() {
         println!("{}. {}", i + 1, folder);
     }
-    Ok(Config {
-        folders: Some(folders),
-        ..Config::default()
-    })
+    Ok((
+        Config {
+            folders: Some(folders),
+            ..Config::default()
+        },
+        None,
+    ))
 }

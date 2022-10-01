@@ -5,7 +5,6 @@ mod error;
 mod helpers;
 mod runtime;
 
-use crate::helpers::println::println_error;
 use camino::Utf8PathBuf;
 use clap::StructOpt;
 use cli::Command;
@@ -19,16 +18,15 @@ use std::process::ExitCode;
 
 fn main() -> ExitCode {
     match inner() {
-        Ok(_) => ExitCode::SUCCESS,
+        Ok(exit_code) => exit_code,
         Err(err) => {
-            println!();
-            println_error!("{}\n", err);
+            println!("{}{}", "ERROR: ".red().bold(), err.to_string().red());
             err.exit_code()
         }
     }
 }
 
-fn inner() -> Result<(), UserError> {
+fn inner() -> Result<ExitCode, UserError> {
     let cli_args = cli::Arguments::parse();
     if cli_args.command != Command::Activate {
         helpers::ensure_activated()?;
@@ -37,8 +35,9 @@ fn inner() -> Result<(), UserError> {
     let init_dir = Utf8PathBuf::from_path_buf(init_dir).expect("invalid unicode current dir");
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
+    prevent_session_override(&persisted_config, &cli_args.command)?;
     let ignore_all = cli_args.command == Command::IgnoreAll;
-    let config_to_execute = match cli_args.command {
+    let (config_to_execute, early_exit) = match cli_args.command {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
         Command::All => commands::all(persisted_config),
@@ -49,9 +48,12 @@ fn inner() -> Result<(), UserError> {
         Command::Except { cmd, args } => commands::limit(&cmd, &args, &init_dir, &Mode::NoMatch)?,
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
-        Command::Status => commands::status(persisted_config),
+        Command::Status => commands::status(&persisted_config),
         Command::Walk { start } => commands::walk(&init_dir, persisted_config, start)?,
     };
+    if let Some(exit_code) = early_exit {
+        return Ok(exit_code);
+    }
     match runtime::execute(config_to_execute, ignore_all) {
         Outcome::Success { config } => {
             config::save(
@@ -66,7 +68,7 @@ fn inner() -> Result<(), UserError> {
             if cwd != init_dir {
                 dir_file::save(&cwd.to_string_lossy())?;
             }
-            Ok(())
+            Ok(ExitCode::SUCCESS)
         }
         Outcome::StepFailed { code, config, dir } => {
             config::save(&config_path, &config)?;
@@ -76,7 +78,22 @@ fn inner() -> Result<(), UserError> {
         Outcome::Exit { config, dir } => {
             config::save(&config_path, &config)?;
             dir_file::save(&dir)?;
-            Ok(())
+            Ok(ExitCode::SUCCESS)
         }
+    }
+}
+
+/// prevents accidental override of an already active session
+fn prevent_session_override(config: &Config, command: &Command) -> Result<(), UserError> {
+    if config.steps.is_empty() {
+        return Ok(());
+    }
+    match command {
+        Command::Run { cmd: _, args: _ } | Command::Walk { start: _ } => {
+            Err(UserError::SessionAlreadyActive {
+                config: config.clone(),
+            })
+        }
+        _ => Ok(()),
     }
 }

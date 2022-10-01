@@ -3,8 +3,9 @@ use crate::error::UserError;
 use crate::helpers::github;
 use crate::runtime::steps::{self, Step};
 use camino::Utf8Path;
+use std::process::ExitCode;
 
-pub fn clone(org: &str, dir: &Utf8Path) -> Result<Config, UserError> {
+pub fn clone(org: &str, dir: &Utf8Path) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut steps = vec![];
     let repos = github::get_repos(org)?;
     for repo in repos {
@@ -30,9 +31,12 @@ pub fn clone(org: &str, dir: &Utf8Path) -> Result<Config, UserError> {
             });
         }
     }
-    Ok(Config {
-        steps: steps::numbered(steps),
-        folders: None,
-        root_dir: Some(dir.to_string()),
-    })
+    Ok((
+        Config {
+            steps: steps::numbered(steps),
+            folders: None,
+            root_dir: Some(dir.to_string()),
+        },
+        None,
+    ))
 }

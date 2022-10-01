@@ -1,8 +1,8 @@
 use crate::config::Config;
-use std::process;
+use std::process::ExitCode;
 
-pub fn status(config: Config) -> Config {
-    match config.folders {
+pub fn status(config: &Config) -> (Config, Option<ExitCode>) {
+    match &config.folders {
         Some(folders) => {
             println!("Running only in these folders:");
             for folder in folders {
@@ -14,9 +14,9 @@ pub fn status(config: Config) -> Config {
     if config.steps.is_empty() {
         println!("I'm not doing anything right now.");
     } else {
-        for step in config.steps {
+        for step in &config.steps {
             println!("{}", step);
         }
     }
-    process::exit(0);
+    (Config::default(), Some(ExitCode::SUCCESS))
 }
