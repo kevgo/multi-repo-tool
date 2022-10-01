@@ -1,3 +1,5 @@
+use std::process::ExitCode;
+
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::get_subdirs;
@@ -8,7 +10,7 @@ pub fn walk(
     root_dir: &Utf8Path,
     config: Config,
     start: Option<String>,
-) -> Result<Config, UserError> {
+) -> Result<(Config, Option<ExitCode>), UserError> {
     let start = start.map(|start| root_dir.join(start));
     let mut steps = vec![];
     let mut active = start.is_none();
@@ -30,9 +32,12 @@ pub fn walk(
     steps.push(Step::Chdir {
         dir: root_dir.to_string(),
     });
-    Ok(Config {
-        steps: steps::numbered(steps),
-        root_dir: Some(root_dir.to_string()),
-        ..config
-    })
+    Ok((
+        Config {
+            steps: steps::numbered(steps),
+            root_dir: Some(root_dir.to_string()),
+            ..config
+        },
+        None,
+    ))
 }

@@ -39,7 +39,7 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
 
     // somehow this is enough to ensure a graceful exit
     ctrlc::set_handler(move || {
-        println!("Canceling current step...");
+        println!("Canceling the current step...");
     })
     .expect("Error setting Ctrl-C handler");
 
@@ -106,8 +106,9 @@ pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<()
     let mut command = Command::new(cmd);
     command.args(args);
     let status = command.status().expect("cannot determine exit status");
-    if ignore_all {
-        return Ok(());
+    if status.success() || ignore_all {
+        Ok(())
+    } else {
+        Err(status.code().unwrap_or(1) as u8)
     }
-    Err(status.code().unwrap_or(1) as u8)
 }
