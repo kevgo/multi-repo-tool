@@ -9,15 +9,15 @@ pub fn walk(
     config: Config,
     start: Option<String>,
 ) -> Result<Config, UserError> {
-    let full_start = start.map(|start| root_dir.join(start));
+    let start = start.map(|start| root_dir.join(start));
     let mut steps = vec![];
-    let mut push = full_start.is_none();
+    let mut push = start.is_none();
     let dirs = match config.folders.clone() {
         None => get_subdirs(root_dir)?,
         Some(folders) => folders,
     };
     for dir in dirs {
-        if let Some(start) = &full_start {
+        if let Some(start) = &start {
             println!("dir: {}, start: {}", dir, start);
             if &dir == start {
                 push = true;
