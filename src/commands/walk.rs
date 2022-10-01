@@ -18,7 +18,6 @@ pub fn walk(
     };
     for dir in dirs {
         if let Some(start) = &start {
-            println!("dir: {}, start: {}", dir, start);
             if &dir == start {
                 active = true;
             }
