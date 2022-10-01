@@ -35,7 +35,7 @@ fn inner() -> Result<ExitCode, UserError> {
     let init_dir = Utf8PathBuf::from_path_buf(init_dir).expect("invalid unicode current dir");
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
-    protect_accidental_override(&persisted_config, &cli_args.command)?;
+    prevent_session_override(&persisted_config, &cli_args.command)?;
     let ignore_all = cli_args.command == Command::IgnoreAll;
     let (config_to_execute, early_exit) = match cli_args.command {
         Command::Abort => commands::abort(persisted_config)?,
@@ -83,7 +83,8 @@ fn inner() -> Result<ExitCode, UserError> {
     }
 }
 
-fn protect_accidental_override(config: &Config, command: &Command) -> Result<(), UserError> {
+/// prevents accidental override of an already active session
+fn prevent_session_override(config: &Config, command: &Command) -> Result<(), UserError> {
     if config.steps.is_empty() {
         return Ok(());
     }
