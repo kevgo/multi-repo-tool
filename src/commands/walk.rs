@@ -11,7 +11,7 @@ pub fn walk(
 ) -> Result<Config, UserError> {
     let start = start.map(|start| root_dir.join(start));
     let mut steps = vec![];
-    let mut push = start.is_none();
+    let mut active = start.is_none();
     let dirs = match config.folders.clone() {
         None => get_subdirs(root_dir)?,
         Some(folders) => folders,
@@ -20,10 +20,10 @@ pub fn walk(
         if let Some(start) = &start {
             println!("dir: {}, start: {}", dir, start);
             if &dir == start {
-                push = true;
+                active = true;
             }
         }
-        if push {
+        if active {
             steps.push(Step::Chdir { dir });
             steps.push(Step::Exit);
         }
