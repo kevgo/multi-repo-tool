@@ -1,6 +1,5 @@
-use std::process::ExitCode;
-
 use crate::config::Config;
+use std::process::ExitCode;
 
 pub fn activate() -> (Config, Option<ExitCode>) {
     // define wrapper shell function

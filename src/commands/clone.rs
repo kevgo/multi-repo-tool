@@ -1,10 +1,9 @@
-use std::process::ExitCode;
-
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::github;
 use crate::runtime::steps::{self, Step};
 use camino::Utf8Path;
+use std::process::ExitCode;
 
 pub fn clone(org: &str, dir: &Utf8Path) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut steps = vec![];

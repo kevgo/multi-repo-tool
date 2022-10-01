@@ -1,10 +1,9 @@
-use std::process::ExitCode;
-
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::get_subdirs;
 use crate::runtime::steps::{self, Step};
 use camino::Utf8Path;
+use std::process::ExitCode;
 
 pub fn walk(
     root_dir: &Utf8Path,
