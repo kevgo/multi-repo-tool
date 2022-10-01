@@ -6,17 +6,32 @@ use camino::Utf8Path;
 use colored::Colorize;
 use std::process::Command;
 
-pub fn only(cmd: &str, args: &[String], root_dir: &Utf8Path) -> Result<Config, UserError> {
+/// defines which folders get included
+pub enum Mode {
+    /// include folders that match the given condition
+    Match,
+    /// include folders that don't match the given condition
+    NoMatch,
+}
+
+pub fn limit(
+    cmd: &str,
+    args: &[String],
+    root_dir: &Utf8Path,
+    mode: &Mode,
+) -> Result<Config, UserError> {
     let mut folders = vec![];
     for dir in get_subdirs(root_dir)? {
         let mut command = Command::new(&cmd);
         command.args(args);
         command.current_dir(&dir);
         if let Ok(status) = command.status() {
-            if let Some(exit_code) = status.code() {
-                if exit_code == 0 {
-                    folders.push(dir);
-                }
+            let push = match mode {
+                Mode::Match => status.success(),
+                Mode::NoMatch => !status.success(),
+            };
+            if push {
+                folders.push(dir);
             }
         }
     }

@@ -16,6 +16,8 @@ pub enum Command {
     All,
     /// Clones a Github organization into the current directory
     Clone { org: String },
+    /// Limits activities to a subset of subfolders that don't match the given criteria
+    Except { cmd: String, args: Vec<String> },
     /// Skips the current workflow step and executes the next one
     Ignore,
     /// Skips all workflow steps that fail
