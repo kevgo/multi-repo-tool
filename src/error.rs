@@ -97,6 +97,7 @@ impl Display for UserError {
             UserError::NothingToAbort => write!(f, "nothing to abort"),
             UserError::NothingToIgnore => write!(f, "nothing to ignore"),
             UserError::NothingToRetry => write!(f, "nothing to retry"),
+            #[allow(clippy::print_in_format_impl)]
             UserError::SessionAlreadyActive { config } => {
                 commands::status(config);
                 println!();
