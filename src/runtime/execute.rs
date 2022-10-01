@@ -37,6 +37,7 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
         };
     }
 
+    // somehow this is enough to ensure a graceful exit
     ctrlc::set_handler(move || {
         println!("Canceling current step...");
     })
