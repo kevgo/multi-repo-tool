@@ -6,8 +6,11 @@ use camino::Utf8Path;
 use colored::Colorize;
 use std::process::Command;
 
+/// defines which folders get included
 pub enum Mode {
+    /// include folders that match the given condition
     Match,
+    /// include folders that don't match the given condition
     NoMatch,
 }
 
