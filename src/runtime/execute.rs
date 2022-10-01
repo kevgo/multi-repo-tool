@@ -4,8 +4,6 @@ use crate::runtime::steps::Step;
 use colored::Colorize;
 use std::env;
 use std::process::Command;
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
 
 pub enum Outcome {
     /// exit in the middle of execution
@@ -39,31 +37,13 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
         };
     }
 
-    let running = Arc::new(AtomicBool::new(true));
-    let r = running.clone();
     ctrlc::set_handler(move || {
-        println!("Captured Ctrl-C ...");
-        r.store(false, Ordering::SeqCst);
+        println!("Canceling current step...");
     })
     .expect("Error setting Ctrl-C handler");
 
     let mut steps_iter = config.steps.into_iter();
     while let Some(numbered) = steps_iter.next() {
-        if !running.load(Ordering::SeqCst) {
-            println!("Exiting event queue ...");
-            let current_dir = env::current_dir().expect("cannot determine current directory");
-            let mut remaining_steps = vec![numbered];
-            remaining_steps.extend(steps_iter);
-            return Outcome::StepFailed {
-                code: 1,
-                config: Config {
-                    steps: remaining_steps,
-                    ..config
-                },
-                dir: current_dir.to_string_lossy().to_string(),
-            };
-        }
-
         let text = match &numbered.step {
             Step::Run { cmd, args } => {
                 format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
