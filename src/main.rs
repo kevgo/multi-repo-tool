@@ -5,7 +5,6 @@ mod error;
 mod helpers;
 mod runtime;
 
-use crate::helpers::println::println_error;
 use camino::Utf8PathBuf;
 use clap::StructOpt;
 use cli::Command;
@@ -21,8 +20,7 @@ fn main() -> ExitCode {
     match inner() {
         Ok(exit_code) => exit_code,
         Err(err) => {
-            println!();
-            println_error!("{}\n", err);
+            println!("{}{}", "ERROR: ".red().bold(), err.to_string().red());
             err.exit_code()
         }
     }
@@ -37,9 +35,7 @@ fn inner() -> Result<ExitCode, UserError> {
     let init_dir = Utf8PathBuf::from_path_buf(init_dir).expect("invalid unicode current dir");
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
-    if let Some(exit_code) = protect_accidental_override(&persisted_config, &cli_args.command) {
-        return Ok(exit_code);
-    }
+    protect_accidental_override(&persisted_config, &cli_args.command)?;
     let ignore_all = cli_args.command == Command::IgnoreAll;
     let (config_to_execute, early_exit) = match cli_args.command {
         Command::Abort => commands::abort(persisted_config)?,
@@ -87,17 +83,16 @@ fn inner() -> Result<ExitCode, UserError> {
     }
 }
 
-fn protect_accidental_override(config: &Config, command: &Command) -> Option<ExitCode> {
+fn protect_accidental_override(config: &Config, command: &Command) -> Result<(), UserError> {
     if config.steps.is_empty() {
-        return None;
+        return Ok(());
     }
     match command {
         Command::Run { cmd: _, args: _ } | Command::Walk { start: _ } => {
-            println!("A session is currently running:\n");
-            commands::status(config);
-            println!("\nPlease abort this currently running session before you start a new one.");
-            Some(ExitCode::SUCCESS)
+            Err(UserError::SessionAlreadyActive {
+                config: config.clone(),
+            })
         }
-        _ => None,
+        _ => Ok(()),
     }
 }
