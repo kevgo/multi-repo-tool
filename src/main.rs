@@ -48,7 +48,7 @@ fn inner() -> Result<(), UserError> {
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
         Command::Status => commands::status(persisted_config),
-        Command::Walk { start } => commands::walk(&initial_dir, persisted_config, &start)?,
+        Command::Walk { start } => commands::walk(&initial_dir, persisted_config, start)?,
     };
     match runtime::execute(config_to_execute, ignore_all) {
         Outcome::Success { config } => {

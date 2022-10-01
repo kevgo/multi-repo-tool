@@ -7,16 +7,18 @@ use camino::Utf8Path;
 pub fn walk(
     root_dir: &Utf8Path,
     config: Config,
-    start: &Option<String>,
+    start: Option<String>,
 ) -> Result<Config, UserError> {
+    let full_start = start.map(|start| root_dir.join(start));
     let mut steps = vec![];
-    let mut push = start.is_none();
+    let mut push = full_start.is_none();
     let dirs = match config.folders.clone() {
         None => get_subdirs(root_dir)?,
         Some(folders) => folders,
     };
     for dir in dirs {
-        if let Some(start) = &start {
+        if let Some(start) = &full_start {
+            println!("dir: {}, start: {}", dir, start);
             if &dir == start {
                 push = true;
             }
