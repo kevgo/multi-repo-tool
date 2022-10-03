@@ -1,5 +1,4 @@
 use crate::config::Config;
-use crate::helpers::println::println_bold;
 use crate::runtime::steps::Step;
 use colored::Colorize;
 use std::env;
@@ -52,7 +51,7 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
             Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
             Step::Exit => "".into(),
         };
-        println_bold!("\n{}", text);
+        println!("\n{}", text.bold());
         let result = match &numbered.step {
             Step::Run { cmd, args } => run_command(cmd, args, ignore_all),
             Step::Chdir { dir } => change_wd(dir),
@@ -84,7 +83,7 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     if let Some(dir) = config.root_dir {
         env::set_current_dir(dir).expect("cannot cd into the initial directory");
     }
-    println_bold!("\n{}\n", "ALL DONE");
+    println!("\n{}\n", "ALL DONE".bold());
     Outcome::Success {
         config: Config {
             steps: vec![],
