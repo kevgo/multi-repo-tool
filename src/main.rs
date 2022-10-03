@@ -40,12 +40,14 @@ fn inner() -> Result<ExitCode, UserError> {
     let (config_to_execute, early_exit) = match cli_args.command {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
-        Command::All => commands::all(persisted_config),
+        Command::All => commands::limit::all(persisted_config),
         Command::Clone { org } => commands::clone(&org, &init_dir)?,
         Command::Run { cmd, args } => commands::run(&cmd, &args, persisted_config, &init_dir)?,
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
-        Command::Only { cmd, args } => commands::limit(&cmd, &args, &init_dir, &Mode::Match)?,
-        Command::Except { cmd, args } => commands::limit(&cmd, &args, &init_dir, &Mode::NoMatch)?,
+        Command::Only { cmd, args } => commands::limit::only(&cmd, &args, &init_dir, &Mode::Match)?,
+        Command::Except { cmd, args } => {
+            commands::limit::only(&cmd, &args, &init_dir, &Mode::NoMatch)?
+        }
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
         Command::Status => commands::status(&persisted_config),

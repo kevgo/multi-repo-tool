@@ -14,7 +14,17 @@ pub enum Mode {
     NoMatch,
 }
 
-pub fn limit(
+pub fn all(config: Config) -> (Config, Option<ExitCode>) {
+    (
+        Config {
+            folders: None,
+            ..config
+        },
+        None,
+    )
+}
+
+pub fn only(
     cmd: &str,
     args: &[String],
     root_dir: &Utf8Path,
