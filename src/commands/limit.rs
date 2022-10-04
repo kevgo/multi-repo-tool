@@ -69,11 +69,14 @@ pub fn only(
     };
     println!("\n{}", text.bold());
     folder_list::print(&new_folders);
+    if !config.steps.is_empty() {
+        println!("Discarding pending {} steps.", config.steps.len());
+    }
     let new_config = Config {
         folders: Some(new_folders),
         root_dir: Some(root_dir.to_string()),
-        ..Config::default()
+        steps: vec![],
     };
-    config::save(&config_path, &new_config)?;
-    Ok((new_config, None))
+    config::save(config_path, &new_config)?;
+    Ok((new_config, Some(ExitCode::SUCCESS)))
 }
