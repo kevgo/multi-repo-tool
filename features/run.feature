@@ -7,7 +7,7 @@ Feature: running a command automatically
     When running "m run action"
     Then it prints:
       """
-      step 0: cd /home/kevlar/mrt/examples/go1
+      step 0: cd {{examples_path}}/go1
 
       step 1: run action
       """
