@@ -13,7 +13,7 @@ pub fn abort(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
         "{}",
         format!("aborting {} steps", config.steps.len()).bold()
     );
-    if let Some(dir) = config.root_dir {
+    if let Some(dir) = &config.root_dir {
         let cwd = env::current_dir().expect("cannot determine current directory");
         if cwd != PathBuf::from(&dir) {
             println!("{}", format!("returning to {}\n", &dir).bold());
@@ -23,7 +23,6 @@ pub fn abort(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
     Ok((
         Config {
             steps: vec![],
-            root_dir: None,
             ..config
         },
         None,
