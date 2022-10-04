@@ -7,20 +7,20 @@ Feature: running a command automatically
     When running "m run pwd"
     Then it prints:
       """
-      step 0: cd /home/kevlar/mrt/examples/simple/go1
+      step 0: cd {{examples_dir}}/go1
 
       step 1: run pwd
-      /home/kevlar/mrt/examples/simple/go1
+      {{examples_dir}}/go1
 
-      step 2: cd /home/kevlar/mrt/examples/simple/node1
+      step 2: cd {{examples_dir}}/node1
 
       step 3: run pwd
-      /home/kevlar/mrt/examples/simple/node1
+      {{examples_dir}}/node1
 
-      step 4: cd /home/kevlar/mrt/examples/simple/node2
+      step 4: cd {{examples_dir}}/node2
 
       step 5: run pwd
-      /home/kevlar/mrt/examples/simple/node2
+      {{examples_dir}}/node2
 
       ALL DONE
       """

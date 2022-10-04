@@ -47,7 +47,7 @@ async fn when_running(world: &mut MrtWorld, command: String) {
 async fn it_prints(world: &mut MrtWorld, step: &Step) {
     let examples_dir = world.dir.as_ref().unwrap();
     let want = step.docstring().expect("step has no docstring");
-    let want = want.replace("{{examples_path}}", &examples_dir.to_string_lossy());
+    let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
     let output = world.output.take().expect("no execution recorded");
     let printed = format!(
         "{}{}",
