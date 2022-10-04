@@ -14,8 +14,12 @@ pub fn status(config: &Config) -> Result<(Config, Option<ExitCode>), UserError> 
                 Some(all) => println!("Running only in {}/{} folders:", folders.len(), all),
                 None => println!("Running only in {} folders:", folders.len()),
             }
-            for folder in folders {
-                println!("- {}", folder);
+            for (i, folder) in folders.iter().enumerate() {
+                match folder.len() {
+                    10..=99 => println!("{:02}. {}", i + 1, folder),
+                    100..=999 => println!("{:03}. {}", i + 1, folder),
+                    _ => println!("{}. {}", i + 1, folder),
+                }
             }
         }
         None => match all_count {
@@ -23,6 +27,7 @@ pub fn status(config: &Config) -> Result<(Config, Option<ExitCode>), UserError> 
             None => println!("Running in all folders."),
         },
     }
+    println!();
     if config.steps.is_empty() {
         println!("I'm not doing anything right now.");
     } else {
