@@ -4,7 +4,7 @@ use std::env;
 use std::path::PathBuf;
 use std::process::Output;
 use std::str;
-// use tokio::fs;
+use tokio::fs;
 // use tokio::fs::File;
 // use tokio::io;
 use tokio::process::Command;
@@ -56,6 +56,16 @@ async fn it_prints(world: &mut MrtWorld, step: &Step) {
     );
     assert_eq!(printed.trim(), want.trim());
     assert!(output.status.success());
+}
+
+#[then("the saved state is:")]
+async fn verify_saved_state(_world: &mut MrtWorld, step: &Step) {
+    let cwd = env::current_dir().expect("cannot determine current dir");
+    let home_dir = cwd.join("examples").join("home");
+    let config_path = home_dir.join(".config").join("mrt.json");
+    let have = fs::read_to_string(config_path).await.unwrap();
+    let want = step.docstring().expect("step has no docstring");
+    assert_eq!(have.trim(), want.trim());
 }
 
 #[tokio::main(flavor = "current_thread")]

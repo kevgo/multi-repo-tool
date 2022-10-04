@@ -26,6 +26,14 @@ Feature: running a command automatically
 
       ALL DONE
         """
+      And the saved state is:
+        """
+        {
+          "rootDir": null,
+          "steps": [],
+          "folders": null
+        }
+        """
 
     Scenario: non-executable binary
 
