@@ -46,7 +46,11 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     while let Some(numbered) = steps_iter.next() {
         let text = match &numbered.step {
             Step::Run { cmd, args } => {
-                format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+                if args.is_empty() {
+                    format!("step {}: run {}", numbered.id, cmd)
+                } else {
+                    format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+                }
             }
             Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
             Step::Exit => "".into(),
