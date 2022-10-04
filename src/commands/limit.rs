@@ -1,4 +1,4 @@
-use crate::config::{self, Config};
+use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::{folder_list, subdirs};
 use camino::Utf8Path;
@@ -17,6 +17,7 @@ pub fn all(config: Config) -> (Config, Option<ExitCode>) {
     (
         Config {
             folders: None,
+            steps: vec![],
             ..config
         },
         None,
@@ -29,7 +30,6 @@ pub fn only(
     root_dir: &Utf8Path,
     mode: &Mode,
     config: Config,
-    config_path: &Utf8Path,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut new_folders = vec![];
     let all_folders = subdirs::all(root_dir)?;
@@ -72,11 +72,12 @@ pub fn only(
     if !config.steps.is_empty() {
         println!("Discarding pending {} steps.", config.steps.len());
     }
-    let new_config = Config {
-        folders: Some(new_folders),
-        root_dir: Some(root_dir.to_string()),
-        steps: vec![],
-    };
-    config::save(config_path, &new_config)?;
-    Ok((new_config, Some(ExitCode::SUCCESS)))
+    Ok((
+        Config {
+            folders: Some(new_folders),
+            steps: vec![],
+            ..config
+        },
+        None,
+    ))
 }
