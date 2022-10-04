@@ -17,6 +17,7 @@ pub fn all(config: Config) -> (Config, Option<ExitCode>) {
     (
         Config {
             folders: None,
+            steps: vec![],
             ..config
         },
         None,
@@ -68,11 +69,14 @@ pub fn only(
     };
     println!("\n{}", text.bold());
     folder_list::print(&new_folders);
+    if !config.steps.is_empty() {
+        println!("Discarding pending {} steps.", config.steps.len());
+    }
     Ok((
         Config {
             folders: Some(new_folders),
-            root_dir: Some(root_dir.to_string()),
-            ..Config::default()
+            steps: vec![],
+            ..config
         },
         None,
     ))
