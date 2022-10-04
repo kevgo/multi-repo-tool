@@ -44,13 +44,15 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::Clone { org } => commands::clone(&org, &init_dir)?,
         Command::Run { cmd, args } => commands::run(&cmd, &args, persisted_config, &init_dir)?,
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
-        Command::Only { cmd, args } => commands::limit::only(&cmd, &args, &init_dir, &Mode::Match)?,
+        Command::Only { cmd, args } => {
+            commands::limit::only(&cmd, &args, &init_dir, &Mode::Match, persisted_config)?
+        }
         Command::Except { cmd, args } => {
-            commands::limit::only(&cmd, &args, &init_dir, &Mode::NoMatch)?
+            commands::limit::only(&cmd, &args, &init_dir, &Mode::NoMatch, persisted_config)?
         }
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
-        Command::Status => commands::status(&persisted_config),
+        Command::Status => commands::status(&persisted_config)?,
         Command::Walk { start } => commands::walk(&init_dir, persisted_config, start)?,
     };
     if let Some(exit_code) = early_exit {

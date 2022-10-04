@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::UserError;
-use crate::helpers::get_subdirs;
+use crate::helpers::subdirs;
 use crate::runtime::steps::{self, Step};
 use camino::Utf8Path;
 use std::process::ExitCode;
@@ -14,7 +14,7 @@ pub fn walk(
     let mut steps = vec![];
     let mut active = start.is_none();
     let dirs = match config.folders.clone() {
-        None => get_subdirs(root_dir)?,
+        None => subdirs::all(root_dir)?,
         Some(folders) => folders,
     };
     for dir in dirs {

@@ -1,7 +1,6 @@
 use crate::config::Config;
 use crate::error::UserError;
-use crate::helpers::get_subdirs;
-use crate::helpers::println::println_bold;
+use crate::helpers::subdirs;
 use camino::Utf8Path;
 use colored::Colorize;
 use std::process::{Command, ExitCode};
@@ -29,32 +28,50 @@ pub fn only(
     args: &[String],
     root_dir: &Utf8Path,
     mode: &Mode,
+    config: Config,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
-    let mut folders = vec![];
-    for dir in get_subdirs(root_dir)? {
+    let mut new_folders = vec![];
+    let all_folders = subdirs::all(root_dir)?;
+    let all_folders_count = all_folders.len();
+    let previous_count = config.folders.as_ref().map(|folders| folders.len());
+    for dir in config.folders.unwrap_or(all_folders) {
         let mut command = Command::new(&cmd);
         command.args(args);
         command.current_dir(&dir);
         if let Ok(status) = command.status() {
-            let push = match mode {
+            let folder_matches = match mode {
                 Mode::Match => status.success(),
                 Mode::NoMatch => !status.success(),
             };
-            if push {
-                folders.push(dir);
+            if folder_matches {
+                new_folders.push(dir);
             }
         }
     }
-    if folders.is_empty() {
+    if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    println_bold!("\n{}", "Execution has been limited to these folders:");
-    for (i, folder) in folders.iter().enumerate() {
+    let output = match previous_count {
+        Some(previous_count) => format!(
+            "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
+            previous_count,
+            all_folders_count,
+            new_folders.len(),
+            all_folders_count
+        ),
+        None => format!(
+            "Limiting execution to {}/{} folders:",
+            new_folders.len(),
+            all_folders_count
+        ),
+    };
+    println!("\n{}", output.bold());
+    for (i, folder) in new_folders.iter().enumerate() {
         println!("{}. {}", i + 1, folder);
     }
     Ok((
         Config {
-            folders: Some(folders),
+            folders: Some(new_folders),
             ..Config::default()
         },
         None,
