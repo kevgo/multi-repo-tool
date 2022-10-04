@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::UserError;
-use crate::helpers::subdirs;
+use crate::helpers::{folder_list, subdirs};
 use std::process::ExitCode;
 
 pub fn status(config: &Config) -> Result<(Config, Option<ExitCode>), UserError> {
@@ -14,13 +14,7 @@ pub fn status(config: &Config) -> Result<(Config, Option<ExitCode>), UserError> 
                 Some(all) => println!("Running only in {}/{} folders:", folders.len(), all),
                 None => println!("Running only in {} folders:", folders.len()),
             }
-            for (i, folder) in folders.iter().enumerate() {
-                match folder.len() {
-                    10..=99 => println!("{:02}. {}", i + 1, folder),
-                    100..=999 => println!("{:03}. {}", i + 1, folder),
-                    _ => println!("{}. {}", i + 1, folder),
-                }
-            }
+            folder_list::print(folders);
         }
         None => match all_count {
             Some(all) => println!("Running in all {} folders.", all),
