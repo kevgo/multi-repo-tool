@@ -51,7 +51,7 @@ pub fn only(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    let output = if let Some(previous_count) = previous_count {
+    let text = if let Some(previous_count) = previous_count {
         format!(
             "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
             previous_count,
@@ -66,11 +66,12 @@ pub fn only(
             all_folders_count
         )
     };
-    println!("\n{}", output.bold());
+    println!("\n{}", text.bold());
     folder_list::print(&new_folders);
     Ok((
         Config {
             folders: Some(new_folders),
+            root_dir: Some(root_dir.to_string()),
             ..Config::default()
         },
         None,

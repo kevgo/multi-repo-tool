@@ -64,7 +64,6 @@ fn inner() -> Result<ExitCode, UserError> {
                 &config_path,
                 &Config {
                     steps: vec![],
-                    root_dir: None,
                     ..config
                 },
             )?;
