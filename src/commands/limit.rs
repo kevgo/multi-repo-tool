@@ -71,6 +71,7 @@ pub fn only(
     Ok((
         Config {
             folders: Some(new_folders),
+            root_dir: Some(root_dir.to_string()),
             ..Config::default()
         },
         None,
