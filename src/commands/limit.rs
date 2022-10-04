@@ -53,8 +53,9 @@ pub fn only(
     }
     let output = match previous_count {
         Some(previous_count) => format!(
-            "Tightening the existing limit of {} folders to {}/{} folders:",
+            "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
             previous_count,
+            all_folders_count,
             new_folders.len(),
             all_folders_count
         ),
