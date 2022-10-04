@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+echo "doing stuff in node1"
