@@ -99,7 +99,7 @@ impl Display for UserError {
             UserError::NothingToRetry => write!(f, "nothing to retry"),
             #[allow(clippy::print_in_format_impl)]
             UserError::SessionAlreadyActive { config } => {
-                commands::status(config);
+                commands::status(config).unwrap();
                 println!();
                 write!(f, "a session is already active. Please abort this currently running session before starting a new one.")
             }

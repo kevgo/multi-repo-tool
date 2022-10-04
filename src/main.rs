@@ -52,7 +52,7 @@ fn inner() -> Result<ExitCode, UserError> {
         }
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
-        Command::Status => commands::status(&persisted_config),
+        Command::Status => commands::status(&persisted_config)?,
         Command::Walk { start } => commands::walk(&init_dir, persisted_config, start)?,
     };
     if let Some(exit_code) = early_exit {

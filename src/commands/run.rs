@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::UserError;
-use crate::helpers::get_subdirs;
+use crate::helpers::subdirs;
 use crate::runtime::steps::{self, Step};
 use camino::Utf8PathBuf;
 use std::process::ExitCode;
@@ -12,9 +12,10 @@ pub fn run(
     root_dir: &Utf8PathBuf,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut steps = vec![];
-    let dirs = match config.folders.clone() {
-        None => get_subdirs(root_dir)?,
-        Some(folders) => folders,
+    let all_subdirs = subdirs::all(root_dir)?;
+    let dirs = match &config.folders {
+        Some(config_folders) => config_folders.clone(),
+        None => all_subdirs,
     };
     for dir in dirs {
         steps.push(Step::Chdir { dir });

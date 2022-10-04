@@ -1,15 +1,27 @@
 use crate::config::Config;
+use crate::error::UserError;
+use crate::helpers::subdirs;
 use std::process::ExitCode;
 
-pub fn status(config: &Config) -> (Config, Option<ExitCode>) {
+pub fn status(config: &Config) -> Result<(Config, Option<ExitCode>), UserError> {
+    let all_count = match &config.root_dir {
+        Some(root_dir) => Some(subdirs::count(root_dir)?),
+        None => None,
+    };
     match &config.folders {
         Some(folders) => {
-            println!("Running only in these folders:");
+            match all_count {
+                Some(all) => println!("Running only in {}/{} folders:", folders.len(), all),
+                None => println!("Running only in {} folders:", folders.len()),
+            }
             for folder in folders {
                 println!("- {}", folder);
             }
         }
-        None => println!("Running in all folders."),
+        None => match all_count {
+            Some(all) => println!("Running in all {} folders.", all),
+            None => println!("Running in all folders."),
+        },
     }
     if config.steps.is_empty() {
         println!("I'm not doing anything right now.");
@@ -18,5 +30,5 @@ pub fn status(config: &Config) -> (Config, Option<ExitCode>) {
             println!("{}", step);
         }
     }
-    (Config::default(), Some(ExitCode::SUCCESS))
+    Ok((Config::default(), Some(ExitCode::SUCCESS)))
 }

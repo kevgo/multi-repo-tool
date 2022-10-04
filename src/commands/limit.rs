@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::UserError;
-use crate::helpers::get_subdirs;
+use crate::helpers::subdirs;
 use camino::Utf8Path;
 use colored::Colorize;
 use std::process::{Command, ExitCode};
@@ -31,7 +31,7 @@ pub fn only(
     config: Config,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut new_folders = vec![];
-    let all_folders = get_subdirs(root_dir)?;
+    let all_folders = subdirs::all(root_dir)?;
     let all_folders_count = all_folders.len();
     for dir in config.folders.unwrap_or(all_folders) {
         let mut command = Command::new(&cmd);
