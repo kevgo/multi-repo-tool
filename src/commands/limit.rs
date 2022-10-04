@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::config::{self, Config};
 use crate::error::UserError;
 use crate::helpers::{folder_list, subdirs};
 use camino::Utf8Path;
@@ -29,6 +29,7 @@ pub fn only(
     root_dir: &Utf8Path,
     mode: &Mode,
     config: Config,
+    config_path: &Utf8Path,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut new_folders = vec![];
     let all_folders = subdirs::all(root_dir)?;
@@ -68,12 +69,11 @@ pub fn only(
     };
     println!("\n{}", text.bold());
     folder_list::print(&new_folders);
-    Ok((
-        Config {
-            folders: Some(new_folders),
-            root_dir: Some(root_dir.to_string()),
-            ..Config::default()
-        },
-        None,
-    ))
+    let new_config = Config {
+        folders: Some(new_folders),
+        root_dir: Some(root_dir.to_string()),
+        ..Config::default()
+    };
+    config::save(&config_path, &new_config)?;
+    Ok((new_config, None))
 }
