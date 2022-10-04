@@ -33,6 +33,7 @@ pub fn only(
     let mut new_folders = vec![];
     let all_folders = subdirs::all(root_dir)?;
     let all_folders_count = all_folders.len();
+    let previous_count = config.folders.as_ref().map(|folders| folders.len());
     for dir in config.folders.unwrap_or(all_folders) {
         let mut command = Command::new(&cmd);
         command.args(args);
@@ -50,15 +51,20 @@ pub fn only(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    println!(
-        "\n{}",
-        format!(
-            "Execution has been limited to {}/{} folders:",
+    let output = match previous_count {
+        Some(previous_count) => format!(
+            "Tightening the existing limit of {} folders to {}/{} folders:",
+            previous_count,
             new_folders.len(),
             all_folders_count
-        )
-        .bold()
-    );
+        ),
+        None => format!(
+            "Limiting execution to {}/{} folders:",
+            new_folders.len(),
+            all_folders_count
+        ),
+    };
+    println!("\n{}", output.bold());
     for (i, folder) in new_folders.iter().enumerate() {
         println!("{}. {}", i + 1, folder);
     }
