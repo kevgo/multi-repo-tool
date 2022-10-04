@@ -67,7 +67,11 @@ pub fn only(
     };
     println!("\n{}", output.bold());
     for (i, folder) in new_folders.iter().enumerate() {
-        println!("{}. {}", i + 1, folder);
+        match folder.len() {
+            10..=99 => println!("{:02}. {}", i + 1, folder),
+            100..=999 => println!("{:03}. {}", i + 1, folder),
+            _ => println!("{}. {}", i + 1, folder),
+        }
     }
     Ok((
         Config {
