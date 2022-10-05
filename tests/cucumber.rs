@@ -9,8 +9,11 @@ use tokio::process::Command;
 
 #[derive(Debug, Default, World)]
 pub struct MrtWorld {
+    /// the directory in which we run mrt
     dir: Option<PathBuf>,
+    /// the output produced by mrt
     output: Option<Output>,
+    /// the content of mrt.json before running mrt
     previous_state: Option<String>,
 }
 
