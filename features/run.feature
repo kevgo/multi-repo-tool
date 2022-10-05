@@ -28,14 +28,7 @@ Feature: run a command in all folders
         ALL DONE
         """
       And it returns "success"
-      And the saved state is now:
-        """
-        {
-          "rootDir": null,
-          "steps": [],
-          "folders": null
-        }
-        """
+      And there is no saved state
 
     Scenario: command not found
       When running "m run zonk"
