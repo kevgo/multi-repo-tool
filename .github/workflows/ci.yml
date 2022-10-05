@@ -23,4 +23,4 @@ jobs:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v1.2.0
       - uses: dprint/check@v2.1
-      - run: cargo test
+      - run: make test

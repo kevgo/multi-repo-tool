@@ -78,6 +78,27 @@ async fn when_running(world: &mut MrtWorld, command: String) {
     world.output = Some(output);
 }
 
+#[then(expr = "I am now back in the {string} example folder")]
+async fn verify_in_example_folder(_world: &mut MrtWorld, folder: String) {
+    let cwd = env::current_dir().expect("cannot determine current dir");
+    let home_dir = cwd.join("examples").join("home");
+    let next_dir_path = home_dir.join(".config").join("mrt.next_dir");
+    let have = fs::read_to_string(next_dir_path).await.unwrap();
+    let examples_dir = cwd.join("examples").join(folder);
+    assert_eq!(have.trim(), examples_dir.to_string_lossy().trim());
+}
+
+#[then(expr = "I am now in the {string} subfolder")]
+async fn verify_in_subfolder(world: &mut MrtWorld, folder_name: String) {
+    let cwd = env::current_dir().expect("cannot determine current dir");
+    let home_dir = cwd.join("examples").join("home");
+    let next_dir_path = home_dir.join(".config").join("mrt.next_dir");
+    let have = fs::read_to_string(next_dir_path).await.unwrap();
+    let examples_dir = world.dir.as_ref().unwrap();
+    let have = have.replace(&format!("{}/", &examples_dir.to_string_lossy()), "");
+    assert_eq!(have.trim(), folder_name.trim());
+}
+
 #[then("it prints:")]
 async fn it_prints(world: &mut MrtWorld, step: &Step) {
     let examples_dir = world.dir.as_ref().unwrap();
@@ -113,8 +134,8 @@ async fn verify_saved_state(world: &mut MrtWorld, step: &Step) {
     let home_dir = cwd.join("examples").join("home");
     let config_path = home_dir.join(".config").join("mrt.json");
     let have = fs::read_to_string(config_path).await.unwrap();
-    let examples_dir = world.dir.as_ref().unwrap();
     let want = step.docstring().expect("step has no docstring");
+    let examples_dir = world.dir.as_ref().unwrap();
     let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
     assert_eq!(have.trim(), want.trim());
 }
