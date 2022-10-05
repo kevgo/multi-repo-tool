@@ -4,7 +4,7 @@ Feature: limiting folders
     Given I am in the "simple" example folder
     And no mrt configuration
 
-  Rule: "m only" reduces the folders set to matching folders
+  Rule: "m only" reduces the folder set to matching folders
 
     Scenario: limiting using "m only"
       When running "m only ls package.json"
@@ -35,7 +35,7 @@ Feature: limiting folders
         """
       And it returns "success"
 
-  Rule: "m except" reduces the folders set to non-matching folders
+  Rule: "m except" reduces the folder set to non-matching folders
 
     Scenario: limiting using "m except"
       When running "m except ls package.json"
@@ -94,3 +94,15 @@ Feature: limiting folders
         ALL DONE
         """
       And it returns "success"
+
+  Rule: does not allow empty folder sets
+
+    @this
+    Scenario: limiting all folders
+      When running "m only ls zonk"
+      Then it prints:
+        """
+        ERROR: all folders have been filtered out
+        """
+      And it returns "failure"
+      And there is no saved state

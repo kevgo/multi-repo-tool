@@ -120,7 +120,7 @@ async fn verify_exit_code(world: &mut MrtWorld, want: String) {
     match want.as_ref() {
         "success" => assert!(success),
         "failure" => assert!(!success),
-        other => panic!("unknown exit code: {}", other),
+        other => panic!("unknown return check: {}", other),
     }
 }
 
