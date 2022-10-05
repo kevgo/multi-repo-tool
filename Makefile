@@ -23,7 +23,7 @@ lint: tools/actionlint  # checks formatting
 	git diff --check
 	tools/actionlint
 
-test: unit lint  # runs all tests
+test: unit lint cuke  # runs all tests
 
 unit:  # runs the unit tests
 	cargo test
