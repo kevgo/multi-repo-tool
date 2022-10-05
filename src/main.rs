@@ -83,6 +83,7 @@ fn inner() -> Result<ExitCode, UserError> {
             dir_file::save(&dir)?;
             Ok(ExitCode::SUCCESS)
         }
+        Outcome::UserError { error } => Err(error),
     }
 }
 

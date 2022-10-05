@@ -5,8 +5,6 @@ use std::path::PathBuf;
 use std::process::Output;
 use std::str;
 use tokio::fs;
-// use tokio::fs::File;
-// use tokio::io;
 use tokio::process::Command;
 
 #[derive(Debug, Default, World)]
@@ -77,34 +75,12 @@ async fn when_running(world: &mut MrtWorld, command: String) {
     world.output = Some(output);
 }
 
-#[when(expr = "trying to run {string}")]
-async fn trying_to_run(world: &mut MrtWorld, command: String) {
-    let mut argv = command.split_ascii_whitespace();
-    match argv.next() {
-        Some("m") => {}
-        _ => panic!("The end-to-end tests can only run the 'm' command"),
-    }
-    let cwd = env::current_dir().expect("cannot determine current dir");
-    let mrt_path = cwd.join("target").join("debug").join("mrt");
-    let examples_dir = world.dir.as_ref().unwrap();
-    let home_dir = cwd.join("examples").join("home");
-    let output = Command::new(&mrt_path)
-        .args(argv)
-        .current_dir(&examples_dir)
-        .env("HOME", &home_dir)
-        .env("MRT_WRAPPED", "true")
-        .output()
-        .await
-        .expect("cannot find the 'mrt' executable");
-    world.output = Some(output);
-}
-
 #[then("it prints:")]
 async fn it_prints(world: &mut MrtWorld, step: &Step) {
     let examples_dir = world.dir.as_ref().unwrap();
     let want = step.docstring().expect("step has no docstring");
     let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
-    let output = world.output.take().expect("no execution recorded");
+    let output = world.output.as_ref().expect("no execution recorded");
     let printed = format!(
         "{}{}",
         str::from_utf8(&output.stdout).unwrap(),
@@ -113,7 +89,7 @@ async fn it_prints(world: &mut MrtWorld, step: &Step) {
     assert_eq!(printed.trim(), want.trim());
 }
 
-#[then(expr = "the exit code is {string}")]
+#[then(expr = "it returns {string}")]
 async fn verify_exit_code(world: &mut MrtWorld, want: String) {
     let success = world
         .output
@@ -141,13 +117,21 @@ async fn verify_saved_state(world: &mut MrtWorld, step: &Step) {
 }
 
 #[then("the saved state is unchanged")]
-async fn verify_saved_state_unchanged(world: &mut MrtWorld) {
+async fn verify_no_saved_state(world: &mut MrtWorld) {
     let cwd = env::current_dir().expect("cannot determine current dir");
     let home_dir = cwd.join("examples").join("home");
     let config_path = home_dir.join(".config").join("mrt.json");
     let have = fs::read_to_string(config_path).await.unwrap();
     let want = world.previous_state.take().expect("no previous state");
     assert_eq!(have.trim(), want.trim());
+}
+
+#[then("there is no saved state")]
+async fn verify_saved_state_unchanged(_world: &mut MrtWorld) {
+    let cwd = env::current_dir().expect("cannot determine current dir");
+    let home_dir = cwd.join("examples").join("home");
+    let config_path = home_dir.join(".config").join("mrt.json");
+    assert!(fs::read_to_string(config_path).await.is_err());
 }
 
 #[tokio::main(flavor = "current_thread")]

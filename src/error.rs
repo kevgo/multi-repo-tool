@@ -11,6 +11,10 @@ pub enum UserError {
         error: String,
         guidance: String,
     },
+    CannotChangeIntoDirectory {
+        dir: String,
+        guidance: String,
+    },
     CannotReadDirectory {
         directory: String,
         guidance: String,
@@ -23,6 +27,12 @@ pub enum UserError {
         filename: String,
         guidance: String,
     },
+    CommandNotFound {
+        command: String,
+    },
+    ExecutePermissionDenied {
+        command: String,
+    },
     InvalidPersistenceFormat {
         filename: String,
         guidance: String,
@@ -33,6 +43,10 @@ pub enum UserError {
     NothingToAbort,
     NothingToIgnore,
     NothingToRetry,
+    OtherExecutionError {
+        command: String,
+        guidance: String,
+    },
     SessionAlreadyActive {
         config: Config,
     },
@@ -67,6 +81,13 @@ impl Display for UserError {
                 "cannot read GitHub API:\n- url: {}\n- error: {}\n- guidance: {}",
                 url, error, guidance
             ),
+            UserError::CannotChangeIntoDirectory { dir, guidance } => {
+                write!(
+                    f,
+                    "cannot change into the \"{}\" directory: {}",
+                    dir, guidance
+                )
+            }
             UserError::CannotReadDirectory {
                 directory,
                 guidance,
@@ -81,6 +102,12 @@ impl Display for UserError {
                 "cannot write persistence file \"{}\": {}",
                 filename, guidance
             ),
+            UserError::CommandNotFound { command } => {
+                write!(f, "command \"{}\" not found", command)
+            }
+            UserError::ExecutePermissionDenied { command } => {
+                write!(f, "\"{}\" is not executable", command)
+            }
             UserError::InvalidPersistenceFormat { filename, guidance } => write!(
                 f,
                 "persistence file \"{}\" has an invalid format: {}",
@@ -97,6 +124,11 @@ impl Display for UserError {
             UserError::NothingToAbort => write!(f, "nothing to abort"),
             UserError::NothingToIgnore => write!(f, "nothing to ignore"),
             UserError::NothingToRetry => write!(f, "nothing to retry"),
+            UserError::OtherExecutionError { command, guidance } => write!(
+                f,
+                "unknown error while trying to execute \"{}\": {}",
+                command, guidance
+            ),
             #[allow(clippy::print_in_format_impl)]
             UserError::SessionAlreadyActive { config } => {
                 commands::status(config).unwrap();
