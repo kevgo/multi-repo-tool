@@ -4,37 +4,37 @@ Feature: running a command automatically
     Given I am in the "simple" example folder
     And no mrt configuration
 
-  Rule: runs the given command in all subfolders
+  Scenario: valid binary, no saved state
+    When running "m run pwd"
+    Then it prints:
+      """
+      step 0: cd {{examples_dir}}/go1
 
-    Scenario: valid binary, no saved state
-      When running "m run pwd"
-      Then it prints:
-        """
-        step 0: cd {{examples_dir}}/go1
+      step 1: run pwd
+      {{examples_dir}}/go1
 
-        step 1: run pwd
-        {{examples_dir}}/go1
+      step 2: cd {{examples_dir}}/node1
 
-        step 2: cd {{examples_dir}}/node1
+      step 3: run pwd
+      {{examples_dir}}/node1
 
-        step 3: run pwd
-        {{examples_dir}}/node1
+      step 4: cd {{examples_dir}}/node2
 
-        step 4: cd {{examples_dir}}/node2
+      step 5: run pwd
+      {{examples_dir}}/node2
 
-        step 5: run pwd
-        {{examples_dir}}/node2
+      ALL DONE
+      """
+    And the saved state is now:
+      """
+      {
+        "rootDir": null,
+        "steps": [],
+        "folders": null
+      }
+      """
 
-        ALL DONE
-        """
-      And the saved state is now:
-        """
-        {
-          "rootDir": null,
-          "steps": [],
-          "folders": null
-        }
-        """
+  Scenario: non-existing binary
 
   Rule: does not interrupt an existing walk
 
@@ -54,7 +54,3 @@ Feature: running a command automatically
         ERROR: a session is already active. Please abort this currently running session before starting a new one.
         """
       And the saved state is unchanged
-
-    Scenario: non-executable binary
-
-    Scenario: non-existing binary
