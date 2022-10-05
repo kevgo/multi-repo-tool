@@ -1,3 +1,11 @@
+cuke:  # runs the feature tests
+	cargo build
+	cargo test --test cucumber
+
+cukethis: target/debug/mrt  # runs only end-to-end tests with a @this tag
+	cargo build
+	cargo test --test cucumber -- -t @this
+
 fix:  # auto-corrects issues
 	dprint fmt
 	cargo fmt
@@ -16,7 +24,7 @@ lint: tools/actionlint  # checks formatting
 	git diff --check
 	tools/actionlint
 
-test: unit lint  # runs all tests
+test: unit lint cuke  # runs all tests
 
 unit:  # runs the unit tests
 	cargo test
@@ -28,6 +36,7 @@ tools/actionlint:
 
 update:  # updates the dependencies
 	cargo upgrade
+
 
 .DEFAULT_GOAL := help
 .SILENT:

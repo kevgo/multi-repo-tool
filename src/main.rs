@@ -60,13 +60,17 @@ fn inner() -> Result<ExitCode, UserError> {
     }
     match runtime::execute(config_to_execute, ignore_all) {
         Outcome::Success { config } => {
-            config::save(
-                &config_path,
-                &Config {
-                    steps: vec![],
-                    ..config
-                },
-            )?;
+            if config == Config::default() {
+                config::delete(&config_path);
+            } else {
+                config::save(
+                    &config_path,
+                    &Config {
+                        steps: vec![],
+                        ..config
+                    },
+                )?;
+            }
             let cwd = env::current_dir().expect("cannot determine current dir");
             if cwd != init_dir {
                 dir_file::save(&cwd.to_string_lossy())?;
@@ -83,6 +87,7 @@ fn inner() -> Result<ExitCode, UserError> {
             dir_file::save(&dir)?;
             Ok(ExitCode::SUCCESS)
         }
+        Outcome::UserError { error } => Err(error),
     }
 }
 

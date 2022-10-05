@@ -1,7 +1,9 @@
 use crate::config::Config;
+use crate::error::UserError;
 use crate::runtime::steps::Step;
 use colored::Colorize;
 use std::env;
+use std::io::ErrorKind;
 use std::process::Command;
 
 pub enum Outcome {
@@ -13,7 +15,9 @@ pub enum Outcome {
         config: Config,
     },
     /// all steps were successfully executed
-    Success { config: Config },
+    Success {
+        config: Config,
+    },
     /// the given step has failed
     StepFailed {
         /// error code
@@ -22,6 +26,9 @@ pub enum Outcome {
         config: Config,
         /// subfolder in which the problem happened
         dir: String,
+    },
+    UserError {
+        error: UserError,
     },
 }
 
@@ -46,7 +53,11 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     while let Some(numbered) = steps_iter.next() {
         let text = match &numbered.step {
             Step::Run { cmd, args } => {
-                format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+                if args.is_empty() {
+                    format!("step {}: run {}", numbered.id, cmd)
+                } else {
+                    format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+                }
             }
             Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
             Step::Exit => "".into(),
@@ -66,18 +77,22 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
                 };
             }
         };
-        if let Err(exit_code) = result {
-            let current_dir = env::current_dir().expect("cannot determine current directory");
-            let mut remaining_steps = vec![numbered];
-            remaining_steps.extend(steps_iter);
-            return Outcome::StepFailed {
-                code: exit_code,
-                config: Config {
-                    steps: remaining_steps,
-                    ..config
-                },
-                dir: current_dir.to_string_lossy().to_string(),
-            };
+        match result {
+            Ok(exit_code) if exit_code == 0 => {}
+            Ok(exit_code) => {
+                let current_dir = env::current_dir().expect("cannot determine current directory");
+                let mut remaining_steps = vec![numbered];
+                remaining_steps.extend(steps_iter);
+                return Outcome::StepFailed {
+                    code: exit_code,
+                    config: Config {
+                        steps: remaining_steps,
+                        ..config
+                    },
+                    dir: current_dir.to_string_lossy().to_string(),
+                };
+            }
+            Err(user_error) => return Outcome::UserError { error: user_error },
         }
     }
     if let Some(dir) = config.root_dir {
@@ -93,21 +108,39 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     }
 }
 
-pub fn change_wd(dir: &str) -> Result<(), u8> {
+pub fn change_wd(dir: &str) -> Result<u8, UserError> {
     match env::set_current_dir(dir) {
-        Ok(_) => Ok(()),
-        Err(_) => Err(1),
+        Ok(_) => Ok(0),
+        Err(err) => Err(UserError::CannotChangeIntoDirectory {
+            dir: dir.into(),
+            guidance: err.to_string(),
+        }),
     }
 }
 
 /// executes the given command in the current working directory
-pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<(), u8> {
+pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<u8, UserError> {
     let mut command = Command::new(cmd);
     command.args(args);
-    let status = command.status().expect("cannot determine exit status");
-    if status.success() || ignore_all {
-        Ok(())
-    } else {
-        Err(status.code().unwrap_or(1) as u8)
+    match command.status() {
+        Ok(status) => {
+            if status.success() || ignore_all {
+                Ok(0)
+            } else {
+                Ok(status.code().unwrap_or(1) as u8)
+            }
+        }
+        Err(err) => match err.kind() {
+            ErrorKind::NotFound => Err(UserError::CommandNotFound {
+                command: cmd.into(),
+            }),
+            ErrorKind::PermissionDenied => Err(UserError::ExecutePermissionDenied {
+                command: cmd.into(),
+            }),
+            _ => Err(UserError::OtherExecutionError {
+                command: cmd.into(),
+                guidance: err.to_string(),
+            }),
+        },
     }
 }

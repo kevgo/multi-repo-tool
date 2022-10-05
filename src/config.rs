@@ -2,9 +2,9 @@ use crate::error::UserError;
 use crate::runtime::steps::NumberedStep;
 use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
-use std::env;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, ErrorKind};
+use std::{env, fs};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -17,6 +17,10 @@ pub struct Config {
     /// None --> all folders
     /// Some --> only the specified folders
     pub folders: Option<Vec<String>>,
+}
+
+pub fn delete(config_path: &Utf8Path) {
+    let _ignore_failure = fs::remove_file(config_path);
 }
 
 /// provides the full path to the config file
