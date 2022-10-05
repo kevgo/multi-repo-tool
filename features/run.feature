@@ -34,7 +34,7 @@ Feature: run a command in all folders
       When running "m run zonk"
       Then it prints:
         """
-        step 0: cd /home/kevlar/mrt/examples/simple/go1
+        step 0: cd {{examples_dir}}/go1
 
         step 1: run zonk
         ERROR: command "zonk" not found
@@ -50,11 +50,11 @@ Feature: run a command in all folders
         """
         Running in all 3 folders.
 
-        step 2: cd /home/kevlar/mrt/examples/simple/node1
+        step 2: cd {{examples_dir}}/node1
         step 3: exit
-        step 4: cd /home/kevlar/mrt/examples/simple/node2
+        step 4: cd {{examples_dir}}/node2
         step 5: exit
-        step 6: cd /home/kevlar/mrt/examples/simple
+        step 6: cd {{examples_dir}}
 
         ERROR: a session is already active. Please abort this currently running session before starting a new one.
         """
