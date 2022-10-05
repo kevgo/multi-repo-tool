@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::runtime::steps::Step;
 use colored::Colorize;
 use std::env;
+use std::io::ErrorKind;
 use std::process::Command;
 
 pub enum Outcome {
@@ -108,10 +109,17 @@ pub fn change_wd(dir: &str) -> Result<(), u8> {
 pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<(), u8> {
     let mut command = Command::new(cmd);
     command.args(args);
-    let status = command.status().expect("cannot determine exit status");
-    if status.success() || ignore_all {
-        Ok(())
-    } else {
-        Err(status.code().unwrap_or(1) as u8)
+    match command.status() {
+        Ok(status) => {
+            if status.success() || ignore_all {
+                Ok(())
+            } else {
+                Err(status.code().unwrap_or(1) as u8)
+            }
+        }
+        Err(err) => match err.kind() {
+            ErrorKind::NotFound => Err(
+            _ => todo!(),
+        },
     }
 }

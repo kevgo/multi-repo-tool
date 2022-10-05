@@ -74,11 +74,6 @@ async fn when_running(world: &mut MrtWorld, command: String) {
         .output()
         .await
         .expect("cannot find the 'mrt' executable");
-    if !output.status.success() {
-        println!();
-        println!("{}", str::from_utf8(&output.stdout).unwrap());
-        panic!();
-    }
     world.output = Some(output);
 }
 
@@ -101,7 +96,6 @@ async fn trying_to_run(world: &mut MrtWorld, command: String) {
         .output()
         .await
         .expect("cannot find the 'mrt' executable");
-    assert!(!output.status.success());
     world.output = Some(output);
 }
 
@@ -117,6 +111,21 @@ async fn it_prints(world: &mut MrtWorld, step: &Step) {
         str::from_utf8(&output.stderr).unwrap()
     );
     assert_eq!(printed.trim(), want.trim());
+}
+
+#[then(expr = "the exit code is {string}")]
+async fn verify_exit_code(world: &mut MrtWorld, want: String) {
+    let success = world
+        .output
+        .as_ref()
+        .expect("no run recorded")
+        .status
+        .success();
+    match want.as_ref() {
+        "success" => assert!(success),
+        "failure" => assert!(!success),
+        other => panic!("unknown exit code: {}", other),
+    }
 }
 
 #[then("the saved state is now:")]
