@@ -1,13 +1,15 @@
-Feature: running a command automatically
+Feature: run a command in all folders
 
   Background:
     Given I am in the "simple" example folder
     And no mrt configuration
 
-  Scenario: happy path
-    When running "m run pwd"
-    Then it prints:
-      """
+  Rule: it runs the given command in all subfolders
+
+    Scenario: happy path
+      When running "m run pwd"
+      Then it prints:
+        """
       step 0: cd {{examples_dir}}/go1
 
       step 1: run pwd
@@ -24,27 +26,27 @@ Feature: running a command automatically
       {{examples_dir}}/node2
 
       ALL DONE
-      """
-    And it returns "success"
-    And the saved state is now:
-      """
-      {
-        "rootDir": null,
-        "steps": [],
-        "folders": null
-      }
-      """
+        """
+      And it returns "success"
+      And the saved state is now:
+        """
+        {
+          "rootDir": null,
+          "steps": [],
+          "folders": null
+        }
+        """
 
-  Scenario: command not found
-    When running "m run zonk"
-    Then it prints:
-      """
+    Scenario: command not found
+      When running "m run zonk"
+      Then it prints:
+        """
       step 0: cd /home/kevlar/mrt/examples/simple/go1
 
       step 1: run zonk
       ERROR: command "zonk" not found
-      """
-    And there is no saved state
+        """
+      And there is no saved state
 
   Rule: does not interrupt an existing walk
 
