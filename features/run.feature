@@ -2,11 +2,11 @@ Feature: running a command automatically
 
   Background:
     Given I am in the "simple" example folder
+    And no mrt configuration
 
   Rule: runs the given command in all subfolders
 
     Scenario: valid binary, no saved state
-      Given no mrt configuration
       When running "m run pwd"
       Then it prints:
         """
