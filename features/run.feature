@@ -4,7 +4,7 @@ Feature: running a command automatically
     Given I am in the "simple" example folder
     And no mrt configuration
 
-  Scenario: valid binary, no saved state
+  Scenario: happy path
     When running "m run pwd"
     Then it prints:
       """
@@ -35,8 +35,7 @@ Feature: running a command automatically
       }
       """
 
-  @this
-  Scenario: non-existing binary
+  Scenario: command not found
     When running "m run zonk"
     Then it prints:
       """
