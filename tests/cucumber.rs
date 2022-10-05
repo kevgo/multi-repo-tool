@@ -53,7 +53,7 @@ async fn no_config(_world: &mut MrtWorld) {
     let cwd = env::current_dir().expect("cannot determine current dir");
     let home_dir = cwd.join("examples").join("home");
     let config_path = home_dir.join(".config").join("mrt.json");
-    let _ = fs::remove_file(config_path).await;
+    let _ignore_failure = fs::remove_file(config_path).await;
 }
 
 #[when(expr = "running {string}")]
