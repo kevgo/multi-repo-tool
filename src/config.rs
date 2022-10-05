@@ -20,7 +20,7 @@ pub struct Config {
 }
 
 pub fn delete(config_path: &Utf8Path) {
-    let _failure_ok = fs::remove_file(config_path);
+    let _ignore_failure = fs::remove_file(config_path);
 }
 
 /// provides the full path to the config file
