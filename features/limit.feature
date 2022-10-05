@@ -4,9 +4,9 @@ Feature: limiting folders
     Given I am in the "simple" example folder
     And no mrt configuration
 
-  Rule: a limit reduces the folders to process
+  Rule: "m only" reduces the folders set to matching folders
 
-    Scenario: limiting to a subset of folders
+    Scenario: limiting using "m only"
       When running "m only ls package.json"
       Then it prints:
         """
@@ -35,9 +35,33 @@ Feature: limiting folders
         """
       And it returns "success"
 
+  Rule: "m except" reduces the folders set to non-matching folders
+
+    Scenario: limiting using "m except"
+      When running "m except ls package.json"
+      Then it prints:
+        """
+        package.json
+        package.json
+
+        Limiting execution to 1/3 folders:
+        1. {{examples_dir}}/go
+        """
+      And it returns "success"
+      When running "m run pwd"
+      Then it prints:
+        """
+        step 0: cd {{examples_dir}}/go
+
+        step 1: run pwd
+        {{examples_dir}}/go
+
+        ALL DONE
+        """
+      And it returns "success"
+
   Rule: subsequent limits build on previous limits
 
-    @this
     Scenario: nested limiting
       When running "m only ls package.json"
       Then it prints:
