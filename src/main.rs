@@ -72,9 +72,7 @@ fn inner() -> Result<ExitCode, UserError> {
                 )?;
             }
             let cwd = env::current_dir().expect("cannot determine current dir");
-            if cwd != init_dir {
-                dir_file::save(&cwd.to_string_lossy())?;
-            }
+            dir_file::save(&cwd.to_string_lossy())?;
             Ok(ExitCode::SUCCESS)
         }
         Outcome::StepFailed { code, config, dir } => {
