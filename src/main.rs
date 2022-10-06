@@ -51,6 +51,7 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::Run { cmd, args } => commands::run(cmd, args, persisted_config, &init_dir)?,
         Command::Help => commands::help(),
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
+        Command::List { cmd, args } => commands::list(cmd, args, persisted_config, &init_dir)?,
         Command::Only { cmd, args } => {
             commands::limit::only(cmd, args, &init_dir, &Mode::Match, persisted_config)?
         }

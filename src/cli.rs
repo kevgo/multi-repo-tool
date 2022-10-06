@@ -19,6 +19,8 @@ pub enum Command {
     Ignore,
     /// Skips all workflow steps that fail
     IgnoreAll,
+    /// Lists all subfolders matching the given condition
+    List { cmd: String, args: Vec<String> },
     /// Limits activities to a subset of subfolders that match the given criteria
     Only { cmd: String, args: Vec<String> },
     /// Goes to the next subdirectory during walk
@@ -53,6 +55,10 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
         "help" => Command::Help,
         "ignore" => Command::Ignore,
         "ignore-all" => Command::IgnoreAll,
+        "list" => Command::List {
+            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            args: args.collect(),
+        },
         "next" => Command::Next,
         "only" => Command::Only {
             cmd: args.next().ok_or_else(|| help("no executable provided"))?,

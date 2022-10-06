@@ -5,7 +5,7 @@ use crate::runtime::steps::{self, Step};
 use camino::Utf8PathBuf;
 use std::process::ExitCode;
 
-pub fn run(
+pub fn list(
     cmd: &str,
     args: &[String],
     config: Config,
@@ -18,7 +18,7 @@ pub fn run(
     };
     for dir in dirs {
         steps.push(Step::Chdir { dir });
-        steps.push(Step::Run {
+        steps.push(Step::Check {
             cmd: cmd.to_string(),
             args: args.to_owned(),
         });
