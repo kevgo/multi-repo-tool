@@ -776,7 +776,6 @@ name = "mrt"
 version = "0.1.0"
 dependencies = [
  "camino",
- "clap",
  "colored",
  "ctrlc",
  "cucumber",

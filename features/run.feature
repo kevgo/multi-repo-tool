@@ -50,6 +50,8 @@ Feature: run a command in all folders
       When running "m run pwd"
       Then it prints:
         """
+        ERROR: a session is already active. Please abort this currently running session before starting a new one.
+
         Running in all 3 folders.
 
         step 3: cd {{examples_dir}}/go_node
@@ -57,8 +59,6 @@ Feature: run a command in all folders
         step 5: cd {{examples_dir}}/node
         step 6: exit
         step 7: cd {{examples_dir}}
-
-        ERROR: a session is already active. Please abort this currently running session before starting a new one.
         """
       And it returns "failure"
       And the saved state is unchanged

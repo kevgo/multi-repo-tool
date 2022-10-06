@@ -68,7 +68,7 @@ pub fn only(
         )
     };
     println!("\n{}", text.bold());
-    folder_list::print(&new_folders);
+    println!("{}", folder_list::render(&new_folders));
     if !config.steps.is_empty() {
         println!("Discarding pending {} steps.", config.steps.len());
     }

@@ -1,12 +1,8 @@
-/// Runs CLI commands for all repositories of a Github organization.
-#[derive(clap::StructOpt)]
-#[clap(version, about, long_about = None)]
-pub struct Arguments {
-    #[clap(subcommand)]
-    pub command: Command,
-}
+use std::env;
 
-#[derive(clap::Subcommand, Clone, Eq, PartialEq)]
+use crate::error::UserError;
+
+#[derive(Eq, PartialEq)]
 pub enum Command {
     /// Deletes the currently running workflow
     Abort,
@@ -34,4 +30,45 @@ pub enum Command {
     Status,
     /// Manually visits each subdirectory, optionally starting at the given one
     Walk { start: Option<String> },
+}
+
+pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
+    let _binary_name = args.next(); // skip the binary name
+    let cmd = match args.next() {
+        Some(cmd) => cmd,
+        None => return Err(help("no command provided")),
+    };
+    Ok(match cmd.as_str() {
+        "abort" => Command::Abort,
+        "activate" => Command::Activate,
+        "all" => Command::All,
+        "clone" => Command::Clone {
+            org: args.next().ok_or_else(|| help("no org provided"))?,
+        },
+        "except" => Command::Except {
+            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            args: args.collect(),
+        },
+        "ignore" => Command::Ignore,
+        "ignore-all" => Command::IgnoreAll,
+        "next" => Command::Next,
+        "only" => Command::Only {
+            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            args: args.collect(),
+        },
+        "retry" => Command::Retry,
+        "run" => Command::Run {
+            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            args: args.collect(),
+        },
+        "status" => Command::Status,
+        "walk" => Command::Walk { start: args.next() },
+        other => return Err(help(format!("unknown command: {}", other))),
+    })
+}
+
+fn help<IS: Into<String>>(error: IS) -> UserError {
+    UserError::WrongCliArguments {
+        message: error.into(),
+    }
 }
