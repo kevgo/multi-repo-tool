@@ -13,7 +13,6 @@ Feature: display the current status
       I'm not doing anything right now.
       """
 
-  @this
   Scenario: within a walk
     Given I am in the middle of running "m walk"
     When running "m status"
