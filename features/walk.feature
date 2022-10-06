@@ -14,6 +14,7 @@ Feature: manually iterate all folders
         """
       And I am now in the "go" subfolder
       And it returns "success"
+
       When running "m next"
       Then it prints:
         """
@@ -21,6 +22,7 @@ Feature: manually iterate all folders
         """
       And I am now in the "go_node" subfolder
       And it returns "success"
+
       When running "m next"
       Then it prints:
         """
@@ -28,6 +30,7 @@ Feature: manually iterate all folders
         """
       And I am now in the "node" subfolder
       And it returns "success"
+
       When running "m next"
       Then it prints:
         """

@@ -39,6 +39,7 @@ Feature: run a command in all folders
         step 1: run zonk
         ERROR: command "zonk" not found
         """
+      And it returns "failure"
       And there is no saved state
 
   Rule: does not interrupt an existing walk
@@ -58,4 +59,5 @@ Feature: run a command in all folders
 
         ERROR: a session is already active. Please abort this currently running session before starting a new one.
         """
+      And it returns "failure"
       And the saved state is unchanged
