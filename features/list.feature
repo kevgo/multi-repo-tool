@@ -6,7 +6,6 @@ Feature: list subfolders matching a condition
 
   Rule: it displays the folders where the condition returns 0
 
-    @this
     Scenario: happy path
       When running "m list ls go.mod"
       Then it prints:
