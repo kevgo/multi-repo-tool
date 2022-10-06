@@ -35,7 +35,7 @@ fn inner() -> Result<ExitCode, UserError> {
         Ok(args) => args,
         Err(_) => return Ok(ExitCode::FAILURE),
     };
-    if cli_args != Command::Activate {
+    if cli_args != Command::Activate && cli_args != Command::Help {
         helpers::ensure_activated()?;
     }
     let init_dir = env::current_dir().expect("cannot determine the current directory");
@@ -49,6 +49,7 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::All => commands::limit::all(persisted_config),
         Command::Clone { org } => commands::clone(org, &init_dir)?,
         Command::Run { cmd, args } => commands::run(cmd, args, persisted_config, &init_dir)?,
+        Command::Help => commands::help(),
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
         Command::Only { cmd, args } => {
             commands::limit::only(cmd, args, &init_dir, &Mode::Match, persisted_config)?

@@ -97,6 +97,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
         | cli::Command::Activate
         | cli::Command::All
         | cli::Command::Except { cmd: _, args: _ }
+        | cli::Command::Help
         | cli::Command::Only { cmd: _, args: _ }
         | cli::Command::Status => {}
     }

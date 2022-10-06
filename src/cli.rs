@@ -14,6 +14,8 @@ pub enum Command {
     Clone { org: String },
     /// Limits activities to a subset of subfolders that don't match the given criteria
     Except { cmd: String, args: Vec<String> },
+    /// Displays usage instructions
+    Help,
     /// Skips the current workflow step and executes the next one
     Ignore,
     /// Skips all workflow steps that fail
@@ -49,6 +51,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
             cmd: args.next().ok_or_else(|| help("no executable provided"))?,
             args: args.collect(),
         },
+        "help" => Command::Help,
         "ignore" => Command::Ignore,
         "ignore-all" => Command::IgnoreAll,
         "next" => Command::Next,
