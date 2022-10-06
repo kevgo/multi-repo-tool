@@ -11,7 +11,7 @@ pub fn all(path: &Utf8Path) -> Result<Vec<String>, UserError> {
     let mut dirpaths: Vec<String> = entries
         .map(|entry| entry.expect("cannot read filesystem"))
         .filter(|entry| entry.metadata().expect("cannot read metadata").is_dir())
-        .map(|entry| entry.path().to_string_lossy().to_string())
+        .map(|dir| dir.path().to_string_lossy().to_string())
         .collect();
     dirpaths.sort();
     Ok(dirpaths)

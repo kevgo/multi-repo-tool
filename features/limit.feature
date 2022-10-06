@@ -6,9 +6,8 @@ Feature: limiting folders
 
   Rule: "m only" reduces the folder set to matching folders
 
-    @this
     Scenario: limiting using "m only"
-      When running "m only -- test -f package.json"
+      When running "m only test -f package.json"
       Then it prints:
         """
         Limiting execution to 2/3 folders:
