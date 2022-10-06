@@ -78,6 +78,7 @@ async fn when_running(world: &mut MrtWorld, command: String) {
     world.output = Some(output);
 }
 
+#[then(expr = "I am now in the {string} example folder")]
 #[then(expr = "I am now back in the {string} example folder")]
 async fn verify_in_example_folder(_world: &mut MrtWorld, folder: String) {
     let cwd = env::current_dir().expect("cannot determine current dir");
@@ -89,6 +90,7 @@ async fn verify_in_example_folder(_world: &mut MrtWorld, folder: String) {
 }
 
 #[then(expr = "I am now in the {string} subfolder")]
+#[then(expr = "I am still in the {string} subfolder")]
 async fn verify_in_subfolder(world: &mut MrtWorld, folder_name: String) {
     let cwd = env::current_dir().expect("cannot determine current dir");
     let home_dir = cwd.join("examples").join("home");

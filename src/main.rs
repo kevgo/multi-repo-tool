@@ -36,29 +36,28 @@ fn inner() -> Result<ExitCode, UserError> {
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
     prevent_session_override(&persisted_config, &cli_args.command)?;
-    let ignore_all = cli_args.command == Command::IgnoreAll;
-    let (config_to_execute, early_exit) = match cli_args.command {
+    let (config_to_execute, early_exit) = match &cli_args.command {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
         Command::All => commands::limit::all(persisted_config),
-        Command::Clone { org } => commands::clone(&org, &init_dir)?,
-        Command::Run { cmd, args } => commands::run(&cmd, &args, persisted_config, &init_dir)?,
+        Command::Clone { org } => commands::clone(org, &init_dir)?,
+        Command::Run { cmd, args } => commands::run(cmd, args, persisted_config, &init_dir)?,
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
         Command::Only { cmd, args } => {
-            commands::limit::only(&cmd, &args, &init_dir, &Mode::Match, persisted_config)?
+            commands::limit::only(cmd, args, &init_dir, &Mode::Match, persisted_config)?
         }
         Command::Except { cmd, args } => {
-            commands::limit::only(&cmd, &args, &init_dir, &Mode::NoMatch, persisted_config)?
+            commands::limit::only(cmd, args, &init_dir, &Mode::NoMatch, persisted_config)?
         }
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
         Command::Status => commands::status(&persisted_config)?,
-        Command::Walk { start } => commands::walk(&init_dir, persisted_config, start)?,
+        Command::Walk { start } => commands::walk(&init_dir, persisted_config, start.as_ref())?,
     };
     if let Some(exit_code) = early_exit {
         return Ok(exit_code);
     }
-    match runtime::execute(config_to_execute, ignore_all) {
+    match runtime::execute(config_to_execute, &cli_args.command) {
         Outcome::Success { config } => {
             if config == Config::default() {
                 config::delete(&config_path);
