@@ -143,3 +143,32 @@ Feature: run a command in all folders
       And I am now back in the "simple" example folder
 
   Rule: "m ignore-all" ignores all failing steps
+
+    @this
+    Scenario: ignoring all failures
+      When running "m run ls zonk"
+      Then it prints:
+        """
+        step 1: cd {{examples_dir}}/go
+
+        step 2: run ls zonk
+        ERROR: Abort, Retry, Ignore?
+        """
+      And it returns "failure"
+      And I am now in the "go" subfolder
+
+      When running "m ignore-all"
+      Then it prints:
+        """
+        step 3: cd {{examples_dir}}/go_node
+
+        step 4: run ls zonk
+
+        step 5: cd {{examples_dir}}/node
+
+        step 6: run ls zonk
+
+        ALL DONE
+        """
+      And it returns "success"
+      And I am now back in the "simple" example folder
