@@ -36,8 +36,7 @@ fn inner() -> Result<ExitCode, UserError> {
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
     prevent_session_override(&persisted_config, &cli_args.command)?;
-    let ignore_all = cli_args.command == Command::IgnoreAll;
-    let (config_to_execute, early_exit) = match cli_args.command {
+    let (config_to_execute, early_exit) = match cli_args.command.clone() {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
         Command::All => commands::limit::all(persisted_config),
@@ -58,7 +57,7 @@ fn inner() -> Result<ExitCode, UserError> {
     if let Some(exit_code) = early_exit {
         return Ok(exit_code);
     }
-    match runtime::execute(config_to_execute, ignore_all) {
+    match runtime::execute(config_to_execute, &cli_args.command) {
         Outcome::Success { config } => {
             if config == Config::default() {
                 config::delete(&config_path);

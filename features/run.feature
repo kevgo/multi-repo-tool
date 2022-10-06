@@ -138,13 +138,13 @@ Feature: run a command in all folders
       When running "m ignore"
       Then it prints:
         """
+        ALL DONE
         """
       And it returns "success"
       And I am now back in the "simple" example folder
 
   Rule: "m ignore-all" ignores all failing steps
 
-    @this
     Scenario: ignoring all failures
       When running "m run ls zonk"
       Then it prints:

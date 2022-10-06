@@ -35,16 +35,39 @@ mod tests {
                 },
                 NumberedStep {
                     id: 2,
+                    step: Step::Run {
+                        cmd: "pwd".into(),
+                        args: vec![],
+                    },
+                },
+                NumberedStep {
+                    id: 3,
                     step: Step::Chdir { dir: "two".into() },
+                },
+                NumberedStep {
+                    id: 4,
+                    step: Step::Run {
+                        cmd: "pwd".into(),
+                        args: vec![],
+                    },
                 },
             ],
             ..Config::default()
         };
         let want = Config {
-            steps: vec![NumberedStep {
-                id: 2,
-                step: Step::Chdir { dir: "two".into() },
-            }],
+            steps: vec![
+                NumberedStep {
+                    id: 3,
+                    step: Step::Chdir { dir: "two".into() },
+                },
+                NumberedStep {
+                    id: 4,
+                    step: Step::Run {
+                        cmd: "pwd".into(),
+                        args: vec![],
+                    },
+                },
+            ],
             ..Config::default()
         };
         match super::ignore(give) {

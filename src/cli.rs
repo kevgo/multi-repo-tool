@@ -6,7 +6,7 @@ pub struct Arguments {
     pub command: Command,
 }
 
-#[derive(clap::Subcommand, Eq, PartialEq)]
+#[derive(clap::Subcommand, Clone, Eq, PartialEq)]
 pub enum Command {
     /// Deletes the currently running workflow
     Abort,

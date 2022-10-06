@@ -1,3 +1,4 @@
+use crate::cli;
 use crate::config::Config;
 use crate::error::UserError;
 use crate::runtime::steps::{NumberedStep, Step};
@@ -33,16 +34,7 @@ pub enum Outcome {
 }
 
 /// executes the given steps, returns the not executed steps in case of an issue
-pub fn execute(config: Config, ignore_all: bool) -> Outcome {
-    if config.steps.is_empty() {
-        return Outcome::Success {
-            config: Config {
-                root_dir: None,
-                ..config
-            },
-        };
-    }
-
+pub fn execute(config: Config, command: &cli::Command) -> Outcome {
     // somehow this is enough to ensure a graceful exit
     ctrlc::set_handler(move || {
         println!(" Canceling the current step...");
@@ -52,20 +44,9 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     let mut steps_iter = config.steps.into_iter();
     let mut last_dir: Option<String> = None;
     while let Some(numbered) = steps_iter.next() {
-        let text = match &numbered.step {
-            Step::Run { cmd, args } => {
-                if args.is_empty() {
-                    format!("step {}: run {}", numbered.id, cmd)
-                } else {
-                    format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
-                }
-            }
-            Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
-            Step::Exit => "".into(),
-        };
-        println!("\n{}", text.bold());
+        print_step(&numbered);
         let result = match &numbered.step {
-            Step::Run { cmd, args } => run_command(cmd, args, ignore_all),
+            Step::Run { cmd, args } => run_command(cmd, args, command == &cli::Command::IgnoreAll),
             Step::Chdir { dir } => {
                 last_dir = Some(dir.into());
                 change_wd(dir)
@@ -110,7 +91,23 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     if let Some(dir) = config.root_dir {
         env::set_current_dir(dir).expect("cannot cd into the initial directory");
     }
-    println!("\n{}\n", "ALL DONE".bold());
+    match command {
+        cli::Command::Clone { org: _ }
+        | cli::Command::Ignore
+        | cli::Command::IgnoreAll
+        | cli::Command::Next
+        | cli::Command::Retry
+        | cli::Command::Walk { start: _ }
+        | cli::Command::Run { cmd: _, args: _ } => {
+            println!("\n{}\n", "ALL DONE".bold());
+        }
+        cli::Command::Abort
+        | cli::Command::Activate
+        | cli::Command::All
+        | cli::Command::Except { cmd: _, args: _ }
+        | cli::Command::Only { cmd: _, args: _ }
+        | cli::Command::Status => {}
+    }
     Outcome::Success {
         config: Config {
             steps: vec![],
@@ -128,6 +125,21 @@ pub fn change_wd(dir: &str) -> Result<u8, UserError> {
             guidance: err.to_string(),
         }),
     }
+}
+
+fn print_step(numbered: &NumberedStep) {
+    let text = match &numbered.step {
+        Step::Run { cmd, args } => {
+            if args.is_empty() {
+                format!("step {}: run {}", numbered.id, cmd)
+            } else {
+                format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+            }
+        }
+        Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
+        Step::Exit => "".into(),
+    };
+    println!("\n{}", text.bold());
 }
 
 /// executes the given command in the current working directory
