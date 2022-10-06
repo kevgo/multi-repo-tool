@@ -6,13 +6,11 @@ Feature: limiting folders
 
   Rule: "m only" reduces the folder set to matching folders
 
+    @this
     Scenario: limiting using "m only"
-      When running "m only ls package.json"
+      When running "m only -- test -f package.json"
       Then it prints:
         """
-        package.json
-        package.json
-
         Limiting execution to 2/3 folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
@@ -37,12 +35,9 @@ Feature: limiting folders
   Rule: "m except" reduces the folder set to non-matching folders
 
     Scenario: limiting using "m except"
-      When running "m except ls package.json"
+      When running "m except test -f package.json"
       Then it prints:
         """
-        package.json
-        package.json
-
         Limiting execution to 1/3 folders:
         1. {{examples_dir}}/go
         """
@@ -61,12 +56,9 @@ Feature: limiting folders
   Rule: subsequent limits add to existing limits
 
     Scenario: nested limiting
-      When running "m only ls package.json"
+      When running "m only test -f package.json"
       Then it prints:
         """
-        package.json
-        package.json
-
         Limiting execution to 2/3 folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
@@ -106,12 +98,9 @@ Feature: limiting folders
   Rule: "m all" removes all limits
 
     Scenario: limiting using "m only"
-      When running "m except ls package.json"
+      When running "m except test -f package.json"
       Then it prints:
         """
-        package.json
-        package.json
-
         Limiting execution to 1/3 folders:
         1. {{examples_dir}}/go
         """
