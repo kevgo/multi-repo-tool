@@ -9,6 +9,7 @@ pub fn ignore(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
     }
     let mut step_iter = config.steps.into_iter();
     drop(step_iter.next());
+    drop(step_iter.next());
     Ok((
         Config {
             steps: step_iter.collect(),
