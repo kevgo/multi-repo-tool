@@ -8,7 +8,7 @@ use std::process::ExitCode;
 pub fn walk(
     root_dir: &Utf8Path,
     config: Config,
-    start: Option<String>,
+    start: Option<&String>,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let start = start.map(|start| root_dir.join(start));
     let mut steps = vec![];
