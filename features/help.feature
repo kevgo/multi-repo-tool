@@ -1,6 +1,5 @@
 Feature: display help
 
-  @this
   Scenario: long form
     Given I am in the "simple" example folder
     When running "m help"
