@@ -42,13 +42,13 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
     .expect("Error setting Ctrl-C handler");
 
     let mut steps_iter = config.steps.into_iter();
-    let mut last_dir: Option<String> = None;
+    let mut last_dir: Option<NumberedStep> = None;
     while let Some(numbered) = steps_iter.next() {
         print_step(&numbered);
         let result = match &numbered.step {
             Step::Run { cmd, args } => run_command(cmd, args, command == &cli::Command::IgnoreAll),
             Step::Chdir { dir } => {
-                last_dir = Some(dir.into());
+                last_dir = Some(numbered.clone());
                 change_wd(dir)
             }
             Step::Exit => {
@@ -66,15 +66,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
             Ok(exit_code) if exit_code == 0 => {}
             Ok(exit_code) => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
-                let mut remaining_steps = vec![
-                    NumberedStep {
-                        id: numbered.id - 1,
-                        step: Step::Chdir {
-                            dir: last_dir.unwrap(),
-                        },
-                    },
-                    numbered,
-                ];
+                let mut remaining_steps = vec![last_dir.unwrap(), numbered];
                 remaining_steps.extend(steps_iter);
                 return Outcome::StepFailed {
                     code: exit_code,
