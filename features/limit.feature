@@ -33,7 +33,6 @@ Feature: limiting folders
 
         ALL DONE
         """
-      And it returns "success"
 
   Rule: "m except" reduces the folder set to non-matching folders
 
@@ -58,7 +57,6 @@ Feature: limiting folders
 
         ALL DONE
         """
-      And it returns "success"
 
   Rule: subsequent limits add to previous limits
 
@@ -93,7 +91,6 @@ Feature: limiting folders
 
         ALL DONE
         """
-      And it returns "success"
 
   Rule: does not allow empty folder sets
 
@@ -108,7 +105,6 @@ Feature: limiting folders
 
   Rule: "m all" removes all limits
 
-    @this
     Scenario: limiting using "m only"
       When running "m except ls package.json"
       Then it prints:
@@ -130,7 +126,6 @@ Feature: limiting folders
 
         ALL DONE
         """
-      And it returns "success"
       When running "m all"
       Then it prints:
         """
@@ -157,5 +152,3 @@ Feature: limiting folders
 
         ALL DONE
         """
-      And it returns "success"
-      And there is no saved state
