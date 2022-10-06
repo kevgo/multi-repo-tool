@@ -31,7 +31,10 @@ impl Display for NumberedStep {
 pub fn numbered(steps: Vec<Step>) -> Vec<NumberedStep> {
     let mut numbered_steps = vec![];
     for (i, step) in steps.into_iter().enumerate() {
-        numbered_steps.push(NumberedStep { id: i as u32, step });
+        numbered_steps.push(NumberedStep {
+            id: i as u32 + 1,
+            step,
+        });
     }
     numbered_steps
 }

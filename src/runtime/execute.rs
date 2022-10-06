@@ -1,6 +1,6 @@
 use crate::config::Config;
 use crate::error::UserError;
-use crate::runtime::steps::Step;
+use crate::runtime::steps::{NumberedStep, Step};
 use colored::Colorize;
 use std::env;
 use std::io::ErrorKind;
@@ -50,6 +50,7 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
     .expect("Error setting Ctrl-C handler");
 
     let mut steps_iter = config.steps.into_iter();
+    let mut last_dir: Option<String> = None;
     while let Some(numbered) = steps_iter.next() {
         let text = match &numbered.step {
             Step::Run { cmd, args } => {
@@ -65,7 +66,10 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
         println!("\n{}", text.bold());
         let result = match &numbered.step {
             Step::Run { cmd, args } => run_command(cmd, args, ignore_all),
-            Step::Chdir { dir } => change_wd(dir),
+            Step::Chdir { dir } => {
+                last_dir = Some(dir.into());
+                change_wd(dir)
+            }
             Step::Exit => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
                 return Outcome::Exit {
@@ -81,7 +85,15 @@ pub fn execute(config: Config, ignore_all: bool) -> Outcome {
             Ok(exit_code) if exit_code == 0 => {}
             Ok(exit_code) => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
-                let mut remaining_steps = vec![numbered];
+                let mut remaining_steps = vec![
+                    NumberedStep {
+                        id: numbered.id - 1,
+                        step: Step::Chdir {
+                            dir: last_dir.unwrap(),
+                        },
+                    },
+                    numbered,
+                ];
                 remaining_steps.extend(steps_iter);
                 return Outcome::StepFailed {
                     code: exit_code,

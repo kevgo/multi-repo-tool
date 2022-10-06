@@ -21,14 +21,14 @@ Feature: limiting folders
       When running "m run pwd"
       Then it prints:
         """
-        step 0: cd {{examples_dir}}/go_node
+        step 1: cd {{examples_dir}}/go_node
 
-        step 1: run pwd
+        step 2: run pwd
         {{examples_dir}}/go_node
 
-        step 2: cd {{examples_dir}}/node
+        step 3: cd {{examples_dir}}/node
 
-        step 3: run pwd
+        step 4: run pwd
         {{examples_dir}}/node
 
         ALL DONE
@@ -50,9 +50,9 @@ Feature: limiting folders
       When running "m run pwd"
       Then it prints:
         """
-        step 0: cd {{examples_dir}}/go
+        step 1: cd {{examples_dir}}/go
 
-        step 1: run pwd
+        step 2: run pwd
         {{examples_dir}}/go
 
         ALL DONE
@@ -84,9 +84,9 @@ Feature: limiting folders
       When running "m run pwd"
       Then it prints:
         """
-        step 0: cd {{examples_dir}}/go_node
+        step 1: cd {{examples_dir}}/go_node
 
-        step 1: run pwd
+        step 2: run pwd
         {{examples_dir}}/go_node
 
         ALL DONE
@@ -119,9 +119,9 @@ Feature: limiting folders
       When running "m run pwd"
       Then it prints:
         """
-        step 0: cd {{examples_dir}}/go
+        step 1: cd {{examples_dir}}/go
 
-        step 1: run pwd
+        step 2: run pwd
         {{examples_dir}}/go
 
         ALL DONE
@@ -135,19 +135,19 @@ Feature: limiting folders
       When running "m run pwd"
       Then it prints:
         """
-        step 0: cd {{examples_dir}}/go
+        step 1: cd {{examples_dir}}/go
 
-        step 1: run pwd
+        step 2: run pwd
         {{examples_dir}}/go
 
-        step 2: cd {{examples_dir}}/go_node
+        step 3: cd {{examples_dir}}/go_node
 
-        step 3: run pwd
+        step 4: run pwd
         {{examples_dir}}/go_node
 
-        step 4: cd {{examples_dir}}/node
+        step 5: cd {{examples_dir}}/node
 
-        step 5: run pwd
+        step 6: run pwd
         {{examples_dir}}/node
 
         ALL DONE
