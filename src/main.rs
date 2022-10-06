@@ -20,7 +20,7 @@ fn main() -> ExitCode {
         Ok(exit_code) => exit_code,
         Err(err) => {
             let exit_code = err.exit_code();
-            let (error, guidance) = err.help();
+            let (error, guidance) = err.messages();
             println!("{}{}", "ERROR: ".red().bold(), error.red());
             if !guidance.is_empty() {
                 println!("\n{}", guidance);

@@ -75,7 +75,7 @@ mod tests {
                 assert_eq!(config, want);
                 assert!(exit_code.is_none());
             }
-            Err(err) => panic!("{}", err.help().0),
+            Err(err) => panic!("{}", err.messages().0),
         }
     }
 

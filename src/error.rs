@@ -70,7 +70,7 @@ impl UserError {
     }
 
     /// provides the error message and guidance for this error
-    pub fn help(self) -> (String, String) {
+    pub fn messages(self) -> (String, String) {
         match self {
             UserError::ApiRequestFailed {
                 url,
