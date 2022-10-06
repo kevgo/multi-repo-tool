@@ -1,6 +1,5 @@
-use std::env;
-
 use crate::error::UserError;
+use std::env;
 
 #[derive(Eq, PartialEq)]
 pub enum Command {
