@@ -41,14 +41,15 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
     })
     .expect("Error setting Ctrl-C handler");
 
+    let max_step = config.steps.last().map_or(0, |step| step.id);
     let mut steps_iter = config.steps.into_iter();
-    let mut last_dir: Option<NumberedStep> = None;
+    let mut previous_dir: Option<NumberedStep> = None;
     while let Some(numbered) = steps_iter.next() {
-        print_step(&numbered);
+        print_step(&numbered, max_step);
         let result = match &numbered.step {
             Step::Run { cmd, args } => run_command(cmd, args, command == &cli::Command::IgnoreAll),
             Step::Chdir { dir } => {
-                last_dir = Some(numbered.clone());
+                previous_dir = Some(numbered.clone());
                 change_wd(dir)
             }
             Step::Exit => {
@@ -66,7 +67,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
             Ok(exit_code) if exit_code == 0 => {}
             Ok(exit_code) => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
-                let mut remaining_steps = vec![last_dir.unwrap(), numbered];
+                let mut remaining_steps = vec![previous_dir.unwrap(), numbered];
                 remaining_steps.extend(steps_iter);
                 return Outcome::StepFailed {
                     code: exit_code,
@@ -120,16 +121,22 @@ pub fn change_wd(dir: &str) -> Result<u8, UserError> {
     }
 }
 
-fn print_step(numbered: &NumberedStep) {
+fn print_step(numbered: &NumberedStep, max: u32) {
     let text = match &numbered.step {
         Step::Run { cmd, args } => {
             if args.is_empty() {
-                format!("step {}: run {}", numbered.id, cmd)
+                format!("step {}/{}: run {}", numbered.id, max, cmd)
             } else {
-                format!("step {}: run {} {}", numbered.id, cmd, args.join(" "))
+                format!(
+                    "step {}/{}: run {} {}",
+                    numbered.id,
+                    max,
+                    cmd,
+                    args.join(" ")
+                )
             }
         }
-        Step::Chdir { dir } => format!("step {}: cd {}", numbered.id, dir),
+        Step::Chdir { dir } => format!("step {}/{}: cd {}", numbered.id, max, dir),
         Step::Exit => "".into(),
     };
     println!("\n{}", text.bold());
