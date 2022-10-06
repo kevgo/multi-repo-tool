@@ -58,7 +58,7 @@ Feature: limiting folders
         ALL DONE
         """
 
-  Rule: subsequent limits add to previous limits
+  Rule: subsequent limits add to existing limits
 
     Scenario: nested limiting
       When running "m only ls package.json"
