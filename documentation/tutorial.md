@@ -43,7 +43,7 @@ let's limit the next couple of commands to repositories that contain Node.js
 codebases.
 
 ```
-m only ls package.json
+m only test -f package.json
 ```
 
 The ["only" command](only.md) limits _mrt_ activities to repositories for which

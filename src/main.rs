@@ -6,7 +6,6 @@ mod helpers;
 mod runtime;
 
 use camino::Utf8PathBuf;
-use clap::StructOpt;
 use cli::Command;
 use colored::Colorize;
 use commands::Mode;
@@ -20,28 +19,37 @@ fn main() -> ExitCode {
     match inner() {
         Ok(exit_code) => exit_code,
         Err(err) => {
-            println!("{}{}", "ERROR: ".red().bold(), err.to_string().red());
-            err.exit_code()
+            let exit_code = err.exit_code();
+            let (error, guidance) = err.messages();
+            println!("{}{}", "ERROR: ".red().bold(), error.red());
+            if !guidance.is_empty() {
+                println!("\n{}", guidance);
+            }
+            exit_code
         }
     }
 }
 
 fn inner() -> Result<ExitCode, UserError> {
-    let cli_args = cli::Arguments::parse();
-    if cli_args.command != Command::Activate {
+    let cli_args = match cli::parse(&mut env::args()) {
+        Ok(args) => args,
+        Err(_) => return Ok(ExitCode::FAILURE),
+    };
+    if cli_args != Command::Activate && cli_args != Command::Help {
         helpers::ensure_activated()?;
     }
     let init_dir = env::current_dir().expect("cannot determine the current directory");
     let init_dir = Utf8PathBuf::from_path_buf(init_dir).expect("invalid unicode current dir");
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
-    prevent_session_override(&persisted_config, &cli_args.command)?;
-    let (config_to_execute, early_exit) = match &cli_args.command {
+    prevent_session_override(&persisted_config, &cli_args)?;
+    let (config_to_execute, early_exit) = match &cli_args {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
         Command::All => commands::limit::all(persisted_config),
         Command::Clone { org } => commands::clone(org, &init_dir)?,
         Command::Run { cmd, args } => commands::run(cmd, args, persisted_config, &init_dir)?,
+        Command::Help => commands::help(),
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
         Command::Only { cmd, args } => {
             commands::limit::only(cmd, args, &init_dir, &Mode::Match, persisted_config)?
@@ -57,7 +65,7 @@ fn inner() -> Result<ExitCode, UserError> {
     if let Some(exit_code) = early_exit {
         return Ok(exit_code);
     }
-    match runtime::execute(config_to_execute, &cli_args.command) {
+    match runtime::execute(config_to_execute, &cli_args) {
         Outcome::Success { config } => {
             if config == Config::default() {
                 config::delete(&config_path);

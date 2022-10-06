@@ -50,6 +50,8 @@ Feature: run a command in all folders
       When running "m run pwd"
       Then it prints:
         """
+        ERROR: a session is already active. Please abort this currently running session before starting a new one.
+
         Running in all 3 folders.
 
         step 3: cd {{examples_dir}}/go_node
@@ -57,8 +59,6 @@ Feature: run a command in all folders
         step 5: cd {{examples_dir}}/node
         step 6: exit
         step 7: cd {{examples_dir}}
-
-        ERROR: a session is already active. Please abort this currently running session before starting a new one.
         """
       And it returns "failure"
       And the saved state is unchanged
@@ -66,12 +66,12 @@ Feature: run a command in all folders
   Rule: "m retry" retries a failed step
 
     Scenario: a step fails in a subdirectory
-      When running "m run ls zonk"
+      When running "m run test -z foo"
       Then it prints:
         """
         step 1: cd {{examples_dir}}/go
 
-        step 2: run ls zonk
+        step 2: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -82,7 +82,7 @@ Feature: run a command in all folders
         """
         step 1: cd {{examples_dir}}/go
 
-        step 2: run ls zonk
+        step 2: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -93,7 +93,7 @@ Feature: run a command in all folders
         """
         step 1: cd {{examples_dir}}/go
 
-        step 2: run ls zonk
+        step 2: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -102,12 +102,12 @@ Feature: run a command in all folders
   Rule: "m ignore" ignores a failed step
 
     Scenario:
-      When running "m run ls zonk"
+      When running "m run test -z foo"
       Then it prints:
         """
         step 1: cd {{examples_dir}}/go
 
-        step 2: run ls zonk
+        step 2: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -118,7 +118,7 @@ Feature: run a command in all folders
         """
         step 3: cd {{examples_dir}}/go_node
 
-        step 4: run ls zonk
+        step 4: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -129,7 +129,7 @@ Feature: run a command in all folders
         """
         step 5: cd {{examples_dir}}/node
 
-        step 6: run ls zonk
+        step 6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -146,12 +146,12 @@ Feature: run a command in all folders
   Rule: "m ignore-all" ignores all failing steps
 
     Scenario: ignoring all failures
-      When running "m run ls zonk"
+      When running "m run test -z foo"
       Then it prints:
         """
         step 1: cd {{examples_dir}}/go
 
-        step 2: run ls zonk
+        step 2: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -162,11 +162,11 @@ Feature: run a command in all folders
         """
         step 3: cd {{examples_dir}}/go_node
 
-        step 4: run ls zonk
+        step 4: run test -z foo
 
         step 5: cd {{examples_dir}}/node
 
-        step 6: run ls zonk
+        step 6: run test -z foo
 
         ALL DONE
         """

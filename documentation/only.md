@@ -20,7 +20,7 @@ Limit to ...
 - repos that contain a certain file or folder:
 
   ```
-  m limit ls <file or folder name>
+  m limit test -f  <file or folder name>
   m limit has file|folder <name>
   ```
 

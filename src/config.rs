@@ -1,7 +1,9 @@
 use crate::error::UserError;
+use crate::helpers::{folder_list, subdirs};
 use crate::runtime::steps::NumberedStep;
 use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, ErrorKind};
 use std::{env, fs};
@@ -17,6 +19,37 @@ pub struct Config {
     /// None --> all folders
     /// Some --> only the specified folders
     pub folders: Option<Vec<String>>,
+}
+
+impl Display for Config {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let all_count = self
+            .root_dir
+            .as_ref()
+            .map(|root_dir| subdirs::count(root_dir).expect("cannot list the root dir"));
+        match &self.folders {
+            Some(folders) => {
+                match all_count {
+                    Some(all) => writeln!(f, "Running only in {}/{} folders:", folders.len(), all),
+                    None => writeln!(f, "Running only in {} folders:", folders.len()),
+                }?;
+                write!(f, "{}", folder_list::render(folders))?;
+            }
+            None => match all_count {
+                Some(all) => writeln!(f, "Running in all {} folders.", all),
+                None => writeln!(f, "Running in all folders."),
+            }?,
+        }
+        writeln!(f)?;
+        if self.steps.is_empty() {
+            writeln!(f, "I'm not doing anything right now.")
+        } else {
+            for step in &self.steps {
+                writeln!(f, "{}", &step.to_string()).unwrap();
+            }
+            Ok(())
+        }
+    }
 }
 
 pub fn delete(config_path: &Utf8Path) {

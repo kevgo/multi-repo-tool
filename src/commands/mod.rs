@@ -1,6 +1,7 @@
 mod abort;
 mod activate;
 mod clone;
+mod help;
 mod ignore;
 pub(crate) mod limit;
 mod next;
@@ -12,6 +13,7 @@ mod walk;
 pub use abort::abort;
 pub use activate::activate;
 pub use clone::clone;
+pub use help::help;
 pub use ignore::ignore;
 pub use limit::Mode;
 pub use next::next;

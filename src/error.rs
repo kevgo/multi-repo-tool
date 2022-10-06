@@ -1,6 +1,4 @@
-use crate::commands;
 use crate::config::Config;
-use std::fmt::Display;
 use std::process::ExitCode;
 
 #[derive(Debug, Eq, PartialEq)]
@@ -58,6 +56,9 @@ pub enum UserError {
         code: u16,
         response: String,
     },
+    WrongCliArguments {
+        message: String,
+    },
 }
 
 impl UserError {
@@ -67,86 +68,80 @@ impl UserError {
             _ => ExitCode::FAILURE,
         }
     }
-}
 
-impl Display for UserError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    /// provides the error message and guidance for this error
+    pub fn messages(self) -> (String, String) {
         match self {
             UserError::ApiRequestFailed {
                 url,
                 error,
                 guidance,
-            } => write!(
-                f,
-                "cannot read GitHub API:\n- url: {}\n- error: {}\n- guidance: {}",
-                url, error, guidance
+            } => (
+                format!("cannot read GitHub API: {}", error),
+                format!("url: {}\nguidance: {}", url, guidance),
             ),
-            UserError::CannotChangeIntoDirectory { dir, guidance } => {
-                write!(
-                    f,
-                    "cannot change into the \"{}\" directory: {}",
-                    dir, guidance
-                )
-            }
+            UserError::CannotChangeIntoDirectory { dir, guidance } => (
+                format!("cannot change into the \"{}\" directory", dir),
+                guidance,
+            ),
             UserError::CannotReadDirectory {
                 directory,
                 guidance,
-            } => write!(f, "cannot read directory \"{}\": {}", directory, guidance),
-            UserError::CannotReadPersistenceFile { filename, guidance } => write!(
-                f,
-                "cannot read persistence file \"{}\": {}",
-                filename, guidance
+            } => (format!("cannot read directory \"{}\"", directory), guidance),
+            UserError::CannotReadPersistenceFile { filename, guidance } => (
+                format!("cannot read persistence file \"{}\"", filename),
+                guidance,
             ),
-            UserError::CannotWriteFile { filename, guidance } => write!(
-                f,
-                "cannot write persistence file \"{}\": {}",
-                filename, guidance
+            UserError::CannotWriteFile { filename, guidance } => (
+                format!("cannot write persistence file \"{}\"", filename),
+                guidance,
             ),
             UserError::CommandNotFound { command } => {
-                write!(f, "command \"{}\" not found", command)
+                (format!("command \"{}\" not found", command), "".into())
             }
             UserError::ExecutePermissionDenied { command } => {
-                write!(f, "\"{}\" is not executable", command)
+                (format!("\"{}\" is not executable", command), "".into())
             }
-            UserError::InvalidPersistenceFormat { filename, guidance } => write!(
-                f,
-                "persistence file \"{}\" has an invalid format: {}",
-                filename, guidance
+            UserError::InvalidPersistenceFormat { filename, guidance } => (
+                format!("persistence file \"{}\" has an invalid format", filename),
+                guidance,
             ),
-            UserError::NoFoldersToIterate => write!(f, "all folders have been filtered out"),
-            UserError::NotWrapped => {
-                write!(
-                    f,
-                    "please don't call the mrt binary directly, run \"mrt activate | source\" and then call the shell function \"m\""
-                )
+            UserError::NoFoldersToIterate => {
+                ("all folders have been filtered out".into(), "".into())
             }
-            UserError::NoNextFolder => write!(f, "no next subfolder"),
-            UserError::NothingToAbort => write!(f, "nothing to abort"),
-            UserError::NothingToIgnore => write!(f, "nothing to ignore"),
-            UserError::NothingToRetry => write!(f, "nothing to retry"),
-            UserError::OtherExecutionError { command, guidance } => write!(
-                f,
-                "unknown error while trying to execute \"{}\": {}",
-                command, guidance
+            UserError::NotWrapped => (
+                "please don't call the mrt binary directly".into(),
+                "run \"mrt activate | source\" and then call the shell function \"m\"".into(),
             ),
-            #[allow(clippy::print_in_format_impl)]
-            UserError::SessionAlreadyActive { config } => {
-                commands::status(config).unwrap();
-                println!();
-                write!(f, "a session is already active. Please abort this currently running session before starting a new one.")
-            }
-            UserError::StepFailed { code: _ } => {
-                write!(f, "Abort, Retry, Ignore?")
-            }
+            UserError::NoNextFolder => ("no next subfolder".into(), "".into()),
+            UserError::NothingToAbort => ("nothing to abort".into(), "".into()),
+            UserError::NothingToIgnore => ("nothing to ignore".into(), "".into()),
+            UserError::NothingToRetry => ("nothing to retry".into(), "".into()),
+            UserError::OtherExecutionError { command, guidance } => (
+                format!("unknown error while trying to execute \"{}\"", command),
+                guidance,
+            ),
+            UserError::SessionAlreadyActive { config } => (
+                "a session is already active. Please abort this currently running session before starting a new one.".into(),
+                config.to_string()
+            ),
+            UserError::StepFailed { code: _ } => (
+                "Abort, Retry, Ignore?".into(),
+                "".into(),
+             ),
             UserError::UnknownApiError {
                 url,
                 code,
                 response,
-            } => write!(
-                f,
-                "unexpected GitHub API error:\n- url: {}\n- code: {}\n- response: {}",
-                url, code, response
+            } => (
+                format!("unexpected GitHub API error: {}", code),
+                format!("url: {}responseh: {}", url, response),
             ),
+            UserError::WrongCliArguments { message } => (
+                message,
+                r#"Usage: mrt <command>
+                Available commands:"#.into()
+            )
         }
     }
 }
