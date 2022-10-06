@@ -60,7 +60,7 @@ Feature: limiting folders
         """
       And it returns "success"
 
-  Rule: subsequent limits build on previous limits
+  Rule: subsequent limits add to previous limits
 
     Scenario: nested limiting
       When running "m only ls package.json"
@@ -97,7 +97,6 @@ Feature: limiting folders
 
   Rule: does not allow empty folder sets
 
-    @this
     Scenario: limiting all folders
       When running "m only ls zonk"
       Then it prints:
@@ -105,4 +104,58 @@ Feature: limiting folders
         ERROR: all folders have been filtered out
         """
       And it returns "failure"
+      And there is no saved state
+
+  Rule: "m all" removes all limits
+
+    @this
+    Scenario: limiting using "m only"
+      When running "m except ls package.json"
+      Then it prints:
+        """
+        package.json
+        package.json
+
+        Limiting execution to 1/3 folders:
+        1. {{examples_dir}}/go
+        """
+      And it returns "success"
+      When running "m run pwd"
+      Then it prints:
+        """
+        step 0: cd {{examples_dir}}/go
+
+        step 1: run pwd
+        {{examples_dir}}/go
+
+        ALL DONE
+        """
+      And it returns "success"
+      When running "m all"
+      Then it prints:
+        """
+        """
+      And it returns "success"
+      And there is no saved state
+      When running "m run pwd"
+      Then it prints:
+        """
+        step 0: cd {{examples_dir}}/go
+
+        step 1: run pwd
+        {{examples_dir}}/go
+
+        step 2: cd {{examples_dir}}/go_node
+
+        step 3: run pwd
+        {{examples_dir}}/go_node
+
+        step 4: cd {{examples_dir}}/node
+
+        step 5: run pwd
+        {{examples_dir}}/node
+
+        ALL DONE
+        """
+      And it returns "success"
       And there is no saved state
