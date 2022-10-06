@@ -105,11 +105,7 @@ async fn it_prints(world: &mut MrtWorld, step: &Step) {
     let want = step.docstring().expect("step has no docstring");
     let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
     let output = world.output.as_ref().expect("no execution recorded");
-    let printed = format!(
-        "{}{}",
-        str::from_utf8(&output.stdout).unwrap(),
-        str::from_utf8(&output.stderr).unwrap()
-    );
+    let printed = format!("{}", str::from_utf8(&output.stdout).unwrap());
     assert_eq!(printed.trim(), want.trim());
 }
 
@@ -124,7 +120,7 @@ async fn verify_exit_code(world: &mut MrtWorld, want: String) {
     match want.as_ref() {
         "success" => assert!(success),
         "failure" => assert!(!success),
-        other => panic!("unknown exit code: {}", other),
+        other => panic!("unknown return check: {}", other),
     }
 }
 

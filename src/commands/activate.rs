@@ -13,12 +13,14 @@ function m -d "Fish shell wrapper for mrt"
         set args $argv[3..-1]
     end
     env MRT_WRAPPED=true mrt $cmd -- $args
+    set --local exit_code $status
     set --local next_dir_path ~/.config/mrt.next_dir
     if test -e $next_dir_path
         set --local nextdir (cat $next_dir_path)
         rm $next_dir_path
         cd $nextdir
     end
+    return $exit_code
 end
 "#
     );
