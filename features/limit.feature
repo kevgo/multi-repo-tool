@@ -63,11 +63,9 @@ Feature: limiting folders
         2. {{examples_dir}}/node
         """
       And it returns "success"
-      When running "m only ls go.mod"
+      When running "m only test -f go.mod"
       Then it prints:
         """
-        go.mod
-
         Tightening the existing limit of 2/3 folders further to 1/3 folders:
         1. {{examples_dir}}/go_node
         """
@@ -86,7 +84,7 @@ Feature: limiting folders
   Rule: does not allow empty folder sets
 
     Scenario: limiting all folders
-      When running "m only ls zonk"
+      When running "m only test -f zonk"
       Then it prints:
         """
         ERROR: all folders have been filtered out
