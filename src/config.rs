@@ -44,8 +44,9 @@ impl Display for Config {
         if self.steps.is_empty() {
             writeln!(f, "I'm not doing anything right now.")
         } else {
+            let max_id = self.steps.last().map_or(0, |step| step.id);
             for step in &self.steps {
-                writeln!(f, "{}", &step.to_string()).unwrap();
+                writeln!(f, "{}", &step.list(max_id)).unwrap();
             }
             Ok(())
         }

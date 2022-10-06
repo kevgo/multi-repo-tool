@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -16,14 +15,14 @@ pub enum Step {
     Exit,
 }
 
-impl Display for NumberedStep {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl NumberedStep {
+    pub fn list(&self, max_id: u32) -> String {
         match &self.step {
             Step::Run { cmd, args } => {
-                write!(f, "step {}: {} {}", self.id, cmd, args.join(" "))
+                format!("step {}/{}: {} {}", self.id, max_id, cmd, args.join(" "))
             }
-            Step::Chdir { dir } => write!(f, "step {}: cd {}", self.id, dir),
-            Step::Exit => write!(f, "step {}: exit", self.id),
+            Step::Chdir { dir } => format!("step {}/{}: cd {}", self.id, max_id, dir),
+            Step::Exit => format!("step {}/{}: exit", self.id, max_id),
         }
     }
 }

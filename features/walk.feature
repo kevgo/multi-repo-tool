@@ -10,7 +10,7 @@ Feature: manually iterate all folders
       When running "m walk"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/7: cd {{examples_dir}}/go
         """
       And I am now in the "go" subfolder
       And it returns "success"
@@ -18,7 +18,7 @@ Feature: manually iterate all folders
       When running "m next"
       Then it prints:
         """
-        step 3: cd {{examples_dir}}/go_node
+        step 3/7: cd {{examples_dir}}/go_node
         """
       And I am now in the "go_node" subfolder
       And it returns "success"
@@ -26,7 +26,7 @@ Feature: manually iterate all folders
       When running "m next"
       Then it prints:
         """
-        step 5: cd {{examples_dir}}/node
+        step 5/7: cd {{examples_dir}}/node
         """
       And I am now in the "node" subfolder
       And it returns "success"
@@ -34,7 +34,7 @@ Feature: manually iterate all folders
       When running "m next"
       Then it prints:
         """
-        step 7: cd {{examples_dir}}
+        step 7/7: cd {{examples_dir}}
 
         ALL DONE
         """

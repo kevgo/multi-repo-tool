@@ -10,19 +10,19 @@ Feature: run a command in all folders
       When running "m run pwd"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run pwd
+        step 2/6: run pwd
         {{examples_dir}}/go
 
-        step 3: cd {{examples_dir}}/go_node
+        step 3/6: cd {{examples_dir}}/go_node
 
-        step 4: run pwd
+        step 4/6: run pwd
         {{examples_dir}}/go_node
 
-        step 5: cd {{examples_dir}}/node
+        step 5/6: cd {{examples_dir}}/node
 
-        step 6: run pwd
+        step 6/6: run pwd
         {{examples_dir}}/node
 
         ALL DONE
@@ -35,9 +35,9 @@ Feature: run a command in all folders
       When running "m run zonk"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run zonk
+        step 2/6: run zonk
         ERROR: command "zonk" not found
         """
       And it returns "failure"
@@ -54,11 +54,11 @@ Feature: run a command in all folders
 
         Running in all 3 folders.
 
-        step 3: cd {{examples_dir}}/go_node
-        step 4: exit
-        step 5: cd {{examples_dir}}/node
-        step 6: exit
-        step 7: cd {{examples_dir}}
+        step 3/7: cd {{examples_dir}}/go_node
+        step 4/7: exit
+        step 5/7: cd {{examples_dir}}/node
+        step 6/7: exit
+        step 7/7: cd {{examples_dir}}
         """
       And it returns "failure"
       And the saved state is unchanged
@@ -69,9 +69,9 @@ Feature: run a command in all folders
       When running "m run test -z foo"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run test -z foo
+        step 2/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -80,9 +80,9 @@ Feature: run a command in all folders
       When running "m retry"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run test -z foo
+        step 2/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -91,9 +91,9 @@ Feature: run a command in all folders
       When running "m retry"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run test -z foo
+        step 2/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -105,9 +105,9 @@ Feature: run a command in all folders
       When running "m run test -z foo"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run test -z foo
+        step 2/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -116,9 +116,9 @@ Feature: run a command in all folders
       When running "m ignore"
       Then it prints:
         """
-        step 3: cd {{examples_dir}}/go_node
+        step 3/6: cd {{examples_dir}}/go_node
 
-        step 4: run test -z foo
+        step 4/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -127,9 +127,9 @@ Feature: run a command in all folders
       When running "m ignore"
       Then it prints:
         """
-        step 5: cd {{examples_dir}}/node
+        step 5/6: cd {{examples_dir}}/node
 
-        step 6: run test -z foo
+        step 6/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -149,9 +149,9 @@ Feature: run a command in all folders
       When running "m run test -z foo"
       Then it prints:
         """
-        step 1: cd {{examples_dir}}/go
+        step 1/6: cd {{examples_dir}}/go
 
-        step 2: run test -z foo
+        step 2/6: run test -z foo
         ERROR: Abort, Retry, Ignore?
         """
       And it returns "failure"
@@ -160,13 +160,13 @@ Feature: run a command in all folders
       When running "m ignore-all"
       Then it prints:
         """
-        step 3: cd {{examples_dir}}/go_node
+        step 3/6: cd {{examples_dir}}/go_node
 
-        step 4: run test -z foo
+        step 4/6: run test -z foo
 
-        step 5: cd {{examples_dir}}/node
+        step 5/6: cd {{examples_dir}}/node
 
-        step 6: run test -z foo
+        step 6/6: run test -z foo
 
         ALL DONE
         """

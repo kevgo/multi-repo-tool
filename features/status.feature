@@ -20,9 +20,9 @@ Feature: display the current status
       """
       Running in all 3 folders.
 
-      step 3: cd {{examples_dir}}/go_node
-      step 4: exit
-      step 5: cd {{examples_dir}}/node
-      step 6: exit
-      step 7: cd {{examples_dir}}
+      step 3/7: cd {{examples_dir}}/go_node
+      step 4/7: exit
+      step 5/7: cd {{examples_dir}}/node
+      step 6/7: exit
+      step 7/7: cd {{examples_dir}}
       """
