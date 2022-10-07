@@ -10,10 +10,9 @@ Feature: list subfolders matching a condition
       When running "m list ls go.mod"
       Then it prints:
         """
-        go.mod
-        go.mod
+        ...
 
-        Successful folders:
+        2/3 folders match:
         1. go
         2. go_node
         """

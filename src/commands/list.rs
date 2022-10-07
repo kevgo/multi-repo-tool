@@ -3,6 +3,7 @@ use crate::error::UserError;
 use crate::helpers::{folder_list, subdirs};
 use camino::Utf8Path;
 use colored::Colorize;
+use std::io::{stdout, Write};
 use std::process::{Command, ExitCode};
 
 pub fn list(
@@ -13,12 +14,15 @@ pub fn list(
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut matching_folders = vec![];
     let all_folders = subdirs::all(root_dir)?;
+    let folders_count = all_folders.len();
     for dir in config.folders.unwrap_or(all_folders) {
+        print!(".");
+        let _ignore = stdout().flush();
         let mut command = Command::new(&cmd);
         command.args(args);
         command.current_dir(&dir);
-        if let Ok(status) = command.status() {
-            if status.success() {
+        if let Ok(output) = command.output() {
+            if output.status.success() {
                 matching_folders.push(dir);
             }
         }
@@ -28,7 +32,15 @@ pub fn list(
         .into_iter()
         .map(|folder| folder[init_len..].to_owned())
         .collect();
-    println!("\n{}", "Successful folders:".bold());
+    println!(
+        "\n\n{}",
+        format!(
+            "{}/{} folders match:",
+            matching_folders.len(),
+            folders_count
+        )
+        .bold()
+    );
     println!("{}", folder_list::render(&matching_folders));
     Ok((Config::default(), Some(ExitCode::SUCCESS)))
 }
