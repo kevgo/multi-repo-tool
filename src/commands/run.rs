@@ -12,10 +12,9 @@ pub fn run(
     root_dir: &Utf8PathBuf,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut steps = vec![];
-    let all_subdirs = subdirs::all(root_dir)?;
     let dirs = match &config.folders {
         Some(config_folders) => config_folders.clone(),
-        None => all_subdirs,
+        None => subdirs::all(root_dir)?,
     };
     for dir in dirs {
         steps.push(Step::Chdir { dir });

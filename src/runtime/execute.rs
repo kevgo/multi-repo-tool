@@ -52,6 +52,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
                 previous_dir = Some(numbered.clone());
                 change_wd(dir)
             }
+            Step::Check { cmd, args } => run_command(cmd, args, true),
             Step::Exit => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
                 return Outcome::Exit {
@@ -99,6 +100,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
         | cli::Command::All
         | cli::Command::Except { cmd: _, args: _ }
         | cli::Command::Help
+        | cli::Command::List { cmd: _, args: _ }
         | cli::Command::Only { cmd: _, args: _ }
         | cli::Command::Status => {}
     }
@@ -137,6 +139,19 @@ fn print_step(numbered: &NumberedStep, max: u32) {
             }
         }
         Step::Chdir { dir } => format!("step {}/{}: cd {}", numbered.id, max, dir),
+        Step::Check { cmd, args } => {
+            if args.is_empty() {
+                format!("step {}/{}: check {}", numbered.id, max, cmd)
+            } else {
+                format!(
+                    "step {}/{}: check {} {}",
+                    numbered.id,
+                    max,
+                    cmd,
+                    args.join(" ")
+                )
+            }
+        }
         Step::Exit => "".into(),
     };
     println!("\n{}", text.bold());

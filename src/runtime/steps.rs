@@ -12,6 +12,7 @@ pub struct NumberedStep {
 pub enum Step {
     Run { cmd: String, args: Vec<String> },
     Chdir { dir: String },
+    Check { cmd: String, args: Vec<String> },
     Exit,
 }
 
@@ -22,6 +23,13 @@ impl NumberedStep {
                 format!("step {}/{}: {} {}", self.id, max_id, cmd, args.join(" "))
             }
             Step::Chdir { dir } => format!("step {}/{}: cd {}", self.id, max_id, dir),
+            Step::Check { cmd, args } => format!(
+                "step {}/{}: check {} {}",
+                self.id,
+                max_id,
+                cmd,
+                args.join(" ")
+            ),
             Step::Exit => format!("step {}/{}: exit", self.id, max_id),
         }
     }
