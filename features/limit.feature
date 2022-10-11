@@ -1,3 +1,4 @@
+@this
 Feature: limiting folders
 
   Background:
@@ -10,6 +11,8 @@ Feature: limiting folders
       When running "m only test -f package.json"
       Then it prints:
         """
+        ...
+
         Limiting execution to 2/3 folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
@@ -37,6 +40,8 @@ Feature: limiting folders
       When running "m except test -f package.json"
       Then it prints:
         """
+        ...
+
         Limiting execution to 1/3 folders:
         1. {{examples_dir}}/go
         """
@@ -58,6 +63,8 @@ Feature: limiting folders
       When running "m only test -f package.json"
       Then it prints:
         """
+        ...
+
         Limiting execution to 2/3 folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
@@ -66,6 +73,8 @@ Feature: limiting folders
       When running "m only test -f go.mod"
       Then it prints:
         """
+        ..
+
         Tightening the existing limit of 2/3 folders further to 1/3 folders:
         1. {{examples_dir}}/go_node
         """
@@ -87,6 +96,8 @@ Feature: limiting folders
       When running "m only test -f zonk"
       Then it prints:
         """
+        ...
+
         ERROR: all folders have been filtered out
         """
       And it returns "failure"
@@ -98,6 +109,8 @@ Feature: limiting folders
       When running "m except test -f package.json"
       Then it prints:
         """
+        ...
+
         Limiting execution to 1/3 folders:
         1. {{examples_dir}}/go
         """

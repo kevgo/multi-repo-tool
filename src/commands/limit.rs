@@ -3,6 +3,7 @@ use crate::error::UserError;
 use crate::helpers::{folder_list, subdirs};
 use camino::Utf8Path;
 use colored::Colorize;
+use std::io::{stdout, Write};
 use std::process::{Command, ExitCode};
 
 /// defines which folders get included
@@ -36,19 +37,22 @@ pub fn only(
     let all_folders_count = all_folders.len();
     let previous_count = config.folders.as_ref().map(Vec::len);
     for dir in config.folders.unwrap_or(all_folders) {
+        print!(".");
+        let _ignore = stdout().flush();
         let mut command = Command::new(&cmd);
         command.args(args);
         command.current_dir(&dir);
-        if let Ok(status) = command.status() {
+        if let Ok(output) = command.output() {
             let folder_matches = match mode {
-                Mode::Match => status.success(),
-                Mode::NoMatch => !status.success(),
+                Mode::Match => output.status.success(),
+                Mode::NoMatch => !output.status.success(),
             };
             if folder_matches {
                 new_folders.push(dir);
             }
         }
     }
+    println!("\n");
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
@@ -67,7 +71,7 @@ pub fn only(
             all_folders_count
         )
     };
-    println!("\n{}", text.bold());
+    println!("{}", text.bold());
     println!("{}", folder_list::render(&new_folders));
     if !config.steps.is_empty() {
         println!("Discarding pending {} steps.", config.steps.len());
