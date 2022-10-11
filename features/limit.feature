@@ -1,4 +1,3 @@
-@this
 Feature: limiting folders
 
   Background:
