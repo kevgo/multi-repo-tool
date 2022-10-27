@@ -24,7 +24,6 @@ Feature: manually iterate all folders starting at a given folder
       And it returns "success"
       And there is no saved state
 
-    @this
     Scenario: folder name missing
       Given I am in the "simple" example folder
       And no mrt configuration
