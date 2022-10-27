@@ -1,11 +1,12 @@
-Feature: manually iterate all folders starting at a given folder
+Feature: manually iterate all sibling folders after the current folder
 
-  Rule: it starts at the given subdirectory
+  Rule: it starts in the sibling after the current subdirectory
 
-    Scenario: walk-from command
-      Given I am in the "simple" example folder
+    @this
+    Scenario: walk-from-here command
+      Given I am in the "go" subfolder of the "simple" example
       And no mrt configuration
-      When running "m walk-from node"
+      When running "m walk-from-here"
       Then it prints:
         """
         step 1/3: cd {{examples_dir}}/node

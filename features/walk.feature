@@ -1,12 +1,10 @@
 Feature: manually iterate all folders
 
-  Background:
-    Given I am in the "simple" example folder
-    And no mrt configuration
-
   Rule: it iterates all subdirectories
 
     Scenario: walk command
+      Given I am in the "simple" example folder
+      And no mrt configuration
       When running "m walk"
       Then it prints:
         """
