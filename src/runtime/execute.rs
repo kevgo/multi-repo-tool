@@ -91,8 +91,8 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
         | cli::Command::IgnoreAll
         | cli::Command::Next
         | cli::Command::Retry
-        | cli::Command::Walk
-        | cli::Command::WalkFrom { start: _ }
+        | cli::Command::Walk { start: _ }
+        | cli::Command::WalkFromHere
         | cli::Command::Run { cmd: _, args: _ } => {
             println!("\n{}\n", "ALL DONE".bold());
         }
