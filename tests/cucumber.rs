@@ -9,8 +9,10 @@ use tokio::process::Command;
 
 #[derive(Debug, Default, World)]
 pub struct MrtWorld {
+    /// the directory containing the example used in this scenario
+    example_dir: Option<PathBuf>,
     /// the directory in which we run mrt
-    dir: Option<PathBuf>,
+    run_dir: Option<PathBuf>,
     /// the output produced by mrt
     output: Option<Output>,
     /// the content of mrt.json before running mrt
@@ -20,13 +22,16 @@ pub struct MrtWorld {
 #[given(expr = "I am in the {string} example folder")]
 async fn in_the_folder(world: &mut MrtWorld, example: String) {
     let cwd = env::current_dir().expect("cannot determine current dir");
-    world.dir = Some(cwd.join("examples").join(example));
+    world.example_dir = Some(cwd.join("examples").join(example));
+    world.run_dir = world.example_dir.clone()
 }
 
 #[given(expr = "I am in the {string} subfolder of the {string} example")]
 async fn in_the_example_subfolder(world: &mut MrtWorld, subfolder: String, example: String) {
     let cwd = env::current_dir().expect("cannot determine current dir");
-    world.dir = Some(cwd.join("examples").join(example).join(subfolder));
+    let example_dir = cwd.join("examples").join(example);
+    world.run_dir = Some(example_dir.join(subfolder));
+    world.example_dir = Some(example_dir);
 }
 
 #[given(expr = "I am in the middle of running {string}")]
@@ -41,7 +46,7 @@ async fn previously_ran(world: &mut MrtWorld, command: String) {
     let home_dir = cwd.join("examples").join("home");
     let output = Command::new(mrt_path)
         .args(argv)
-        .current_dir(world.dir.as_ref().unwrap())
+        .current_dir(world.run_dir.as_ref().unwrap())
         .env("HOME", &home_dir)
         .env("MRT_WRAPPED", "true")
         .output()
@@ -73,7 +78,7 @@ async fn when_running(world: &mut MrtWorld, command: String) {
     let home_dir = cwd.join("examples").join("home");
     let output = Command::new(&mrt_path)
         .args(argv)
-        .current_dir(world.dir.as_ref().unwrap())
+        .current_dir(world.run_dir.as_ref().unwrap())
         .env("HOME", &home_dir)
         .env("MRT_WRAPPED", "true")
         .output()
@@ -103,14 +108,14 @@ async fn verify_in_subfolder(world: &mut MrtWorld, folder_name: String) {
     let home_dir = cwd.join("examples").join("home");
     let next_dir_path = home_dir.join(".config").join("mrt.next_dir");
     let have = fs::read_to_string(next_dir_path).await.unwrap();
-    let examples_dir = world.dir.as_ref().unwrap();
+    let examples_dir = world.example_dir.as_ref().unwrap();
     let have = have.replace(&format!("{}/", &examples_dir.to_string_lossy()), "");
     assert_eq!(have.trim(), folder_name.trim());
 }
 
 #[then("it prints:")]
 async fn it_prints(world: &mut MrtWorld, step: &Step) {
-    let examples_dir = world.dir.as_ref().unwrap();
+    let examples_dir = world.example_dir.as_ref().unwrap();
     let want = step.docstring().expect("step has no docstring");
     let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
     let output = world.output.as_ref().expect("no execution recorded");
@@ -140,7 +145,7 @@ async fn verify_saved_state(world: &mut MrtWorld, step: &Step) {
     let config_path = home_dir.join(".config").join("mrt.json");
     let have = fs::read_to_string(config_path).await.unwrap();
     let want = step.docstring().expect("step has no docstring");
-    let examples_dir = world.dir.as_ref().unwrap();
+    let examples_dir = world.example_dir.as_ref().unwrap();
     let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
     assert_eq!(have.trim(), want.trim());
 }

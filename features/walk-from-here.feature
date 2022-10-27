@@ -2,14 +2,21 @@ Feature: manually iterate all sibling folders after the current folder
 
   Rule: it starts in the sibling after the current subdirectory
 
-    @this
     Scenario: walk-from-here command
-      Given I am in the "go" subfolder of the "simple" example
+      Given I am in the "go_node" subfolder of the "simple" example
       And no mrt configuration
       When running "m walk-from-here"
       Then it prints:
         """
-        step 1/3: cd {{examples_dir}}/node
+        step 1/5: cd {{examples_dir}}/go_node
+        """
+      And I am now in the "go_node" subfolder
+      And it returns "success"
+
+      When running "m next"
+      Then it prints:
+        """
+        step 3/5: cd {{examples_dir}}/node
         """
       And I am now in the "node" subfolder
       And it returns "success"
@@ -17,7 +24,7 @@ Feature: manually iterate all sibling folders after the current folder
       When running "m next"
       Then it prints:
         """
-        step 3/3: cd {{examples_dir}}
+        step 5/5: cd {{examples_dir}}
 
         ALL DONE
         """
