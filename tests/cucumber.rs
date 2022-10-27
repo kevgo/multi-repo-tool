@@ -18,9 +18,15 @@ pub struct MrtWorld {
 }
 
 #[given(expr = "I am in the {string} example folder")]
-async fn in_the_folder(world: &mut MrtWorld, folder: String) {
+async fn in_the_folder(world: &mut MrtWorld, example: String) {
     let cwd = env::current_dir().expect("cannot determine current dir");
-    world.dir = Some(cwd.join("examples").join(folder));
+    world.dir = Some(cwd.join("examples").join(example));
+}
+
+#[given(expr = "I am in the {string} subfolder of the {string} example")]
+async fn in_the_example_subfolder(world: &mut MrtWorld, subfolder: String, example: String) {
+    let cwd = env::current_dir().expect("cannot determine current dir");
+    world.dir = Some(cwd.join("examples").join(example).join(subfolder));
 }
 
 #[given(expr = "I am in the middle of running {string}")]
@@ -32,11 +38,10 @@ async fn previously_ran(world: &mut MrtWorld, command: String) {
     }
     let cwd = env::current_dir().expect("cannot determine current dir");
     let mrt_path = cwd.join("target").join("debug").join("mrt");
-    let examples_dir = world.dir.as_ref().unwrap();
     let home_dir = cwd.join("examples").join("home");
     let output = Command::new(mrt_path)
         .args(argv)
-        .current_dir(&examples_dir)
+        .current_dir(world.dir.as_ref().unwrap())
         .env("HOME", &home_dir)
         .env("MRT_WRAPPED", "true")
         .output()
@@ -65,16 +70,18 @@ async fn when_running(world: &mut MrtWorld, command: String) {
     }
     let cwd = env::current_dir().expect("cannot determine current dir");
     let mrt_path = cwd.join("target").join("debug").join("mrt");
-    let examples_dir = world.dir.as_ref().unwrap();
     let home_dir = cwd.join("examples").join("home");
     let output = Command::new(&mrt_path)
         .args(argv)
-        .current_dir(&examples_dir)
+        .current_dir(world.dir.as_ref().unwrap())
         .env("HOME", &home_dir)
         .env("MRT_WRAPPED", "true")
         .output()
         .await
-        .expect("cannot find the 'mrt' executable");
+        .expect(&format!(
+            "cannot find the '{}' executable",
+            mrt_path.display()
+        ));
     world.output = Some(output);
 }
 
