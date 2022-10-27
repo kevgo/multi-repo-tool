@@ -38,11 +38,11 @@ fn inner() -> Result<ExitCode, UserError> {
     if cli_args != Command::Activate && cli_args != Command::Help {
         helpers::ensure_activated()?;
     }
+    let init_dir = env::current_dir().expect("cannot determine the current directory");
+    let init_dir = Utf8PathBuf::from_path_buf(init_dir).expect("invalid unicode current dir");
     let config_path = config::filepath();
     let persisted_config = config::load(&config_path)?;
     prevent_session_override(&persisted_config, &cli_args)?;
-    let init_dir = env::current_dir().expect("cannot determine the current directory");
-    let init_dir = Utf8PathBuf::from_path_buf(init_dir).expect("invalid unicode current dir");
     let (config_to_execute, early_exit) = match &cli_args {
         Command::Abort => commands::abort(persisted_config)?,
         Command::Activate => commands::activate(),
