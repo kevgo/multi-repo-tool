@@ -44,7 +44,6 @@ Feature: manually iterate all folders
 
   Rule: with argument it starts at the given subdirectory
 
-    @this
     Scenario: argument
       When running "m walk node"
       Then it prints:
