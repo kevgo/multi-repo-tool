@@ -6,7 +6,7 @@ Feature: manually iterate all folders
 
   Rule: it iterates all subdirectories
 
-    Scenario: no argument
+    Scenario: walk command
       When running "m walk"
       Then it prints:
         """

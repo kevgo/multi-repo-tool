@@ -6,7 +6,7 @@ Feature: manually iterate all folders starting at a given folder
 
   Rule: it starts at the given subdirectory
 
-    Scenario: argument
+    Scenario: walk-from command
       When running "m walk-from node"
       Then it prints:
         """
