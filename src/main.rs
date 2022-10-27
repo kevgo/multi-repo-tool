@@ -61,7 +61,8 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
         Command::Status => commands::status(&persisted_config)?,
-        Command::Walk { start } => commands::walk(&init_dir, persisted_config, start.as_ref())?,
+        Command::Walk => commands::walk(&init_dir, persisted_config, None)?,
+        Command::WalkFrom { start } => commands::walk(&init_dir, persisted_config, start.as_ref())?,
     };
     if let Some(exit_code) = early_exit {
         return Ok(exit_code);
@@ -103,7 +104,7 @@ fn prevent_session_override(config: &Config, command: &Command) -> Result<(), Us
         return Ok(());
     }
     match command {
-        Command::Run { cmd: _, args: _ } | Command::Walk { start: _ } => {
+        Command::Run { cmd: _, args: _ } | Command::Walk | Command::WalkFrom { start: _ } => {
             Err(UserError::SessionAlreadyActive {
                 config: config.clone(),
             })

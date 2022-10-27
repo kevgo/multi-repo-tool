@@ -32,7 +32,9 @@ pub enum Command {
     /// Displays the current status of the command queue
     Status,
     /// Manually visits each subdirectory, optionally starting at the given one
-    Walk { start: Option<String> },
+    Walk,
+    /// Manually visits each subdirectory starting at the given one
+    WalkFrom { start: Option<String> },
 }
 
 pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
@@ -70,7 +72,8 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
             args: args.collect(),
         },
         "status" => Command::Status,
-        "walk" => Command::Walk { start: args.next() },
+        "walk" => Command::Walk,
+        "walk-from" => Command::WalkFrom { start: args.next() },
         other => return Err(help(format!("unknown command: {}", other))),
     })
 }
