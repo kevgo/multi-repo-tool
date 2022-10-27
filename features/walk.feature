@@ -4,9 +4,9 @@ Feature: manually iterate all folders
     Given I am in the "simple" example folder
     And no mrt configuration
 
-  Rule: it goes to the next subdirectory
+  Rule: it iterates all subdirectories
 
-    Scenario: multiple subdirectories
+    Scenario: walk command
       When running "m walk"
       Then it prints:
         """

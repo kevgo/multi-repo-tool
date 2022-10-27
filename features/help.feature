@@ -20,4 +20,5 @@ Feature: display help
       To open a command prompt in all subfolders: m walk
       When you are done with one subfolder, run m next to go to the next subfolder.
       To stop the process early: m abort
+      To start walking at a specific subfolder: m walk-from <folder name>
       """

@@ -39,5 +39,9 @@ pub fn help() -> (Config, Option<ExitCode>) {
         "m next".bold()
     );
     println!("To stop the process early: {}", "m abort".bold());
+    println!(
+        "To start walking at a specific subfolder: {}",
+        "m walk-from <folder name>".bold()
+    );
     (Config::default(), Some(ExitCode::SUCCESS))
 }
