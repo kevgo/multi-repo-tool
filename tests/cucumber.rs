@@ -97,8 +97,8 @@ async fn verify_in_example_folder(_world: &mut MrtWorld, folder: String) {
     let home_dir = cwd.join("examples").join("home");
     let next_dir_path = home_dir.join(".config").join("mrt.next_dir");
     let have = fs::read_to_string(next_dir_path).await.unwrap();
-    let examples_dir = cwd.join("examples").join(folder);
-    assert_eq!(have.trim(), examples_dir.to_string_lossy().trim());
+    let example_dir = cwd.join("examples").join(folder);
+    assert_eq!(have.trim(), example_dir.to_string_lossy().trim());
 }
 
 #[then(expr = "I am now in the {string} subfolder")]
@@ -108,16 +108,16 @@ async fn verify_in_subfolder(world: &mut MrtWorld, folder_name: String) {
     let home_dir = cwd.join("examples").join("home");
     let next_dir_path = home_dir.join(".config").join("mrt.next_dir");
     let have = fs::read_to_string(next_dir_path).await.unwrap();
-    let examples_dir = world.example_dir.as_ref().unwrap();
-    let have = have.replace(&format!("{}/", &examples_dir.to_string_lossy()), "");
+    let example_dir = world.example_dir.as_ref().unwrap();
+    let have = have.replace(&format!("{}/", &example_dir.to_string_lossy()), "");
     assert_eq!(have.trim(), folder_name.trim());
 }
 
 #[then("it prints:")]
 async fn it_prints(world: &mut MrtWorld, step: &Step) {
-    let examples_dir = world.example_dir.as_ref().unwrap();
+    let example_dir = world.example_dir.as_ref().unwrap();
     let want = step.docstring().expect("step has no docstring");
-    let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
+    let want = want.replace("{{examples_dir}}", &example_dir.to_string_lossy());
     let output = world.output.as_ref().expect("no execution recorded");
     let printed = format!("{}", str::from_utf8(&output.stdout).unwrap());
     assert_eq!(printed.trim(), want.trim());
@@ -145,8 +145,8 @@ async fn verify_saved_state(world: &mut MrtWorld, step: &Step) {
     let config_path = home_dir.join(".config").join("mrt.json");
     let have = fs::read_to_string(config_path).await.unwrap();
     let want = step.docstring().expect("step has no docstring");
-    let examples_dir = world.example_dir.as_ref().unwrap();
-    let want = want.replace("{{examples_dir}}", &examples_dir.to_string_lossy());
+    let example_dir = world.example_dir.as_ref().unwrap();
+    let want = want.replace("{{examples_dir}}", &example_dir.to_string_lossy());
     assert_eq!(have.trim(), want.trim());
 }
 
