@@ -28,6 +28,7 @@ fn main() -> ExitCode {
             let (error, guidance) = err.messages();
             println!("{}{}", "ERROR: ".red().bold(), error.red());
             if show_usage {
+                println!();
                 help();
             } else if !guidance.is_empty() {
                 println!("\n{}", guidance);

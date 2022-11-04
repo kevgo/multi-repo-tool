@@ -33,7 +33,7 @@ Feature: manually iterate all folders starting at a given folder
         """
         ERROR: missing start folder
 
-        Usage: mrt <command>
+        Usage: m <command>
 
         To execute a CLI command in all subfolders: m run <executable> [<arguments>]
         If the given executable fails in one of the subfolders, you end up in that subfolder.

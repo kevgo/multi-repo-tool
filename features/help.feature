@@ -27,6 +27,8 @@ Feature: display help
     When running "m"
     Then it prints:
       """
+      ERROR: no command provided
+
       Usage: m <command>
 
       To execute a CLI command in all subfolders: m run <executable> [<arguments>]
@@ -48,6 +50,8 @@ Feature: display help
     When running "m"
     Then it prints:
       """
+      ERROR: no command provided
+
       Usage: m <command>
 
       To execute a CLI command in all subfolders: m run <executable> [<arguments>]
