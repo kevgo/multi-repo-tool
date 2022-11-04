@@ -139,8 +139,7 @@ impl UserError {
             ),
             UserError::WrongCliArguments { message } => (
                 message,
-                r#"Usage: mrt <command>
-                Available commands:"#.into()
+                String::new()
             )
         }
     }
