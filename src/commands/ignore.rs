@@ -24,6 +24,7 @@ mod tests {
     use crate::config::Config;
     use crate::error::UserError;
     use crate::runtime::steps::{NumberedStep, Step};
+    use big_s::S;
 
     #[test]
     fn content() {
@@ -31,23 +32,23 @@ mod tests {
             steps: vec![
                 NumberedStep {
                     id: 1,
-                    step: Step::Chdir { dir: "one".into() },
+                    step: Step::Chdir { dir: S("one") },
                 },
                 NumberedStep {
                     id: 2,
                     step: Step::Run {
-                        cmd: "pwd".into(),
+                        cmd: S("pwd"),
                         args: vec![],
                     },
                 },
                 NumberedStep {
                     id: 3,
-                    step: Step::Chdir { dir: "two".into() },
+                    step: Step::Chdir { dir: S("two") },
                 },
                 NumberedStep {
                     id: 4,
                     step: Step::Run {
-                        cmd: "pwd".into(),
+                        cmd: S("pwd"),
                         args: vec![],
                     },
                 },
@@ -58,12 +59,12 @@ mod tests {
             steps: vec![
                 NumberedStep {
                     id: 3,
-                    step: Step::Chdir { dir: "two".into() },
+                    step: Step::Chdir { dir: S("two") },
                 },
                 NumberedStep {
                     id: 4,
                     step: Step::Run {
-                        cmd: "pwd".into(),
+                        cmd: S("pwd"),
                         args: vec![],
                     },
                 },
