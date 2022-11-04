@@ -44,12 +44,13 @@ Feature: display help
       To start walking at a specific subfolder: m walk-from <folder name>
       """
 
+  @this
   Scenario: wrong command
     Given I am in the "simple" example folder
-    When running "m"
+    When running "m zonk"
     Then it prints:
       """
-      ERROR: no command provided
+      ERROR: unknown command: zonk
 
       Usage: m <command>
 
