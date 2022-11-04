@@ -39,9 +39,8 @@ pub enum Command {
 
 pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
     let _binary_name = args.next(); // skip the binary name
-    let cmd = match args.next() {
-        Some(cmd) => cmd,
-        None => return Err(help("no command provided")),
+    let Some(cmd) = args.next() else {
+        return Err(help("no command provided"));
     };
     Ok(match cmd.as_str() {
         "abort" => Command::Abort,

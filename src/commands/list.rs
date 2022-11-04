@@ -18,7 +18,7 @@ pub fn list(
     for dir in config.folders.unwrap_or(all_folders) {
         print!(".");
         let _ignore = stdout().flush();
-        let mut command = Command::new(&cmd);
+        let mut command = Command::new(cmd);
         command.args(args);
         command.current_dir(&dir);
         if let Ok(output) = command.output() {

@@ -97,26 +97,26 @@ impl UserError {
                 guidance,
             ),
             UserError::CommandNotFound { command } => {
-                (format!("command \"{}\" not found", command), "".into())
+                (format!("command \"{}\" not found", command), String::new())
             }
             UserError::ExecutePermissionDenied { command } => {
-                (format!("\"{}\" is not executable", command), "".into())
+                (format!("\"{}\" is not executable", command), String::new())
             }
             UserError::InvalidPersistenceFormat { filename, guidance } => (
                 format!("persistence file \"{}\" has an invalid format", filename),
                 guidance,
             ),
             UserError::NoFoldersToIterate => {
-                ("all folders have been filtered out".into(), "".into())
+                ("all folders have been filtered out".into(), String::new())
             }
             UserError::NotWrapped => (
                 "please don't call the mrt binary directly".into(),
                 "run \"mrt activate | source\" and then call the shell function \"m\"".into(),
             ),
-            UserError::NoNextFolder => ("no next subfolder".into(), "".into()),
-            UserError::NothingToAbort => ("nothing to abort".into(), "".into()),
-            UserError::NothingToIgnore => ("nothing to ignore".into(), "".into()),
-            UserError::NothingToRetry => ("nothing to retry".into(), "".into()),
+            UserError::NoNextFolder => ("no next subfolder".into(), String::new()),
+            UserError::NothingToAbort => ("nothing to abort".into(), String::new()),
+            UserError::NothingToIgnore => ("nothing to ignore".into(), String::new()),
+            UserError::NothingToRetry => ("nothing to retry".into(), String::new()),
             UserError::OtherExecutionError { command, guidance } => (
                 format!("unknown error while trying to execute \"{}\"", command),
                 guidance,
@@ -127,7 +127,7 @@ impl UserError {
             ),
             UserError::StepFailed { code: _ } => (
                 "Abort, Retry, Ignore?".into(),
-                "".into(),
+                String::new(),
              ),
             UserError::UnknownApiError {
                 url,
