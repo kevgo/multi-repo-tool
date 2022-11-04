@@ -73,7 +73,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
         "status" => Command::Status,
         "walk" => Command::Walk { start: None },
         "walk-from" => Command::Walk {
-            start: Some(args.next().ok_or_else(|| help("missing start folder"))?),
+            start: Some(args.next().ok_or(UserError::MissingStartFolder)?),
         },
         "walk-from-here" => Command::WalkFromHere,
         other => return Err(help(format!("unknown command: {}", other))),

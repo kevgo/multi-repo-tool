@@ -35,6 +35,7 @@ pub enum UserError {
         filename: String,
         guidance: String,
     },
+    MissingStartFolder,
     NoFoldersToIterate,
     NoNextFolder,
     NotWrapped,
@@ -106,6 +107,7 @@ impl UserError {
                 format!("persistence file \"{}\" has an invalid format", filename),
                 guidance,
             ),
+            UserError::MissingStartFolder => ("missing start folder".into(), "Usage: m walk-from <folder to start the walk in>".into()),
             UserError::NoFoldersToIterate => {
                 ("all folders have been filtered out".into(), String::new())
             }
