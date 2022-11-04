@@ -1,4 +1,4 @@
-Feature: limiting repos
+Feature: limiting folders
 
   Background:
     Given I am in the "simple" example folder
