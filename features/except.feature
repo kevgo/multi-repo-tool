@@ -3,6 +3,8 @@ Feature: "except" command
   Rule: "m except" reduces the folder set to non-matching folders
 
     Scenario: limiting using "m except"
+      Given I am in the "simple" example folder
+      And no mrt configuration
       When running "m except test -f package.json"
       Then it prints:
         """

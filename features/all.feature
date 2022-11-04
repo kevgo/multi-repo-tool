@@ -3,6 +3,8 @@ Feature: "all command"
   Rule: "m all" removes all limits
 
     Scenario: limiting using "m only"
+      Given I am in the "simple" example folder
+      And no mrt configuration
       When running "m except test -f package.json"
       Then it prints:
         """
