@@ -145,7 +145,7 @@ impl UserError {
             ),
             UserError::WrongCliArguments { message } => (
                 message,
-                String::new()
+                S("")
             )
         }
     }
