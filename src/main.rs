@@ -31,9 +31,8 @@ fn main() -> ExitCode {
 }
 
 fn inner() -> Result<ExitCode, UserError> {
-    let cli_args = match cli::parse(&mut env::args()) {
-        Ok(args) => args,
-        Err(_) => return Ok(ExitCode::FAILURE),
+    let Ok(cli_args) = cli::parse(&mut env::args()) else {
+        return Ok(ExitCode::FAILURE);
     };
     if cli_args != Command::Activate && cli_args != Command::Help {
         helpers::ensure_activated()?;
