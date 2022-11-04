@@ -7,8 +7,6 @@ Feature: display help
       """
       Usage: m <command>
 
-      Don't call mrt directly. Run mrt activate | source, then call the shell function m.
-
       To execute a CLI command in all subfolders: m run <executable> [<arguments>]
       If the given executable fails in one of the subfolders, you end up in that subfolder.
       After investigating/fixing the failure, you can:
