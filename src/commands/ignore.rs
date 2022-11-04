@@ -21,11 +21,10 @@ pub fn ignore(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
 
 #[cfg(test)]
 mod tests {
-    use big_s::S;
-
     use crate::config::Config;
     use crate::error::UserError;
     use crate::runtime::steps::{NumberedStep, Step};
+    use big_s::S;
 
     #[test]
     fn content() {
