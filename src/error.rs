@@ -1,4 +1,5 @@
 use crate::config::Config;
+use big_s::S;
 use std::process::ExitCode;
 
 #[derive(Debug, Eq, PartialEq)]
@@ -112,26 +113,26 @@ impl UserError {
                 "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
             ),
             UserError::NoFoldersToIterate => {
-                ("all folders have been filtered out".into(), String::new())
+                (S("all folders have been filtered out"), String::new())
             }
             UserError::NotWrapped => (
-                "please don't call the mrt binary directly".into(),
-                "run \"mrt activate | source\" and then call the shell function \"m\"".into(),
+                S("please don't call the mrt binary directly"),
+                S("run \"mrt activate | source\" and then call the shell function \"m\""),
             ),
-            UserError::NoNextFolder => ("no next subfolder".into(), String::new()),
-            UserError::NothingToAbort => ("nothing to abort".into(), String::new()),
-            UserError::NothingToIgnore => ("nothing to ignore".into(), String::new()),
-            UserError::NothingToRetry => ("nothing to retry".into(), String::new()),
+            UserError::NoNextFolder => (S("no next subfolder"), String::new()),
+            UserError::NothingToAbort => (S("nothing to abort"), String::new()),
+            UserError::NothingToIgnore => (S("nothing to ignore"), String::new()),
+            UserError::NothingToRetry => (S("nothing to retry"), String::new()),
             UserError::OtherExecutionError { command, guidance } => (
                 format!("unknown error while trying to execute \"{}\"", command),
                 guidance,
             ),
             UserError::SessionAlreadyActive { config } => (
-                "a session is already active. Please abort this currently running session before starting a new one.".into(),
+                S("a session is already active. Please abort this currently running session before starting a new one."),
                 config.to_string()
             ),
             UserError::StepFailed { code: _ } => (
-                "Abort, Retry, Ignore?".into(),
+                S("Abort, Retry, Ignore?"),
                 String::new(),
              ),
             UserError::UnknownApiError {

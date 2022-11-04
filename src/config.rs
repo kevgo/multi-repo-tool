@@ -102,6 +102,7 @@ pub fn save(config_path: &Utf8Path, config: &Config) -> Result<(), UserError> {
 mod tests {
     use crate::config::{self, Config};
     use crate::runtime::steps::{NumberedStep, Step};
+    use big_s::S;
     use camino::Utf8PathBuf;
     use std::fs;
 
@@ -111,18 +112,18 @@ mod tests {
             steps: vec![
                 NumberedStep {
                     id: 2,
-                    step: Step::Chdir { dir: "abc".into() },
+                    step: Step::Chdir { dir: S("abc") },
                 },
                 NumberedStep {
                     id: 3,
                     step: Step::Run {
-                        cmd: "git".into(),
-                        args: vec!["clone".into()],
+                        cmd: S("git"),
+                        args: vec![S("clone")],
                     },
                 },
             ],
-            folders: Some(vec!["sub1".into(), "sub2".into()]),
-            root_dir: Some("rootdir".into()),
+            folders: Some(vec![S("sub1"), S("sub2")]),
+            root_dir: Some(S("rootdir")),
         };
         let config_path = Utf8PathBuf::from("mrt_test.json");
         config::save(&config_path, &config1).unwrap();
