@@ -153,7 +153,7 @@ fn print_step(numbered: &NumberedStep, max: u32) {
                 )
             }
         }
-        Step::Exit => "".into(),
+        Step::Exit => String::new(),
     };
     println!("\n{}", text.bold());
 }
