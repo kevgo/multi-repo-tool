@@ -99,10 +99,10 @@ impl UserError {
                 guidance,
             ),
             UserError::CommandNotFound { command } => {
-                (format!("command \"{}\" not found", command), String::new())
+                (format!("command \"{}\" not found", command), S(""))
             }
             UserError::ExecutePermissionDenied { command } => {
-                (format!("\"{}\" is not executable", command), String::new())
+                (format!("\"{}\" is not executable", command), S(""))
             }
             UserError::InvalidPersistenceFormat { filename, guidance } => (
                 format!("persistence file \"{}\" has an invalid format", filename),
@@ -113,16 +113,16 @@ impl UserError {
                 "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
             ),
             UserError::NoFoldersToIterate => {
-                (S("all folders have been filtered out"), String::new())
+                (S("all folders have been filtered out"), S(""))
             }
             UserError::NotWrapped => (
                 S("please don't call the mrt binary directly"),
                 S("run \"mrt activate | source\" and then call the shell function \"m\""),
             ),
-            UserError::NoNextFolder => (S("no next subfolder"), String::new()),
-            UserError::NothingToAbort => (S("nothing to abort"), String::new()),
-            UserError::NothingToIgnore => (S("nothing to ignore"), String::new()),
-            UserError::NothingToRetry => (S("nothing to retry"), String::new()),
+            UserError::NoNextFolder => (S("no next subfolder"), S("")),
+            UserError::NothingToAbort => (S("nothing to abort"), S("")),
+            UserError::NothingToIgnore => (S("nothing to ignore"), S("")),
+            UserError::NothingToRetry => (S("nothing to retry"), S("")),
             UserError::OtherExecutionError { command, guidance } => (
                 format!("unknown error while trying to execute \"{}\"", command),
                 guidance,
@@ -133,7 +133,7 @@ impl UserError {
             ),
             UserError::StepFailed { code: _ } => (
                 S("Abort, Retry, Ignore?"),
-                String::new(),
+                S(""),
              ),
             UserError::UnknownApiError {
                 url,
