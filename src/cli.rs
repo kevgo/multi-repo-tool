@@ -31,6 +31,8 @@ pub enum Command {
     Run { cmd: String, args: Vec<String> },
     /// Displays the current status of the command queue
     Status,
+    /// Replaces the current folders with all subfolders matching the given condition
+    Unfold { cmd: String, args: Vec<String> },
     /// Manually visits each subdirectory, optionally starting at the given one
     Walk { start: Option<String> },
     /// Manually visit each sibling after the current directory
@@ -71,6 +73,10 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
             args: args.collect(),
         },
         "status" => Command::Status,
+        "unfold" => Command::Unfold {
+            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            args: args.collect(),
+        },
         "walk" => Command::Walk { start: None },
         "walk-from" => Command::Walk {
             start: Some(args.next().ok_or(UserError::MissingStartFolder)?),

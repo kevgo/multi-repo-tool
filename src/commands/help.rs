@@ -38,5 +38,15 @@ pub fn help() -> (Config, Option<ExitCode>) {
         "To start walking at a specific subfolder: {}",
         "m walk-from <folder name>".bold()
     );
+    println!(
+        "By default, mrt iterates through all direct subfolders of the directory it is called."
+    );
+    println!("To limit the set of folders that mrt goes through:");
+    println!(
+        "m only <condition>   keeps only the folders for which condition returns exit code 0."
+    );
+    println!("You can call \"m only\" repeatedly to limit by multiple criteria.");
+    println!("m unfold <condition> replaces the current folder set with all subfolders of the current folders");
+    println!("for which the given condition returns exit code 0.");
     (Config::default(), Some(ExitCode::SUCCESS))
 }
