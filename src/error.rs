@@ -36,6 +36,7 @@ pub enum UserError {
         filename: String,
         guidance: String,
     },
+    MissingStartFolder,
     NoFoldersToIterate,
     NoNextFolder,
     NotWrapped,
@@ -107,6 +108,10 @@ impl UserError {
                 format!("persistence file \"{}\" has an invalid format", filename),
                 guidance,
             ),
+            UserError::MissingStartFolder => (
+                "missing start folder".into(),
+                "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
+            ),
             UserError::NoFoldersToIterate => {
                 (S("all folders have been filtered out"), S(""))
             }
@@ -140,8 +145,7 @@ impl UserError {
             ),
             UserError::WrongCliArguments { message } => (
                 message,
-                r#"Usage: mrt <command>
-                Available commands:"#.into()
+                S("")
             )
         }
     }

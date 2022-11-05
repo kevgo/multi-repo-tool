@@ -5,6 +5,7 @@ mod error;
 mod helpers;
 mod runtime;
 
+use crate::commands::help;
 use camino::Utf8PathBuf;
 use cli::Command;
 use colored::Colorize;
@@ -20,9 +21,13 @@ fn main() -> ExitCode {
         Ok(exit_code) => exit_code,
         Err(err) => {
             let exit_code = err.exit_code();
+            let show_usage = matches!(err, UserError::WrongCliArguments { message: _ });
             let (error, guidance) = err.messages();
             println!("{}{}", "ERROR: ".red().bold(), error.red());
-            if !guidance.is_empty() {
+            if show_usage {
+                println!();
+                help();
+            } else if !guidance.is_empty() {
                 println!("\n{}", guidance);
             }
             exit_code
@@ -31,9 +36,7 @@ fn main() -> ExitCode {
 }
 
 fn inner() -> Result<ExitCode, UserError> {
-    let Ok(cli_args) = cli::parse(&mut env::args()) else {
-        return Ok(ExitCode::FAILURE);
-    };
+    let cli_args = cli::parse(&mut env::args())?;
     if cli_args != Command::Activate && cli_args != Command::Help {
         helpers::ensure_activated()?;
     }

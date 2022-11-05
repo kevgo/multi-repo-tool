@@ -30,5 +30,8 @@ Feature: manually iterate all folders starting at a given folder
       When running "m walk-from"
       Then it prints:
         """
+        ERROR: missing start folder
+
+        The "walk-from" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>
         """
       And it returns "failure"
