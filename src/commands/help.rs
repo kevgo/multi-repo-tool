@@ -5,11 +5,6 @@ use std::process::ExitCode;
 pub fn help() -> (Config, Option<ExitCode>) {
     println!("{}", "Usage: m <command>\n".bold());
     println!(
-        "Don't call mrt directly. Run {}, then call the shell function {}.\n",
-        "mrt activate | source".bold(),
-        "m".bold()
-    );
-    println!(
         "To execute a CLI command in all subfolders: {}",
         "m run <executable> [<arguments>]".bold()
     );

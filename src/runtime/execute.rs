@@ -2,6 +2,7 @@ use crate::cli;
 use crate::config::Config;
 use crate::error::UserError;
 use crate::runtime::steps::{NumberedStep, Step};
+use big_s::S;
 use colored::Colorize;
 use std::env;
 use std::io::ErrorKind;
@@ -153,7 +154,7 @@ fn print_step(numbered: &NumberedStep, max: u32) {
                 )
             }
         }
-        Step::Exit => String::new(),
+        Step::Exit => S(""),
     };
     println!("\n{}", text.bold());
 }
