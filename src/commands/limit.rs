@@ -15,7 +15,7 @@ pub enum Mode {
     NoMatch,
 }
 
-const IGNORE: &[&str] = vec!["node_modules", "vendor"];
+const IGNORE: &[&str] = &["node_modules", "vendor"];
 
 pub fn all(config: Config) -> (Config, Option<ExitCode>) {
     (
