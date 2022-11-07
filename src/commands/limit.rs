@@ -148,10 +148,12 @@ pub fn unfold(
     ))
 }
 
+/// indicates whether the given folder should be ignored
 fn should_ignore(path: &str) -> bool {
     matches!(path, "node_modules" | "vendor")
 }
 
+/// prints progress indicator to the CLI
 fn print_dot() {
     print!(".");
     let _ignore = stdout().flush();
