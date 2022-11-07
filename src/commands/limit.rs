@@ -48,20 +48,19 @@ pub fn only(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    let text = if let Some(previous_count) = previous_count {
-        format!(
+    let text = match previous_count {
+        Some(previous_count) => format!(
             "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
             previous_count,
             all_folders_count,
             new_folders.len(),
             all_folders_count
-        )
-    } else {
-        format!(
+        ),
+        None => format!(
             "Limiting execution to {}/{} folders:",
             new_folders.len(),
             all_folders_count
-        )
+        ),
     };
     println!("{}", text.bold());
     println!("{}", folder_list::render(&new_folders));
