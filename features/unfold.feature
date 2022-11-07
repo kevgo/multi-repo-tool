@@ -11,11 +11,11 @@ Feature: unfold folder list
         .....
 
         Unfolding execution to 5 subfolders:
-        1. /home/kevlar/mrt/examples/monorepo
-        2. /home/kevlar/mrt/examples/monorepo/product1
-        3. /home/kevlar/mrt/examples/monorepo/product1/backend
-        4. /home/kevlar/mrt/examples/monorepo/product1/frontend
-        5. /home/kevlar/mrt/examples/monorepo/product2
+        1. {{examples_dir}}
+        2. {{examples_dir}}/product1
+        3. {{examples_dir}}/product1/backend
+        4. {{examples_dir}}/product1/frontend
+        5. {{examples_dir}}/product2
         """
       And it returns "success"
       When running "m run pwd"
@@ -59,9 +59,9 @@ Feature: unfold folder list
         ....
 
         Unfolding the existing limit of 1/2 top-level folders to 3 subfolders:
-        1. /home/kevlar/mrt/examples/monorepo/product1
-        2. /home/kevlar/mrt/examples/monorepo/product1/backend
-        3. /home/kevlar/mrt/examples/monorepo/product1/frontend
+        1. {{examples_dir}}/product1
+        2. {{examples_dir}}/product1/backend
+        3. {{examples_dir}}/product1/frontend
         """
       And it returns "success"
       When running "m run pwd"
