@@ -45,6 +45,7 @@ pub fn only(
             new_folders.push(dir);
         }
     }
+    new_folders.sort();
     println!("\n");
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
@@ -118,6 +119,7 @@ pub fn unfold(
             }
         }
     }
+    new_folders.sort();
     println!("\n");
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
