@@ -1,12 +1,12 @@
-Feature: limiting folders
+Feature: limiting the iterated folders
 
   Background:
     Given I am in the "simple" example folder
-    And no mrt configuration
 
   Rule: "m only" reduces the folder set to matching folders
 
     Scenario: limiting using "m only"
+      Given no mrt configuration
       When running "m only test -f package.json"
       Then it prints:
         """
@@ -36,6 +36,7 @@ Feature: limiting folders
   Rule: subsequent limits add to existing limits
 
     Scenario: nested limiting
+      Given no mrt configuration
       When running "m only test -f package.json"
       Then it prints:
         """
@@ -69,6 +70,21 @@ Feature: limiting folders
   Rule: does not allow empty folder sets
 
     Scenario: limiting all folders
+      Given no mrt configuration
+      When running "m only test -f zonk"
+      Then it prints:
+        """
+        ...
+
+        ERROR: all folders have been filtered out
+        """
+      And it returns "failure"
+      And there is no saved state
+
+  Rule: warns about discarding existing steps
+
+    Scenario: has existing steps
+      Given no mrt configuration
       When running "m only test -f zonk"
       Then it prints:
         """

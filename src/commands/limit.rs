@@ -85,3 +85,27 @@ pub fn only(
         None,
     ))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Mode;
+    use crate::config::Config;
+    use big_s::S;
+    use camino::Utf8Path;
+
+    #[test]
+    fn only() {
+        let config = Config {
+            steps: vec![],
+            folders: None,
+            ..Default::default()
+        };
+        let have = super::only(
+            "ls",
+            &[S("go.mod")],
+            Utf8Path::new("."),
+            &Mode::Match,
+            config,
+        );
+    }
+}
