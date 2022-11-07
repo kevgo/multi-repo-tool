@@ -104,7 +104,8 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
         | cli::Command::Help
         | cli::Command::List { cmd: _, args: _ }
         | cli::Command::Only { cmd: _, args: _ }
-        | cli::Command::Status => {}
+        | cli::Command::Status
+        | cli::Command::Unfold { cmd: _, args: _ } => {}
     }
     Outcome::Success {
         config: Config {

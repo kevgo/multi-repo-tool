@@ -63,6 +63,9 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
         Command::Status => commands::status(&persisted_config)?,
+        Command::Unfold { cmd, args } => {
+            commands::limit::unfold(cmd, args, &init_dir, persisted_config)?
+        }
         Command::Walk { start } => commands::walk(&init_dir, persisted_config, start.as_ref())?,
         Command::WalkFromHere => commands::walk(
             init_dir.parent().unwrap(),

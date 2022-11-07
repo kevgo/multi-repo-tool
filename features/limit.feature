@@ -12,7 +12,7 @@ Feature: limiting folders
         """
         ...
 
-        Limiting execution to 2/3 folders:
+        Limiting execution to 2/3 top-level folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
         """
@@ -41,7 +41,7 @@ Feature: limiting folders
         """
         ...
 
-        Limiting execution to 2/3 folders:
+        Limiting execution to 2/3 top-level folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
         """
@@ -51,7 +51,7 @@ Feature: limiting folders
         """
         ..
 
-        Tightening the existing limit of 2/3 folders further to 1/3 folders:
+        Tightening the existing limit of 2/3 top-level folders further to 1/3 top-level folders:
         1. {{examples_dir}}/go_node
         """
       And it returns "success"
