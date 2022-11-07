@@ -1,4 +1,3 @@
-@this
 Feature: display help
 
   Scenario: "help" command

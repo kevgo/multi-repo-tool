@@ -49,12 +49,28 @@ pub fn only(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    print_result(
-        previous_count,
-        all_folders_count,
-        &new_folders,
-        &config.steps,
-    );
+    let folders_count = all_folders_count;
+    let steps: &[NumberedStep] = &config.steps;
+    let text = if let Some(previous_count) = previous_count {
+        format!(
+            "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
+            previous_count,
+            folders_count,
+            new_folders.len(),
+            folders_count
+        )
+    } else {
+        format!(
+            "Limiting execution to {}/{} folders:",
+            new_folders.len(),
+            folders_count
+        )
+    };
+    println!("{}", text.bold());
+    println!("{}", folder_list::render(&new_folders));
+    if !steps.is_empty() {
+        println!("Discarding pending {} steps.", steps.len());
+    }
     Ok((
         Config {
             folders: Some(new_folders),
@@ -72,12 +88,17 @@ pub fn unfold(
     config: Config,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let previous_count = config.folders.as_ref().map(Vec::len);
+    let had_previous_limit = config.folders.is_some();
+    let all_folders = subdirs::all(root_dir)?;
+    let all_folders_count = all_folders.len();
     let folders = match config.folders {
         Some(existing) => existing,
-        None => subdirs::all(root_dir)?,
+        None => all_folders,
     };
-    let folders_count = folders.len();
     let mut new_folders = vec![];
+    if !had_previous_limit && command_success(root_dir.as_str(), cmd, args) {
+        new_folders.push(root_dir.to_string());
+    }
     for folder in folders {
         for entry in WalkDir::new(&folder) {
             let entry = entry.map_err(|err| UserError::CannotReadDirectory {
@@ -101,7 +122,22 @@ pub fn unfold(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    print_result(previous_count, folders_count, &new_folders, &config.steps);
+    let steps: &[NumberedStep] = &config.steps;
+    let text = if let Some(previous_count) = previous_count {
+        format!(
+            "Unfolding the existing limit of {}/{} folders to {} folders:",
+            previous_count,
+            all_folders_count,
+            new_folders.len()
+        )
+    } else {
+        format!("Unfolding execution to {} folders:", new_folders.len())
+    };
+    println!("{}", text.bold());
+    println!("{}", folder_list::render(&new_folders));
+    if !steps.is_empty() {
+        println!("Discarding pending {} steps.", steps.len());
+    }
     Ok((
         Config {
             folders: Some(new_folders),
@@ -110,34 +146,6 @@ pub fn unfold(
         },
         None,
     ))
-}
-
-fn print_result(
-    previous_count: Option<usize>,
-    folders_count: usize,
-    new_folders: &Vec<String>,
-    steps: &[NumberedStep],
-) {
-    let text = if let Some(previous_count) = previous_count {
-        format!(
-            "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
-            previous_count,
-            folders_count,
-            new_folders.len(),
-            folders_count
-        )
-    } else {
-        format!(
-            "Limiting execution to {}/{} folders:",
-            new_folders.len(),
-            folders_count
-        )
-    };
-    println!("{}", text.bold());
-    println!("{}", folder_list::render(new_folders));
-    if !steps.is_empty() {
-        println!("Discarding pending {} steps.", steps.len());
-    }
 }
 
 fn should_ignore(path: &str) -> bool {
