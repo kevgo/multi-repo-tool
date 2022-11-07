@@ -1,6 +1,7 @@
 use crate::config::Config;
 use crate::error::UserError;
 use crate::helpers::{folder_list, subdirs};
+use crate::runtime::steps::NumberedStep;
 use camino::Utf8Path;
 use colored::Colorize;
 use std::io::{stdout, Write};
@@ -8,7 +9,7 @@ use std::process::{Command, ExitCode};
 use walkdir::WalkDir;
 
 /// defines which folders get included
-#[derive(PartialEq)]
+#[derive(Eq, PartialEq)]
 pub enum Mode {
     /// include folders that match the given condition
     Match,
@@ -48,25 +49,12 @@ pub fn only(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
-    let text = match previous_count {
-        Some(previous_count) => format!(
-            "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
-            previous_count,
-            all_folders_count,
-            new_folders.len(),
-            all_folders_count
-        ),
-        None => format!(
-            "Limiting execution to {}/{} folders:",
-            new_folders.len(),
-            all_folders_count
-        ),
-    };
-    println!("{}", text.bold());
-    println!("{}", folder_list::render(&new_folders));
-    if !config.steps.is_empty() {
-        println!("Discarding pending {} steps.", config.steps.len());
-    }
+    print_result(
+        previous_count,
+        all_folders_count,
+        &new_folders,
+        &config.steps,
+    );
     Ok((
         Config {
             folders: Some(new_folders),
@@ -104,7 +92,7 @@ pub fn unfold(
             }
             print_dot();
             let entry_path = entry.path().to_string_lossy();
-            if command_success(&entry_path, cmd, &args) {
+            if command_success(&entry_path, cmd, args) {
                 new_folders.push(entry_path.to_string());
             }
         }
@@ -113,6 +101,23 @@ pub fn unfold(
     if new_folders.is_empty() {
         return Err(UserError::NoFoldersToIterate);
     }
+    print_result(previous_count, folders_count, &new_folders, &config.steps);
+    Ok((
+        Config {
+            folders: Some(new_folders),
+            steps: vec![],
+            ..config
+        },
+        None,
+    ))
+}
+
+fn print_result(
+    previous_count: Option<usize>,
+    folders_count: usize,
+    new_folders: &Vec<String>,
+    steps: &[NumberedStep],
+) {
     let text = if let Some(previous_count) = previous_count {
         format!(
             "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
@@ -129,26 +134,14 @@ pub fn unfold(
         )
     };
     println!("{}", text.bold());
-    println!("{}", folder_list::render(&new_folders));
-    if !config.steps.is_empty() {
-        println!("Discarding pending {} steps.", config.steps.len());
+    println!("{}", folder_list::render(new_folders));
+    if !steps.is_empty() {
+        println!("Discarding pending {} steps.", steps.len());
     }
-    Ok((
-        Config {
-            folders: Some(new_folders),
-            steps: vec![],
-            ..config
-        },
-        None,
-    ))
 }
 
 fn should_ignore(path: &str) -> bool {
-    match path {
-        "node_modules" => true,
-        "vendor" => true,
-        _ => false,
-    }
+    matches!(path, "node_modules" | "vendor")
 }
 
 fn print_dot() {
@@ -160,7 +153,7 @@ fn print_dot() {
 fn command_success(folder: &str, cmd: &str, args: &[String]) -> bool {
     let mut command = Command::new(cmd);
     command.args(args);
-    command.current_dir(&folder);
+    command.current_dir(folder);
     if let Ok(output) = command.output() {
         output.status.success()
     } else {
