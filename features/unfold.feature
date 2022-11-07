@@ -10,7 +10,7 @@ Feature: unfold folder list
         """
         .....
 
-        Unfolding execution to 5 folders:
+        Unfolding execution to 5 subfolders:
         1. /home/kevlar/mrt/examples/monorepo
         2. /home/kevlar/mrt/examples/monorepo/product1
         3. /home/kevlar/mrt/examples/monorepo/product1/backend
@@ -58,7 +58,7 @@ Feature: unfold folder list
         """
         ....
 
-        Unfolding the existing limit of 1/2 folders to 3 folders:
+        Unfolding the existing limit of 1/2 top-level folders to 3 subfolders:
         1. /home/kevlar/mrt/examples/monorepo/product1
         2. /home/kevlar/mrt/examples/monorepo/product1/backend
         3. /home/kevlar/mrt/examples/monorepo/product1/frontend

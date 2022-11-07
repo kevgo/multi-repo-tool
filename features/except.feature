@@ -10,7 +10,7 @@ Feature: "except" command
         """
         ...
 
-        Limiting execution to 1/3 folders:
+        Limiting execution to 1/3 top-level folders:
         1. {{examples_dir}}/go
         """
       And it returns "success"

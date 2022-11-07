@@ -53,7 +53,7 @@ pub fn only(
     let steps: &[NumberedStep] = &config.steps;
     let text = if let Some(previous_count) = previous_count {
         format!(
-            "Tightening the existing limit of {}/{} folders further to {}/{} folders:",
+            "Tightening the existing limit of {}/{} top-level folders further to {}/{} top-level folders:",
             previous_count,
             folders_count,
             new_folders.len(),
@@ -61,7 +61,7 @@ pub fn only(
         )
     } else {
         format!(
-            "Limiting execution to {}/{} folders:",
+            "Limiting execution to {}/{} top-level folders:",
             new_folders.len(),
             folders_count
         )
@@ -125,13 +125,13 @@ pub fn unfold(
     let steps: &[NumberedStep] = &config.steps;
     let text = if let Some(previous_count) = previous_count {
         format!(
-            "Unfolding the existing limit of {}/{} folders to {} folders:",
+            "Unfolding the existing limit of {}/{} top-level folders to {} subfolders:",
             previous_count,
             all_folders_count,
             new_folders.len()
         )
     } else {
-        format!("Unfolding execution to {} folders:", new_folders.len())
+        format!("Unfolding execution to {} subfolders:", new_folders.len())
     };
     println!("{}", text.bold());
     println!("{}", folder_list::render(&new_folders));
