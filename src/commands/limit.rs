@@ -8,14 +8,13 @@ use std::process::{Command, ExitCode};
 use walkdir::WalkDir;
 
 /// defines which folders get included
+#[derive(PartialEq)]
 pub enum Mode {
     /// include folders that match the given condition
     Match,
     /// include folders that don't match the given condition
     NoMatch,
 }
-
-const IGNORE: &[&str] = &["node_modules", "vendor"];
 
 pub fn all(config: Config) -> (Config, Option<ExitCode>) {
     (
@@ -40,19 +39,9 @@ pub fn only(
     let all_folders_count = all_folders.len();
     let previous_count = config.folders.as_ref().map(Vec::len);
     for dir in config.folders.unwrap_or(all_folders) {
-        print!(".");
-        let _ignore = stdout().flush();
-        let mut command = Command::new(cmd);
-        command.args(args);
-        command.current_dir(&dir);
-        if let Ok(output) = command.output() {
-            let folder_matches = match mode {
-                Mode::Match => output.status.success(),
-                Mode::NoMatch => !output.status.success(),
-            };
-            if folder_matches {
-                new_folders.push(dir);
-            }
+        print_dot();
+        if command_success(&dir, cmd, args) ^ (mode == &Mode::NoMatch) {
+            new_folders.push(dir);
         }
     }
     println!("\n");
@@ -96,12 +85,12 @@ pub fn unfold(
     config: Config,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let previous_count = config.folders.as_ref().map(Vec::len);
-    let mut new_folders = vec![];
     let folders = match config.folders {
         Some(existing) => existing,
         None => subdirs::all(root_dir)?,
     };
     let folders_count = folders.len();
+    let mut new_folders = vec![];
     for folder in folders {
         for entry in WalkDir::new(&folder) {
             let entry = entry.map_err(|err| UserError::CannotReadDirectory {
@@ -111,21 +100,13 @@ pub fn unfold(
             if !entry.file_type().is_dir() {
                 continue;
             }
-            if IGNORE
-                .iter()
-                .any(|ignore| ignore == &entry.file_name().to_string_lossy())
-            {
+            if should_ignore(&entry.file_name().to_string_lossy()) {
                 continue;
             }
-            print!(".");
-            let _ignore = stdout().flush();
-            let mut command = Command::new(cmd);
-            command.args(args);
-            command.current_dir(&folder);
-            if let Ok(output) = command.output() {
-                if output.status.success() {
-                    new_folders.push(folder);
-                }
+            print_dot();
+            let entry_path = entry.path().to_string_lossy();
+            if command_success(&entry_path, cmd, &args) {
+                new_folders.push(entry_path.to_string());
             }
         }
     }
@@ -161,4 +142,29 @@ pub fn unfold(
         },
         None,
     ))
+}
+
+fn should_ignore(path: &str) -> bool {
+    match path {
+        "node_modules" => true,
+        "vendor" => true,
+        _ => false,
+    }
+}
+
+fn print_dot() {
+    print!(".");
+    let _ignore = stdout().flush();
+}
+
+/// runs the given command in the given folder and indicates success
+fn command_success(folder: &str, cmd: &str, args: &[String]) -> bool {
+    let mut command = Command::new(cmd);
+    command.args(args);
+    command.current_dir(&folder);
+    if let Ok(output) = command.output() {
+        output.status.success()
+    } else {
+        false
+    }
 }
