@@ -35,7 +35,7 @@ pub fn help() -> (Config, Option<ExitCode>) {
     );
     println!("To stop the process early: {}", "m abort".bold());
     println!(
-        "To start walking at a specific subfolder: {}",
+        "To start walking at a specific subfolder: {}\n",
         "m walk-from <folder name>".bold()
     );
     println!(
@@ -45,8 +45,10 @@ pub fn help() -> (Config, Option<ExitCode>) {
     println!(
         "m only <condition>   keeps only the folders for which condition returns exit code 0."
     );
-    println!("You can call \"m only\" repeatedly to limit by multiple criteria.");
+    println!(
+        "                     You can call \"m only\" repeatedly to limit by multiple criteria."
+    );
     println!("m unfold <condition> replaces the current folder set with all subfolders of the current folders");
-    println!("for which the given condition returns exit code 0.");
+    println!("                     for which the given condition returns exit code 0.");
     (Config::default(), Some(ExitCode::SUCCESS))
 }

@@ -1,3 +1,4 @@
+@this
 Feature: display help
 
   Scenario: "help" command
@@ -58,7 +59,6 @@ Feature: display help
                            for which the given condition returns exit code 0.
       """
 
-  @this
   Scenario: wrong command
     Given I am in the "simple" example folder
     When running "m zonk"
