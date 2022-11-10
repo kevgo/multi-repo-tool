@@ -49,7 +49,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
         "activate" => Command::Activate,
         "all" => Command::All,
         "clone" => Command::Clone {
-            org: args.next().ok_or_else(|| help("no org provided"))?,
+            org: args.next().ok_or(UserError::MissingOrgToClone)?,
         },
         "except" => Command::Except {
             cmd: args.next().ok_or_else(|| help("no executable provided"))?,

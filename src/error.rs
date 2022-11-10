@@ -37,6 +37,7 @@ pub enum UserError {
         guidance: String,
     },
     MissingStartFolder,
+    MissingOrgToClone,
     NoFoldersToIterate,
     NoNextFolder,
     NotWrapped,
@@ -111,6 +112,10 @@ impl UserError {
             UserError::MissingStartFolder => (
                 "missing start folder".into(),
                 "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
+            ),
+            UserError::MissingOrgToClone => (
+                S("missing GitHub organization to clone"),
+                S("I need to know which GitHub organization to clone onto your machine.\nPlease call clone like this:\n\n  m clone <org>\n\nExample: m clone github.com/kevgo")
             ),
             UserError::NoFoldersToIterate => {
                 (S("all folders have been filtered out"), S(""))
