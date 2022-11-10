@@ -115,8 +115,8 @@ impl UserError {
                 S("You need to provide a command that I can run to determine which folders you want to iterate through.\n\n")
             ),
             UserError::MissingStartFolder => (
-                "missing start folder".into(),
-                "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
+                S("missing start folder"),
+                S("The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>")
             ),
             UserError::MissingOrgToClone => (
                 S("missing GitHub organization to clone"),
