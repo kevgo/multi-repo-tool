@@ -35,7 +35,7 @@ pub enum Outcome {
 }
 
 /// executes the given steps, returns the not executed steps in case of an issue
-pub fn execute(config: Config, command: &cli::Command) -> Outcome {
+pub fn execute(config: Config, command: &cli::Arguments) -> Outcome {
     // somehow this is enough to ensure a graceful exit
     ctrlc::set_handler(move || {
         println!(" Canceling the current step...");
@@ -45,68 +45,68 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
     let max_step = config.steps.last().map_or(0, |step| step.id);
     let mut steps_iter = config.steps.into_iter();
     let mut previous_dir: Option<NumberedStep> = None;
-    while let Some(numbered) = steps_iter.next() {
-        print_step(&numbered, max_step);
-        let result = match &numbered.step {
-            Step::Run { cmd, args } => run_command(cmd, args, command == &cli::Command::IgnoreAll),
-            Step::Chdir { dir } => {
-                previous_dir = Some(numbered.clone());
-                change_wd(dir)
-            }
-            Step::Check { cmd, args } => run_command(cmd, args, true),
-            Step::Exit => {
-                let current_dir = env::current_dir().expect("cannot determine current directory");
-                return Outcome::Exit {
-                    dir: current_dir.to_string_lossy().to_string(),
-                    config: Config {
-                        steps: steps_iter.collect(),
-                        ..config
-                    },
-                };
-            }
-        };
-        match result {
-            Ok(exit_code) if exit_code == 0 => {}
-            Ok(exit_code) => {
-                let current_dir = env::current_dir().expect("cannot determine current directory");
-                let mut remaining_steps = vec![previous_dir.unwrap(), numbered];
-                remaining_steps.extend(steps_iter);
-                return Outcome::StepFailed {
-                    code: exit_code,
-                    config: Config {
-                        steps: remaining_steps,
-                        ..config
-                    },
-                    dir: current_dir.to_string_lossy().to_string(),
-                };
-            }
-            Err(user_error) => return Outcome::UserError { error: user_error },
-        }
-    }
-    if let Some(dir) = config.root_dir {
-        env::set_current_dir(dir).expect("cannot cd into the initial directory");
-    }
-    match command {
-        cli::Command::Clone { org: _ }
-        | cli::Command::Ignore
-        | cli::Command::IgnoreAll
-        | cli::Command::Next
-        | cli::Command::Retry
-        | cli::Command::Walk { start: _ }
-        | cli::Command::WalkFromHere
-        | cli::Command::Run { cmd: _, args: _ } => {
-            println!("\n{}\n", "ALL DONE".bold());
-        }
-        cli::Command::Abort
-        | cli::Command::Activate
-        | cli::Command::All
-        | cli::Command::Except { cmd: _, args: _ }
-        | cli::Command::Help
-        | cli::Command::List { cmd: _, args: _ }
-        | cli::Command::Only { cmd: _, args: _ }
-        | cli::Command::Status
-        | cli::Command::Unfold { cmd: _, args: _ } => {}
-    }
+    // while let Some(numbered) = steps_iter.next() {
+    //     print_step(&numbered, max_step);
+    //     let result = match &numbered.step {
+    //         Step::Run { cmd, args } => run_command(cmd, args, command == &cli::Command::IgnoreAll),
+    //         Step::Chdir { dir } => {
+    //             previous_dir = Some(numbered.clone());
+    //             change_wd(dir)
+    //         }
+    //         Step::Check { cmd, args } => run_command(cmd, args, true),
+    //         Step::Exit => {
+    //             let current_dir = env::current_dir().expect("cannot determine current directory");
+    //             return Outcome::Exit {
+    //                 dir: current_dir.to_string_lossy().to_string(),
+    //                 config: Config {
+    //                     steps: steps_iter.collect(),
+    //                     ..config
+    //                 },
+    //             };
+    //         }
+    //     };
+    //     match result {
+    //         Ok(exit_code) if exit_code == 0 => {}
+    //         Ok(exit_code) => {
+    //             let current_dir = env::current_dir().expect("cannot determine current directory");
+    //             let mut remaining_steps = vec![previous_dir.unwrap(), numbered];
+    //             remaining_steps.extend(steps_iter);
+    //             return Outcome::StepFailed {
+    //                 code: exit_code,
+    //                 config: Config {
+    //                     steps: remaining_steps,
+    //                     ..config
+    //                 },
+    //                 dir: current_dir.to_string_lossy().to_string(),
+    //             };
+    //         }
+    //         Err(user_error) => return Outcome::UserError { error: user_error },
+    //     }
+    // }
+    // if let Some(dir) = config.root_dir {
+    //     env::set_current_dir(dir).expect("cannot cd into the initial directory");
+    // }
+    // match command {
+    //     cli::Command::Clone { org: _ }
+    //     | cli::Command::Ignore
+    //     | cli::Command::IgnoreAll
+    //     | cli::Command::Next
+    //     | cli::Command::Retry
+    //     | cli::Command::Walk { start: _ }
+    //     | cli::Command::WalkFromHere
+    //     | cli::Command::Run { cmd: _, args: _ } => {
+    //         println!("\n{}\n", "ALL DONE".bold());
+    //     }
+    //     cli::Command::Abort
+    //     | cli::Command::Activate
+    //     | cli::Command::All
+    //     | cli::Command::Except { cmd: _, args: _ }
+    //     | cli::Command::Help
+    //     | cli::Command::List { cmd: _, args: _ }
+    //     | cli::Command::Only { cmd: _, args: _ }
+    //     | cli::Command::Status
+    //     | cli::Command::Unfold { cmd: _, args: _ } => {}
+    // }
     Outcome::Success {
         config: Config {
             steps: vec![],
