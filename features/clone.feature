@@ -1,6 +1,6 @@
 Feature: Clone an entire GitHub organization
 
-  Scenario: no org provided
+  Scenario: no org to clone provided
     Given I am in the "simple" example folder
     When running "m clone"
     Then it prints:

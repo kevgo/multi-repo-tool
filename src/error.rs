@@ -37,6 +37,7 @@ pub enum UserError {
         guidance: String,
     },
     MissingCommandForExcept,
+    MissingCommandForList,
     MissingStartFolder,
     MissingOrgToClone,
     NoFoldersToIterate,
@@ -111,8 +112,12 @@ impl UserError {
                 guidance,
             ),
             UserError::MissingCommandForExcept => (
-                S("missing command"),
-                S("You need to provide a command that I can run to determine which folders you want to iterate through.\n\n")
+                S("missing condition"),
+                S("The except command filters the active directories to all for whom the given condition returns exit code 1 or higher.\nYou need to tell me which CLI command I should run in each directory to determine whether it matches.\nYou do it like this:\n\n  m except <condition>\n\nExample:\n\n  m except test -f README.md"),
+            ),
+            UserError::MissingCommandForList => (
+                S("missing condition"),
+                S("The list command displays all active directories for whom the given condition returns exit code 0.\nYou need to tell me which CLI command I should run in each directory to determine whether it matches.\nYou do it like this:\n\n  m list <condition>\n\nExample:\n\n  m list test -f README.md"),
             ),
             UserError::MissingStartFolder => (
                 S("missing start folder"),

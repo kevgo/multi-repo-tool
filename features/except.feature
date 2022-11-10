@@ -25,16 +25,22 @@ Feature: "except" command
         ALL DONE
         """
 
-    @this
     Scenario: call without command
       Given I am in the "simple" example folder
       And no mrt configuration
       When running "m except"
       Then it prints:
         """
-        ERROR: missing command
+        ERROR: missing condition
 
-        The except command
-        You need to provide a command that I can run to determine which folders you want me to iterate through.
+        The except command filters the active directories to all for whom the given condition returns exit code 1 or higher.
+        You need to tell me which CLI command I should run in each directory to determine whether it matches.
+        You do it like this:
+
+          m except <condition>
+
+        Example:
+
+          m except test -f README.md
         """
       And it returns "failure"

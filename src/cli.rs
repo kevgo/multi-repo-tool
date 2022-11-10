@@ -59,7 +59,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
         "ignore" => Command::Ignore,
         "ignore-all" => Command::IgnoreAll,
         "list" => Command::List {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForList)?,
             args: args.collect(),
         },
         "next" => Command::Next,

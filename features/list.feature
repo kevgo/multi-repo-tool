@@ -19,3 +19,22 @@ Feature: list subfolders matching a condition
       And it returns "success"
       And I am now in the "simple" example folder
       And there is no saved state
+
+    @this
+    Scenario: call without command
+      When running "m list"
+      Then it prints:
+        """
+        ERROR: missing condition
+
+        The list command displays all active directories for whom the given condition returns exit code 0.
+        You need to tell me which CLI command I should run in each directory to determine whether it matches.
+        You do it like this:
+
+          m list <condition>
+
+        Example:
+
+          m list test -f README.md
+        """
+      And it returns "failure"
