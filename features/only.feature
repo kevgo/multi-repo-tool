@@ -1,4 +1,4 @@
-Feature: limiting folders
+Feature: "only" command
 
   Background:
     Given I am in the "simple" example folder
