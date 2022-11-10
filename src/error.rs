@@ -109,8 +109,8 @@ impl UserError {
                 guidance,
             ),
             UserError::MissingStartFolder => (
-                "missing start folder".into(),
-                "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
+                S("missing start folder"),
+                S("The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>")
             ),
             UserError::NoFoldersToIterate => {
                 (S("all folders have been filtered out"), S(""))
