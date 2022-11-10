@@ -34,6 +34,7 @@ Feature: "except" command
         """
         ERROR: missing command
 
+        The except command
         You need to provide a command that I can run to determine which folders you want me to iterate through.
         """
       And it returns "failure"
