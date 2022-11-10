@@ -36,6 +36,7 @@ pub enum UserError {
         filename: String,
         guidance: String,
     },
+    MissingCommandForExcept,
     MissingStartFolder,
     MissingOrgToClone,
     NoFoldersToIterate,
@@ -109,13 +110,17 @@ impl UserError {
                 format!("persistence file \"{}\" has an invalid format", filename),
                 guidance,
             ),
+            UserError::MissingCommandForExcept => (
+                S("missing command"),
+                S("You need to provide a command that I can run to determine which folders you want to iterate through.\n\n")
+            ),
             UserError::MissingStartFolder => (
                 "missing start folder".into(),
                 "The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>".into()
             ),
             UserError::MissingOrgToClone => (
                 S("missing GitHub organization to clone"),
-                S("I need to know which GitHub organization to clone onto your machine.\nPlease call clone like this:\n\n  m clone <org>\n\nExample: m clone github.com/kevgo")
+                S("The clone command clones all repositories in a GitHub organization onto your machine.\nYou need to tell me which GitHub organization to clone.\nYou do it like this:\n\n  m clone <GitHub org name>\n\nExample:\n\n  m clone github.com/kevgo"),
             ),
             UserError::NoFoldersToIterate => {
                 (S("all folders have been filtered out"), S(""))

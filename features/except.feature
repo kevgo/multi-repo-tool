@@ -24,3 +24,16 @@ Feature: "except" command
 
         ALL DONE
         """
+
+    @this
+    Scenario: call without command
+      Given I am in the "simple" example folder
+      And no mrt configuration
+      When running "m except"
+      Then it prints:
+        """
+        ERROR: missing command
+
+        You need to provide a command that I can run to determine which folders you want me to iterate through.
+        """
+      And it returns "failure"

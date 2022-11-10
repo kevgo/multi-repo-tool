@@ -52,7 +52,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
             org: args.next().ok_or(UserError::MissingOrgToClone)?,
         },
         "except" => Command::Except {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForExcept)?,
             args: args.collect(),
         },
         "help" => Command::Help,

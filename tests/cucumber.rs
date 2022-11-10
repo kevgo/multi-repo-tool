@@ -78,7 +78,7 @@ async fn when_running(world: &mut MrtWorld, command: String) {
     let home_dir = cwd.join("examples").join("home");
     let output = Command::new(&mrt_path)
         .args(argv)
-        .current_dir(world.run_dir.as_ref().unwrap())
+        .current_dir(world.run_dir.as_ref().expect("no world.run_dir set"))
         .env("HOME", &home_dir)
         .env("MRT_WRAPPED", "true")
         .output()
