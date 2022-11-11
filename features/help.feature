@@ -63,7 +63,7 @@ Feature: display help
     When running "m zonk"
     Then it prints:
       """
-      ERROR: unknown command: zonk
+      ERROR: unknown command: "zonk"
 
       Usage: m <command>
 

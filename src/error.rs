@@ -36,7 +36,14 @@ pub enum UserError {
         filename: String,
         guidance: String,
     },
+    MissingCommand,
+    MissingCommandForExcept,
+    MissingCommandForList,
+    MissingCommandForOnly,
+    MissingCommandForRun,
+    MissingCommandForUnfold,
     MissingStartFolder,
+    MissingOrgToClone,
     NoFoldersToIterate,
     NoNextFolder,
     NotWrapped,
@@ -58,8 +65,8 @@ pub enum UserError {
         code: u16,
         response: String,
     },
-    WrongCliArguments {
-        message: String,
+    UnknownCommand {
+        command: String,
     },
 }
 
@@ -108,9 +115,37 @@ impl UserError {
                 format!("persistence file \"{}\" has an invalid format", filename),
                 guidance,
             ),
+            UserError::MissingCommand => (
+                S("no command provided"),
+                S("Please provide a command to run"),
+            ),
+            UserError::MissingCommandForExcept => (
+                S("missing condition"),
+                S("The \"except\" command filters the currently active directories. It removes those in which the given CLI command returns exit code 0.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m except <cli command>\n\nAs an example, to select all directories that don't contain a Node.js codebase:\n\n  m except test -f package.json"),
+            ),
+            UserError::MissingCommandForList => (
+                S("missing condition"),
+                S("The \"list\" command displays all active directories in which the given CLI command returns exit code 0.\nIt is a \"dry run\" of the \"only\" command.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m list <command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m list test -f package.json"),
+            ),
+            UserError::MissingCommandForOnly => (
+                S("missing condition"),
+                S("The \"only\" command filters the currently active directories. It keeps those in which the given CLI command returns exit code 0.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m only <command>\n\nAs an example, to select all directories that contain a Node.js codebase:\n\n  m only test -f package.json"),
+            ),
+            UserError::MissingCommandForRun => (
+                S("missing command to run"),
+                S("The \"run\" command executes the given CLI command in all currently active directories.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m run <command>\n\nAs an example, to display the path of all active directories:\n\n  m run pwd"),
+            ),
+            UserError::MissingCommandForUnfold => (
+                S("missing command to run"),
+                S("The \"unfold\" command expands the active directories to all subfolders of the active directories in which the given CLI command returns exit code 0.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m unfold <command>\n\nAs an example, to select all directories that contain a Makefile:\n\n  m unfold test -f Makefile"),
+            ),
             UserError::MissingStartFolder => (
                 S("missing start folder"),
                 S("The \"walk-from\" command begins a manual iteration starting at the given folder. Usage: m walk-from <folder to start the walk in>")
+            ),
+            UserError::MissingOrgToClone => (
+                S("missing GitHub organization to clone"),
+                S("The clone command clones all repositories in a GitHub organization onto your machine.\nYou need to tell me which GitHub organization to clone.\nYou do it like this:\n\n  m clone <GitHub org name>\n\nExample:\n\n  m clone github.com/kevgo"),
             ),
             UserError::NoFoldersToIterate => {
                 (S("all folders have been filtered out"), S(""))
@@ -143,10 +178,10 @@ impl UserError {
                 format!("unexpected GitHub API error: {}", code),
                 format!("url: {}responseh: {}", url, response),
             ),
-            UserError::WrongCliArguments { message } => (
-                message,
-                S("")
-            )
+            UserError::UnknownCommand { command } => (
+                format!("unknown command: \"{}\"", command),
+                S(""),
+            ),
         }
     }
 }

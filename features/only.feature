@@ -78,3 +78,23 @@ Feature: "only" command
         """
       And it returns "failure"
       And there is no saved state
+
+  Rule: displays guidance when calling without condition
+
+    Scenario: call without condition
+      When running "m only"
+      Then it prints:
+        """
+        ERROR: missing condition
+
+        The "only" command filters the currently active directories. It keeps those in which the given CLI command returns exit code 0.
+
+        You forgot to tell me the CLI command I should run in each directory. You do it like this:
+
+          m only <command>
+
+        As an example, to select all directories that contain a Node.js codebase:
+
+          m only test -f package.json
+        """
+      And it returns "failure"
