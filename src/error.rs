@@ -114,7 +114,7 @@ impl UserError {
             ),
             UserError::MissingCommandForExcept => (
                 S("missing condition"),
-                S("The \"except\" command filters the set of active directories.\nIt runs the given CLI command in each active directory.\nIf the exit code is 0, it removes the directory from the list of active directories.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m except <cli command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m except test -f package.json"),
+                S("The \"except\" command filters the currently active directories. It removes those in which the given CLI command returns exit code 0.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m except <cli command>\n\nAs an example, to select all directories that don't contain a Node.js codebase:\n\n  m except test -f package.json"),
             ),
             UserError::MissingCommandForList => (
                 S("missing condition"),

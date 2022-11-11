@@ -25,6 +25,7 @@ Feature: "except" command
         ALL DONE
         """
 
+    @this
     Scenario: call without command
       Given I am in the "simple" example folder
       And no mrt configuration
@@ -33,15 +34,13 @@ Feature: "except" command
         """
         ERROR: missing condition
 
-        The "except" command filters the set of active directories.
-        It runs the given CLI command in each active directory.
-        If the exit code is 0, it removes the directory from the list of active directories.
+        The "except" command filters the currently active directories. It removes those in which the given CLI command returns exit code 0.
 
         You forgot to tell me the CLI command I should run in each directory. You do it like this:
 
           m except <cli command>
 
-        As an example, to find all codebases that are not Node.js:
+        As an example, to select all directories that don't contain a Node.js codebase:
 
           m except test -f package.json
         """
