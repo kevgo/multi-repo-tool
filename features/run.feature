@@ -172,3 +172,24 @@ Feature: run a command in all folders
         """
       And it returns "success"
       And I am now back in the "simple" example folder
+
+  Rule: displays help when calling without arguments
+
+    @this
+    Scenario: calling without command to run
+      When running "m run"
+      Then it prints:
+        """
+        ERROR: missing command to run
+
+        The "run" command executes the given CLI command in all currently active directories.
+
+        You forgot to tell me the CLI command I should run in each directory. You do it like this:
+
+          m run <command>
+
+        As an example, to display the path of all active directories:
+
+          m run pwd
+        """
+      And it returns "failure"

@@ -39,6 +39,7 @@ pub enum UserError {
     MissingCommandForExcept,
     MissingCommandForList,
     MissingCommandForOnly,
+    MissingCommandForRun,
     MissingStartFolder,
     MissingOrgToClone,
     NoFoldersToIterate,
@@ -123,6 +124,10 @@ impl UserError {
             UserError::MissingCommandForOnly => (
                 S("missing condition"),
                 S("The \"only\" command filters the currently active directories. It keeps those in which the given CLI command returns exit code 0.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m only <command>\n\nAs an example, to select all directories that contain a Node.js codebase:\n\n  m only test -f package.json"),
+            ),
+            UserError::MissingCommandForRun => (
+                S("missing command to run"),
+                S("The \"run\" command executes the given CLI command in all currently active directories.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m run <command>\n\nAs an example, to display the path of all active directories:\n\n  m run pwd"),
             ),
             UserError::MissingStartFolder => (
                 S("missing start folder"),
