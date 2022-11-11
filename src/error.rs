@@ -36,6 +36,7 @@ pub enum UserError {
         filename: String,
         guidance: String,
     },
+    MissingCommand,
     MissingCommandForExcept,
     MissingCommandForList,
     MissingCommandForOnly,
@@ -64,8 +65,8 @@ pub enum UserError {
         code: u16,
         response: String,
     },
-    WrongCliArguments {
-        message: String,
+    UnknownCommand {
+        command: String,
     },
 }
 
@@ -113,6 +114,10 @@ impl UserError {
             UserError::InvalidPersistenceFormat { filename, guidance } => (
                 format!("persistence file \"{}\" has an invalid format", filename),
                 guidance,
+            ),
+            UserError::MissingCommand => (
+                S("no command provided"),
+                S("Please provide a command to run"),
             ),
             UserError::MissingCommandForExcept => (
                 S("missing condition"),
@@ -173,10 +178,10 @@ impl UserError {
                 format!("unexpected GitHub API error: {}", code),
                 format!("url: {}responseh: {}", url, response),
             ),
-            UserError::WrongCliArguments { message } => (
-                message,
-                S("")
-            )
+            UserError::UnknownCommand { command } => (
+                format!("unknown command: \"{}\"", command),
+                S(""),
+            ),
         }
     }
 }

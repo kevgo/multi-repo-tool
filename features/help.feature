@@ -28,6 +28,7 @@ Feature: display help
                            for which the given condition returns exit code 0.
       """
 
+  @this
   Scenario: no command
     Given I am in the "simple" example folder
     When running "m"
@@ -63,7 +64,7 @@ Feature: display help
     When running "m zonk"
     Then it prints:
       """
-      ERROR: unknown command: zonk
+      ERROR: unknown command: "zonk"
 
       Usage: m <command>
 

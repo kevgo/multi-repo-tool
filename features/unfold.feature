@@ -87,7 +87,6 @@ Feature: unfold folder list
 
   Rule: displays help when called without arguments
 
-    @this
     Scenario: called without arguments
       Given I am in the "monorepo" example folder
       And no mrt configuration

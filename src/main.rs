@@ -21,7 +21,10 @@ fn main() -> ExitCode {
         Ok(exit_code) => exit_code,
         Err(err) => {
             let exit_code = err.exit_code();
-            let show_usage = matches!(err, UserError::WrongCliArguments { message: _ });
+            let show_usage = matches!(
+                err,
+                UserError::MissingCommand | UserError::UnknownCommand { command: _ }
+            );
             let (error, guidance) = err.messages();
             println!("{}{}", "ERROR: ".red().bold(), error.red());
             if show_usage {

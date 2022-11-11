@@ -42,7 +42,7 @@ pub enum Command {
 pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
     let _binary_name = args.next(); // skip the binary name
     let Some(cmd) = args.next() else {
-        return Err(help("no command provided"));
+        return Err(UserError::MissingCommand);
     };
     Ok(match cmd.as_str() {
         "abort" => Command::Abort,
@@ -82,12 +82,10 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
             start: Some(args.next().ok_or(UserError::MissingStartFolder)?),
         },
         "walk-from-here" => Command::WalkFromHere,
-        other => return Err(help(format!("unknown command: {}", other))),
+        other => {
+            return Err(UserError::UnknownCommand {
+                command: other.into(),
+            })
+        }
     })
-}
-
-fn help<IS: Into<String>>(error: IS) -> UserError {
-    UserError::WrongCliArguments {
-        message: error.into(),
-    }
 }
