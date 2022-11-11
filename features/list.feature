@@ -22,7 +22,6 @@ Feature: list subfolders matching a condition
 
   Rule: displays help if called without command
 
-    @this
     Scenario: call without command
       When running "m list"
       Then it prints:

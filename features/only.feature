@@ -81,22 +81,21 @@ Feature: "only" command
 
   Rule: displays guidance when calling without condition
 
+    @this
     Scenario: call without condition
       When running "m only"
       Then it prints:
         """
         ERROR: missing condition
 
-        The "only" command filters the set of active directories.
-        It runs the given CLI command in each active directory.
-        If the exit code is 0, it keeps the directory in the list of active directories, otherwise it removes it.
+        The "only" command filters the currently active directories. It keeps those in which the given CLI command returns exit code 0.
 
         You forgot to tell me the CLI command I should run in each directory. You do it like this:
 
-          m except <cli command>
+          m only <command>
 
-        As an example, to find all codebases that are not Node.js:
+        As an example, to select all directories that contain a Node.js codebase:
 
-          m except test -f package.json
+          m only test -f package.json
         """
       And it returns "failure"
