@@ -25,7 +25,6 @@ Feature: "except" command
         ALL DONE
         """
 
-    @this
     Scenario: call without command
       Given I am in the "simple" example folder
       And no mrt configuration

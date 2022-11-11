@@ -30,6 +30,8 @@ Feature: list subfolders matching a condition
         ERROR: missing condition
 
         The "list" command displays all active directories in which the given CLI command returns exit code 0.
+        It is a "dry run" of the "only" command.
+
         You forgot to tell me the CLI command I should run in each directory. You do it like this:
 
           m list <command>

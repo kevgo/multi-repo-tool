@@ -118,7 +118,7 @@ impl UserError {
             ),
             UserError::MissingCommandForList => (
                 S("missing condition"),
-                S("The \"list\" command displays all active directories in which the given CLI command returns exit code 0.\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m list <command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m list test -f package.json"),
+                S("The \"list\" command displays all active directories in which the given CLI command returns exit code 0.\nIt is a \"dry run\" of the \"only\" command.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m list <command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m list test -f package.json"),
             ),
             UserError::MissingCommandForOnly => (
                 S("missing condition"),
