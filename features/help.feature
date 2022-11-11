@@ -28,7 +28,6 @@ Feature: display help
                            for which the given condition returns exit code 0.
       """
 
-  @this
   Scenario: no command
     Given I am in the "simple" example folder
     When running "m"
