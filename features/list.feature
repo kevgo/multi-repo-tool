@@ -20,6 +20,8 @@ Feature: list subfolders matching a condition
       And I am now in the "simple" example folder
       And there is no saved state
 
+  Rule: displays help if called without command
+
     @this
     Scenario: call without command
       When running "m list"
@@ -27,14 +29,13 @@ Feature: list subfolders matching a condition
         """
         ERROR: missing condition
 
-        The list command displays all active directories for whom the given condition returns exit code 0.
-        You need to tell me which CLI command I should run in each directory to determine whether it matches.
-        You do it like this:
+        The "list" command displays all active directories in which the given CLI command returns exit code 0.
+        You forgot to tell me the CLI command I should run in each directory. You do it like this:
 
-          m list <condition>
+          m list <command>
 
-        Example:
+        As an example, to find all codebases that are not Node.js:
 
-          m list test -f README.md
+          m list test -f package.json
         """
       And it returns "failure"

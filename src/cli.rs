@@ -64,7 +64,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
         },
         "next" => Command::Next,
         "only" => Command::Only {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForOnly)?,
             args: args.collect(),
         },
         "retry" => Command::Retry,

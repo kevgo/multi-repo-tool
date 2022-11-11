@@ -33,14 +33,16 @@ Feature: "except" command
         """
         ERROR: missing condition
 
-        The except command filters the active directories to all for whom the given condition returns exit code 1 or higher.
-        You need to tell me which CLI command I should run in each directory to determine whether it matches.
-        You do it like this:
+        The "except" command filters the set of active directories.
+        It runs the given CLI command in each active directory.
+        If the exit code is 0, it removes the directory from the list of active directories.
 
-          m except <condition>
+        You forgot to tell me the CLI command I should run in each directory. You do it like this:
 
-        Example:
+          m except <cli command>
 
-          m except test -f README.md
+        As an example, to find all codebases that are not Node.js:
+
+          m except test -f package.json
         """
       And it returns "failure"

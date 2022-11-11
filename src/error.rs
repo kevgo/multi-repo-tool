@@ -38,6 +38,7 @@ pub enum UserError {
     },
     MissingCommandForExcept,
     MissingCommandForList,
+    MissingCommandForOnly,
     MissingStartFolder,
     MissingOrgToClone,
     NoFoldersToIterate,
@@ -113,11 +114,15 @@ impl UserError {
             ),
             UserError::MissingCommandForExcept => (
                 S("missing condition"),
-                S("The except command filters the active directories to all for whom the given condition returns exit code 1 or higher.\nYou need to tell me which CLI command I should run in each directory to determine whether it matches.\nYou do it like this:\n\n  m except <condition>\n\nExample:\n\n  m except test -f README.md"),
+                S("The \"except\" command filters the set of active directories.\nIt runs the given CLI command in each active directory.\nIf the exit code is 0, it removes the directory from the list of active directories.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m except <cli command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m except test -f package.json"),
             ),
             UserError::MissingCommandForList => (
                 S("missing condition"),
-                S("The list command displays all active directories for whom the given condition returns exit code 0.\nYou need to tell me which CLI command I should run in each directory to determine whether it matches.\nYou do it like this:\n\n  m list <condition>\n\nExample:\n\n  m list test -f README.md"),
+                S("The \"list\" command displays all active directories in which the given CLI command returns exit code 0.\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m list <command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m list test -f package.json"),
+            ),
+            UserError::MissingCommandForOnly => (
+                S("missing condition"),
+                S("The \"only\" command filters the set of active directories.\nIt runs the given CLI command in each active directory.\nIf the exit code is 0, it keeps the directory in the list of active directories, otherwise it removes it.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m except <cli command>\n\nAs an example, to find all codebases that are not Node.js:\n\n  m except test -f package.json"),
             ),
             UserError::MissingStartFolder => (
                 S("missing start folder"),
