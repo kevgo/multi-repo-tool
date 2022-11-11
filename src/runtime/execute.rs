@@ -36,8 +36,8 @@ pub enum Outcome {
 
 /// executes the given steps, returns the not executed steps in case of an issue
 pub fn execute(config: Config, command: &cli::Command) -> Outcome {
-    // somehow this is enough to ensure a graceful exit
     ctrlc::set_handler(move || {
+        // somehow this is enough to ensure a graceful exit
         println!(" Canceling the current step...");
     })
     .expect("Error setting Ctrl-C handler");
