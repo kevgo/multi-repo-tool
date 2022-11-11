@@ -74,7 +74,7 @@ pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
         },
         "status" => Command::Status,
         "unfold" => Command::Unfold {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForUnfold)?,
             args: args.collect(),
         },
         "walk" => Command::Walk { start: None },

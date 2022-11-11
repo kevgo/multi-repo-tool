@@ -84,3 +84,26 @@ Feature: unfold folder list
 
         ALL DONE
         """
+
+  Rule: displays help when called without arguments
+
+    @this
+    Scenario: called without arguments
+      Given I am in the "monorepo" example folder
+      And no mrt configuration
+      When running "m unfold"
+      Then it prints:
+        """
+        ERROR: missing command to run
+
+        The "unfold" command expands the active directories to all subfolders of the active directories in which the given CLI command returns exit code 0.
+
+        You forgot to tell me the CLI command I should run in each directory. You do it like this:
+
+          m unfold <command>
+
+        As an example, to select all directories that contain a Makefile:
+
+          m unfold test -f Makefile
+        """
+      And it returns "failure"

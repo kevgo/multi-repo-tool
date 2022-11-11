@@ -40,6 +40,7 @@ pub enum UserError {
     MissingCommandForList,
     MissingCommandForOnly,
     MissingCommandForRun,
+    MissingCommandForUnfold,
     MissingStartFolder,
     MissingOrgToClone,
     NoFoldersToIterate,
@@ -128,6 +129,10 @@ impl UserError {
             UserError::MissingCommandForRun => (
                 S("missing command to run"),
                 S("The \"run\" command executes the given CLI command in all currently active directories.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m run <command>\n\nAs an example, to display the path of all active directories:\n\n  m run pwd"),
+            ),
+            UserError::MissingCommandForUnfold => (
+                S("missing command to run"),
+                S("The \"unfold\" command expands the active directories to all subfolders of the active directories in which the given CLI command returns exit code 0.\n\nYou forgot to tell me the CLI command I should run in each directory. You do it like this:\n\n  m unfold <command>\n\nAs an example, to select all directories that contain a Makefile:\n\n  m unfold test -f Makefile"),
             ),
             UserError::MissingStartFolder => (
                 S("missing start folder"),

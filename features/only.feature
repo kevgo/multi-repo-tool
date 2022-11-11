@@ -81,7 +81,6 @@ Feature: "only" command
 
   Rule: displays guidance when calling without condition
 
-    @this
     Scenario: call without condition
       When running "m only"
       Then it prints:

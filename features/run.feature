@@ -175,7 +175,6 @@ Feature: run a command in all folders
 
   Rule: displays help when calling without arguments
 
-    @this
     Scenario: calling without command to run
       When running "m run"
       Then it prints:
