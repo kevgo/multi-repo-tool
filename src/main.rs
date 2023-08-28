@@ -31,7 +31,7 @@ fn main() -> ExitCode {
                 println!();
                 help();
             } else if !guidance.is_empty() {
-                println!("\n{}", guidance);
+                println!("\n{guidance}");
             }
             exit_code
         }

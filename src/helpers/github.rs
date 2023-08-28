@@ -35,11 +35,11 @@ pub struct ErrorMessage {
 }
 
 pub fn get_repos(org: &str) -> Result<Vec<Repo>, UserError> {
-    print!("analyzing github.com/{} ", org);
+    print!("analyzing github.com/{org} ");
     print_dot();
     let client = create_client();
     let mut org_repos: Vec<Repo> = vec![];
-    let mut next_url = Some(format!("https://api.github.com/orgs/{}/repos", org));
+    let mut next_url = Some(format!("https://api.github.com/orgs/{org}/repos"));
     while let Some(url) = next_url {
         let response = client.get(&url).send().expect("HTTP request failed");
         print_dot();
@@ -66,7 +66,7 @@ fn create_client() -> reqwest::blocking::Client {
     if let Ok(token) = env::var("GITHUB_TOKEN") {
         headers.insert(
             header::AUTHORIZATION,
-            format!("token {}", token).parse().unwrap(),
+            format!("token {token}").parse().unwrap(),
         );
     }
     reqwest::blocking::Client::builder()
