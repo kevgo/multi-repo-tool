@@ -86,33 +86,33 @@ impl UserError {
                 error,
                 guidance,
             } => (
-                format!("cannot read GitHub API: {}", error),
-                format!("url: {}\nguidance: {}", url, guidance),
+                format!("cannot read GitHub API: {error}"),
+                format!("url: {url}\nguidance: {guidance}"),
             ),
             UserError::CannotChangeIntoDirectory { dir, guidance } => (
-                format!("cannot change into the \"{}\" directory", dir),
+                format!("cannot change into the \"{dir}\" directory"),
                 guidance,
             ),
             UserError::CannotReadDirectory {
                 directory,
                 guidance,
-            } => (format!("cannot read directory \"{}\"", directory), guidance),
+            } => (format!("cannot read directory \"{directory}\""), guidance),
             UserError::CannotReadPersistenceFile { filename, guidance } => (
-                format!("cannot read persistence file \"{}\"", filename),
+                format!("cannot read persistence file \"{filename}\""),
                 guidance,
             ),
             UserError::CannotWriteFile { filename, guidance } => (
-                format!("cannot write persistence file \"{}\"", filename),
+                format!("cannot write persistence file \"{filename}\""),
                 guidance,
             ),
             UserError::CommandNotFound { command } => {
-                (format!("command \"{}\" not found", command), S(""))
+                (format!("command \"{command}\" not found"), S(""))
             }
             UserError::ExecutePermissionDenied { command } => {
-                (format!("\"{}\" is not executable", command), S(""))
+                (format!("\"{command}\" is not executable"), S(""))
             }
             UserError::InvalidPersistenceFormat { filename, guidance } => (
-                format!("persistence file \"{}\" has an invalid format", filename),
+                format!("persistence file \"{filename}\" has an invalid format"),
                 guidance,
             ),
             UserError::MissingCommand => (
@@ -159,7 +159,7 @@ impl UserError {
             UserError::NothingToIgnore => (S("nothing to ignore"), S("")),
             UserError::NothingToRetry => (S("nothing to retry"), S("")),
             UserError::OtherExecutionError { command, guidance } => (
-                format!("unknown error while trying to execute \"{}\"", command),
+                format!("unknown error while trying to execute \"{command}\""),
                 guidance,
             ),
             UserError::SessionAlreadyActive { config } => (
@@ -175,11 +175,11 @@ impl UserError {
                 code,
                 response,
             } => (
-                format!("unexpected GitHub API error: {}", code),
-                format!("url: {}responseh: {}", url, response),
+                format!("unexpected GitHub API error: {code}"),
+                format!("url: {url}response: {response}"),
             ),
             UserError::UnknownCommand { command } => (
-                format!("unknown command: \"{}\"", command),
+                format!("unknown command: \"{command}\""),
                 S(""),
             ),
         }
