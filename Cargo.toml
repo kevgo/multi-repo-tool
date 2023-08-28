@@ -2,7 +2,7 @@
 name = "mrt"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.65"
+rust-version = "1.70"
 
 [dependencies]
 big_s = "1.0.2"
