@@ -21,14 +21,17 @@ fn main() -> ExitCode {
         Ok(exit_code) => exit_code,
         Err(err) => {
             let exit_code = err.exit_code();
-            let show_usage = matches!(err, UserError::WrongCliArguments { message: _ });
+            let show_usage = matches!(
+                err,
+                UserError::MissingCommand | UserError::UnknownCommand { command: _ }
+            );
             let (error, guidance) = err.messages();
             println!("{}{}", "ERROR: ".red().bold(), error.red());
             if show_usage {
                 println!();
                 help();
             } else if !guidance.is_empty() {
-                println!("\n{}", guidance);
+                println!("\n{guidance}");
             }
             exit_code
         }
@@ -63,6 +66,9 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
         Command::Status => commands::status(&persisted_config)?,
+        Command::Unfold { cmd, args } => {
+            commands::limit::unfold(cmd, args, &init_dir, persisted_config)?
+        }
         Command::Walk { start } => commands::walk(&init_dir, persisted_config, start.as_ref())?,
         Command::WalkFromHere => commands::walk(
             init_dir.parent().unwrap(),

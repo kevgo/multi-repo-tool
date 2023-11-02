@@ -19,6 +19,13 @@ Feature: display help
       When you are done with one subfolder, run m next to go to the next subfolder.
       To stop the process early: m abort
       To start walking at a specific subfolder: m walk-from <folder name>
+
+      By default, mrt iterates through all direct subfolders of the directory it is called.
+      To limit the set of folders that mrt goes through:
+      m only <condition>   keeps only the folders for which condition returns exit code 0.
+                           You can call "m only" repeatedly to limit by multiple criteria.
+      m unfold <condition> replaces the current folder set with all subfolders of the current folders
+                           for which the given condition returns exit code 0.
       """
 
   Scenario: no command
@@ -42,15 +49,21 @@ Feature: display help
       When you are done with one subfolder, run m next to go to the next subfolder.
       To stop the process early: m abort
       To start walking at a specific subfolder: m walk-from <folder name>
+
+      By default, mrt iterates through all direct subfolders of the directory it is called.
+      To limit the set of folders that mrt goes through:
+      m only <condition>   keeps only the folders for which condition returns exit code 0.
+                           You can call "m only" repeatedly to limit by multiple criteria.
+      m unfold <condition> replaces the current folder set with all subfolders of the current folders
+                           for which the given condition returns exit code 0.
       """
 
-  @this
   Scenario: wrong command
     Given I am in the "simple" example folder
     When running "m zonk"
     Then it prints:
       """
-      ERROR: unknown command: zonk
+      ERROR: unknown command: "zonk"
 
       Usage: m <command>
 
@@ -66,4 +79,11 @@ Feature: display help
       When you are done with one subfolder, run m next to go to the next subfolder.
       To stop the process early: m abort
       To start walking at a specific subfolder: m walk-from <folder name>
+
+      By default, mrt iterates through all direct subfolders of the directory it is called.
+      To limit the set of folders that mrt goes through:
+      m only <condition>   keeps only the folders for which condition returns exit code 0.
+                           You can call "m only" repeatedly to limit by multiple criteria.
+      m unfold <condition> replaces the current folder set with all subfolders of the current folders
+                           for which the given condition returns exit code 0.
       """

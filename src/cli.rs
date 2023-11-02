@@ -31,6 +31,8 @@ pub enum Command {
     Run { cmd: String, args: Vec<String> },
     /// Displays the current status of the command queue
     Status,
+    /// Replaces the current folders with all subfolders matching the given condition
+    Unfold { cmd: String, args: Vec<String> },
     /// Manually visits each subdirectory, optionally starting at the given one
     Walk { start: Option<String> },
     /// Manually visit each sibling after the current directory
@@ -40,48 +42,50 @@ pub enum Command {
 pub fn parse(args: &mut env::Args) -> Result<Command, UserError> {
     let _binary_name = args.next(); // skip the binary name
     let Some(cmd) = args.next() else {
-        return Err(help("no command provided"));
+        return Err(UserError::MissingCommand);
     };
     Ok(match cmd.as_str() {
         "abort" => Command::Abort,
         "activate" => Command::Activate,
         "all" => Command::All,
         "clone" => Command::Clone {
-            org: args.next().ok_or_else(|| help("no org provided"))?,
+            org: args.next().ok_or(UserError::MissingOrgToClone)?,
         },
         "except" => Command::Except {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForExcept)?,
             args: args.collect(),
         },
         "help" => Command::Help,
         "ignore" => Command::Ignore,
         "ignore-all" => Command::IgnoreAll,
         "list" => Command::List {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForList)?,
             args: args.collect(),
         },
         "next" => Command::Next,
         "only" => Command::Only {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForOnly)?,
             args: args.collect(),
         },
         "retry" => Command::Retry,
         "run" => Command::Run {
-            cmd: args.next().ok_or_else(|| help("no executable provided"))?,
+            cmd: args.next().ok_or(UserError::MissingCommandForRun)?,
             args: args.collect(),
         },
         "status" => Command::Status,
+        "unfold" => Command::Unfold {
+            cmd: args.next().ok_or(UserError::MissingCommandForUnfold)?,
+            args: args.collect(),
+        },
         "walk" => Command::Walk { start: None },
         "walk-from" => Command::Walk {
             start: Some(args.next().ok_or(UserError::MissingStartFolder)?),
         },
         "walk-from-here" => Command::WalkFromHere,
-        other => return Err(help(format!("unknown command: {}", other))),
+        other => {
+            return Err(UserError::UnknownCommand {
+                command: other.into(),
+            })
+        }
     })
-}
-
-fn help<IS: Into<String>>(error: IS) -> UserError {
-    UserError::WrongCliArguments {
-        message: error.into(),
-    }
 }

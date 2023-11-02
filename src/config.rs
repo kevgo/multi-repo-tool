@@ -36,7 +36,7 @@ impl Display for Config {
                 write!(f, "{}", folder_list::render(folders))?;
             }
             None => match all_count {
-                Some(all) => writeln!(f, "Running in all {} folders.", all),
+                Some(all) => writeln!(f, "Running in all {all} folders."),
                 None => writeln!(f, "Running in all folders."),
             }?,
         }
@@ -60,7 +60,7 @@ pub fn delete(config_path: &Utf8Path) {
 /// provides the full path to the config file
 pub fn filepath() -> Utf8PathBuf {
     let home_path = env::var("HOME").expect("cannot read environment variable $HOME");
-    Utf8PathBuf::from(format!("{}/.config/mrt.json", home_path))
+    Utf8PathBuf::from(format!("{home_path}/.config/mrt.json"))
 }
 
 pub fn load(config_path: &Utf8Path) -> Result<Config, UserError> {

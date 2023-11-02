@@ -88,7 +88,7 @@ mod tests {
         };
         let want = UserError::NothingToIgnore;
         match super::ignore(give) {
-            Ok(data) => panic!("{:?}", data),
+            Ok(data) => panic!("{data:?}"),
             Err(err) => assert_eq!(err, want),
         }
     }

@@ -1,4 +1,4 @@
-Feature: limiting the iterated folders
+Feature: "only" command
 
   Background:
     Given I am in the "simple" example folder
@@ -12,7 +12,7 @@ Feature: limiting the iterated folders
         """
         ...
 
-        Limiting execution to 2/3 folders:
+        Limiting execution to 2/3 top-level folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
         """
@@ -42,7 +42,7 @@ Feature: limiting the iterated folders
         """
         ...
 
-        Limiting execution to 2/3 folders:
+        Limiting execution to 2/3 top-level folders:
         1. {{examples_dir}}/go_node
         2. {{examples_dir}}/node
         """
@@ -52,7 +52,7 @@ Feature: limiting the iterated folders
         """
         ..
 
-        Tightening the existing limit of 2/3 folders further to 1/3 folders:
+        Tightening the existing limit of 2/3 top-level folders further to 1/3 top-level folders:
         1. {{examples_dir}}/go_node
         """
       And it returns "success"
@@ -94,3 +94,23 @@ Feature: limiting the iterated folders
         """
       And it returns "failure"
       And there is no saved state
+
+  Rule: displays guidance when calling without condition
+
+    Scenario: call without condition
+      When running "m only"
+      Then it prints:
+        """
+        ERROR: missing condition
+
+        The "only" command filters the currently active directories. It keeps those in which the given CLI command returns exit code 0.
+
+        You forgot to tell me the CLI command I should run in each directory. You do it like this:
+
+          m only <command>
+
+        As an example, to select all directories that contain a Node.js codebase:
+
+          m only test -f package.json
+        """
+      And it returns "failure"
