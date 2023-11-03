@@ -27,9 +27,9 @@ code maintenance.
   [next](documentation/next.md) one or [abort](documentation/abort.md) the walk.
 - [status](documentation/status.md) displays the current state of the command
   queue
-- [only](documentation/only.md) execution to a subset of folders. When done with
-  the folder subset, you can go back to processing [all](documentation/all.md)
-  folders.
+- limit execution to run [only](documentation/only.md) in folders matching the
+  given condition. When done with the folder subset, you can go back to
+  processing [all](documentation/all.md) folders.
 
 ### recipes
 
