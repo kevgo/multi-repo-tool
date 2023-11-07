@@ -58,10 +58,10 @@ fn inner() -> Result<ExitCode, UserError> {
         Command::Ignore | Command::IgnoreAll => commands::ignore(persisted_config)?,
         Command::List { cmd, args } => commands::list(cmd, args, &init_dir, persisted_config)?,
         Command::Only { cmd, args } => {
-            commands::limit::only(cmd, args, &init_dir, &Mode::Match, persisted_config)?
+            commands::limit::only(cmd, args, &init_dir, Mode::Match, persisted_config)?
         }
         Command::Except { cmd, args } => {
-            commands::limit::only(cmd, args, &init_dir, &Mode::NoMatch, persisted_config)?
+            commands::limit::only(cmd, args, &init_dir, Mode::NoMatch, persisted_config)?
         }
         Command::Next => commands::next(persisted_config)?,
         Command::Retry => commands::retry(persisted_config)?,
