@@ -66,7 +66,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
             }
         };
         match result {
-            Ok(exit_code) if exit_code == 0 => {}
+            Ok(0) => {}
             Ok(exit_code) => {
                 let current_dir = env::current_dir().expect("cannot determine current directory");
                 let mut remaining_steps = vec![previous_dir.unwrap(), numbered];
@@ -118,7 +118,7 @@ pub fn execute(config: Config, command: &cli::Command) -> Outcome {
 
 pub fn change_wd(dir: &str) -> Result<u8, UserError> {
     match env::set_current_dir(dir) {
-        Ok(_) => Ok(0),
+        Ok(()) => Ok(0),
         Err(err) => Err(UserError::CannotChangeIntoDirectory {
             dir: dir.into(),
             guidance: err.to_string(),

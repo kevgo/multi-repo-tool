@@ -90,7 +90,7 @@ pub fn save(config_path: &Utf8Path, config: &Config) -> Result<(), UserError> {
     })?;
     let writer = BufWriter::new(file);
     match serde_json::to_writer_pretty(writer, config) {
-        Ok(_) => Ok(()),
+        Ok(()) => Ok(()),
         Err(e) => Err(UserError::CannotWriteFile {
             filename: config_path.to_string(),
             guidance: e.to_string(),
