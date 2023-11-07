@@ -9,7 +9,7 @@ use std::process::{Command, ExitCode};
 use walkdir::WalkDir;
 
 /// defines which folders get included
-#[derive(Eq, PartialEq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub enum Mode {
     /// include folders that match the given condition
     Match,
@@ -32,7 +32,7 @@ pub fn only(
     cmd: &str,
     args: &[String],
     root_dir: &Utf8Path,
-    mode: &Mode,
+    mode: Mode,
     config: Config,
 ) -> Result<(Config, Option<ExitCode>), UserError> {
     let mut new_folders = vec![];
@@ -41,7 +41,7 @@ pub fn only(
     let previous_count = config.folders.as_ref().map(Vec::len);
     for dir in config.folders.unwrap_or(all_folders) {
         print_dot();
-        if command_success(&dir, cmd, args) ^ (mode == &Mode::NoMatch) {
+        if command_success(&dir, cmd, args) ^ (mode == Mode::NoMatch) {
             new_folders.push(dir);
         }
     }
