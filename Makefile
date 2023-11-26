@@ -19,7 +19,7 @@ install:  # installs the binary in the system
 
 lint: tools/actionlint  # checks formatting
 	dprint check
-	cargo clippy --all-targets --all-features -- -W clippy::pedantic -A clippy::too-many-lines
+	cargo clippy --all-targets --all-features -- --deny=warnings
 	cargo fmt -- --check
 	git diff --check
 	tools/actionlint
