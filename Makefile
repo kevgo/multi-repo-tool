@@ -23,7 +23,7 @@ help:  # shows all available Make commands
 install:  # installs the binary in the system
 	cargo install --path .
 
-lint: tools/actionlint  # checks formatting
+lint: tools/run-that-app@${RUN_THAT_APP_VERSION}  # checks formatting
 	tools/rta dprint@${DPRINT_VERSION} check
 	cargo clippy --all-targets --all-features -- --deny=warnings
 	cargo fmt -- --check
