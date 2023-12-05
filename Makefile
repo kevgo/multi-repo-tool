@@ -20,7 +20,7 @@ help:  # shows all available Make commands
 install:  # installs the binary in the system
 	cargo install --path .
 
-lint: tools/run-that-app  # checks formatting
+lint: tools/run-that-app@${RUN_THAT_APP_VERSION}  # checks formatting
 	tools/rta dprint check
 	cargo clippy --all-targets --all-features -- --deny=warnings
 	cargo fmt -- --check
@@ -32,8 +32,9 @@ test: unit lint cuke  # runs all tests
 unit:  # runs the unit tests
 	cargo test
 
-update:  # updates the dependencies
+update: tools/run-that-app@${RUN_THAT_APP_VERSION}  # updates the dependencies
 	cargo upgrade
+	tools/rta --update
 
 # --- HELPER TARGETS --------------------------------------------------------------------------------------------------------------------------------
 
