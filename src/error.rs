@@ -79,6 +79,7 @@ impl UserError {
     }
 
     /// provides the error message and guidance for this error
+    #[allow(clippy::too_many_lines)]
     pub fn messages(self) -> (String, String) {
         match self {
             UserError::ApiRequestFailed {

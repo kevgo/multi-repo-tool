@@ -169,7 +169,7 @@ pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<u8
             if status.success() || ignore_all {
                 Ok(0)
             } else {
-                Ok(status.code().unwrap_or(1) as u8)
+                Ok(reduce_exit_status_to_code(status.code().unwrap()))
             }
         }
         Err(err) => match err.kind() {
@@ -185,4 +185,11 @@ pub fn run_command(cmd: &str, args: &Vec<String>, ignore_all: bool) -> Result<u8
             }),
         },
     }
+}
+
+fn reduce_exit_status_to_code(code: i32) -> u8 {
+    if !(0..=255).contains(&code) {
+        return 255;
+    }
+    u8::try_from(code).unwrap()
 }
