@@ -5,83 +5,83 @@ use std::process::ExitCode;
 #[derive(Debug, Eq, PartialEq)]
 #[allow(clippy::module_name_repetitions)]
 pub enum UserError {
-    ApiRequestFailed {
-        url: String,
-        error: String,
-        guidance: String,
-    },
-    CannotChangeIntoDirectory {
-        dir: String,
-        guidance: String,
-    },
-    CannotReadDirectory {
-        directory: String,
-        guidance: String,
-    },
-    CannotReadPersistenceFile {
-        filename: String,
-        guidance: String,
-    },
-    CannotWriteFile {
-        filename: String,
-        guidance: String,
-    },
-    CommandNotFound {
-        command: String,
-    },
-    ExecutePermissionDenied {
-        command: String,
-    },
-    InvalidPersistenceFormat {
-        filename: String,
-        guidance: String,
-    },
-    MissingCommand,
-    MissingCommandForExcept,
-    MissingCommandForList,
-    MissingCommandForOnly,
-    MissingCommandForRun,
-    MissingCommandForUnfold,
-    MissingStartFolder,
-    MissingOrgToClone,
-    NoFoldersToIterate,
-    NoNextFolder,
-    NotWrapped,
-    NothingToAbort,
-    NothingToIgnore,
-    NothingToRetry,
-    OtherExecutionError {
-        command: String,
-        guidance: String,
-    },
-    SessionAlreadyActive {
-        config: Config,
-    },
-    StepFailed {
-        code: u8,
-    },
-    UnknownApiError {
-        url: String,
-        code: u16,
-        response: String,
-    },
-    UnknownCommand {
-        command: String,
-    },
+  ApiRequestFailed {
+    url: String,
+    error: String,
+    guidance: String,
+  },
+  CannotChangeIntoDirectory {
+    dir: String,
+    guidance: String,
+  },
+  CannotReadDirectory {
+    directory: String,
+    guidance: String,
+  },
+  CannotReadPersistenceFile {
+    filename: String,
+    guidance: String,
+  },
+  CannotWriteFile {
+    filename: String,
+    guidance: String,
+  },
+  CommandNotFound {
+    command: String,
+  },
+  ExecutePermissionDenied {
+    command: String,
+  },
+  InvalidPersistenceFormat {
+    filename: String,
+    guidance: String,
+  },
+  MissingCommand,
+  MissingCommandForExcept,
+  MissingCommandForList,
+  MissingCommandForOnly,
+  MissingCommandForRun,
+  MissingCommandForUnfold,
+  MissingStartFolder,
+  MissingOrgToClone,
+  NoFoldersToIterate,
+  NoNextFolder,
+  NotWrapped,
+  NothingToAbort,
+  NothingToIgnore,
+  NothingToRetry,
+  OtherExecutionError {
+    command: String,
+    guidance: String,
+  },
+  SessionAlreadyActive {
+    config: Config,
+  },
+  StepFailed {
+    code: u8,
+  },
+  UnknownApiError {
+    url: String,
+    code: u16,
+    response: String,
+  },
+  UnknownCommand {
+    command: String,
+  },
 }
 
 impl UserError {
-    pub fn exit_code(&self) -> ExitCode {
-        match self {
-            UserError::StepFailed { code } => ExitCode::from(code.to_owned()),
-            _ => ExitCode::FAILURE,
-        }
+  pub fn exit_code(&self) -> ExitCode {
+    match self {
+      UserError::StepFailed { code } => ExitCode::from(code.to_owned()),
+      _ => ExitCode::FAILURE,
     }
+  }
 
-    /// provides the error message and guidance for this error
-    #[allow(clippy::too_many_lines)]
-    pub fn messages(self) -> (String, String) {
-        match self {
+  /// provides the error message and guidance for this error
+  #[allow(clippy::too_many_lines)]
+  pub fn messages(self) -> (String, String) {
+    match self {
             UserError::ApiRequestFailed {
                 url,
                 error,
@@ -184,5 +184,5 @@ impl UserError {
                 S(""),
             ),
         }
-    }
+  }
 }
