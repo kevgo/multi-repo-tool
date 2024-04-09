@@ -11,8 +11,8 @@ cukethis: target/debug/mrt  # runs only end-to-end tests with a @this tag
 
 fix: tools/rta@${RUN_THAT_APP_VERSION}  # auto-corrects issues
 	tools/rta dprint fmt
-	cargo fmt
-	cargo fix
+	cargo +nightly fmt
+	cargo +nightly fix --allow-dirty
 
 help:  # shows all available Make commands
 	cat Makefile | grep '^[^ ]*:' | grep -v '.PHONY' | grep -v '.SILENT:' | grep '#' | grep -v help | sed 's/:.*#/#/' | column -s "#" -t
@@ -23,9 +23,13 @@ install:  # installs the binary in the system
 lint: tools/rta@${RUN_THAT_APP_VERSION}  # checks formatting
 	tools/rta dprint check
 	cargo clippy --all-targets --all-features -- --deny=warnings
-	cargo fmt -- --check
+	cargo +nightly fmt -- --check
 	git diff --check
 	tools/rta actionlint
+
+setup:  # install development dependencies on this computer
+	rustup toolchain add nightly
+	rustup component add rustfmt --toolchain nightly
 
 test: unit lint cuke  # runs all tests
 

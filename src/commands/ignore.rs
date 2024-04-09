@@ -1,6 +1,5 @@
 use crate::config::Config;
 use crate::error::UserError;
-use std::mem::drop;
 use std::process::ExitCode;
 
 pub fn ignore(config: Config) -> Result<(Config, Option<ExitCode>), UserError> {
