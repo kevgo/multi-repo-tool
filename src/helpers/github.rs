@@ -5,9 +5,8 @@ use reqwest::header::{self, HeaderMap};
 use reqwest::StatusCode;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
-use std::env;
-use std::io;
 use std::io::Write;
+use std::{env, io};
 
 static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 static LINK_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#"<([^>]+)>; rel="next""#).unwrap());
